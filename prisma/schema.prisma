@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String
+  email     String   @unique
+  password  String
+  role      Role     @default(TEACHER)
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model Student {
+  id               Int            @id @default(autoincrement())
+  name             String
+  phone            String
+  email            String         @unique
+  cpf              String         @unique
+  gender           Gender
+  birthDate        DateTime
+  enrollment       Int?           @unique
+  currentFrequency Int
+  belt             Belt
+  grade            Int
+  role             RoleStudent    @default(STUDENT)
+  guardianPhone    String
+  totalFrequency   Int
+  createdAt        DateTime       @default(now())
+  updateAt         DateTime       @updatedAt
+  classes          StudentClass[]
+}
+
+model Class {
+  id         Int            @id @default(autoincrement())
+  teacher_id Int
+  name       String
+  createdAt  DateTime       @default(now())
+  updateAt   DateTime       @updatedAt
+  students   StudentClass[]
+}
+
+model StudentClass {
+  id         Int     @id @default(autoincrement())
+  student_id Int
+  class_id   Int
+  class      Class   @relation(fields: [class_id], references: [id])
+  student    Student @relation(fields: [student_id], references: [id])
+}
+
+model Classroom {
+  id         Int      @id @default(autoincrement())
+  teacher_id Int
+  class_id   Int
+  date       DateTime
+}
+
+model StudentPresence {
+  id           Int     @id @default(autoincrement())
+  classroom_id Int
+  student_id   Int
+  presence     Boolean
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+}
+
+enum RoleStudent {
+  TEACHER
+  STUDENT
+}
+
+enum Belt {
+  WHITE
+  GRAY_WHITE
+  GRAY
+  GRAY_BLACK
+  YELLOW_WHITE
+  YELLOW
+  YELLOW_BLACK
+  ORANGE_WHITE
+  ORANGE
+  ORANGE_BLACK
+  GREEN_WHITE
+  GREEN
+  GREEN_BLACK
+  BLUE
+  PURPLE
+  BROWN
+  BLACK
+  RED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
