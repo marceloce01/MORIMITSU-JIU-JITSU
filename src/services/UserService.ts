@@ -1,6 +1,7 @@
 //Serviços de Usuário: local onde basicamente se trata de regras de negócios dos usuários, ou melhor, verificações de cadastro do usuário, como falta de campos obrigatórios, verificar a existência de um usuário, etc
 
 import bcrypt, { compare } from "bcryptjs";
+import { registerSchema, RegisterInput } from "../schemas/RegisterSchema";
 import { UserRepository } from "../repositories/UserRepository";
 import { ErrorCode } from "../utils/ErrorCodes";
 import { Role} from "@prisma/client";
@@ -9,17 +10,12 @@ import { Role} from "@prisma/client";
 export class UserService{
 
     //Cadastro de Usuários Instrutores
-    static registerUserTeacher = async(username: string, email: string, password: string) =>{
+    static registerUserTeacher = async(data: RegisterInput) =>{
 
-        //Caso falte algum dado
-        if(!username || !email || !password){
-            const error:any = new Error("Estão faltando dados obrigatórios!")
-            error.code = ErrorCode.BAD_REQUEST
-            throw error
-        }
+        const parsedData: RegisterInput = registerSchema.parse(data)
 
         //Caso o usuário já esteja cadastrado
-        const existingUser = await UserRepository.findByEmail(email)
+        const existingUser = await UserRepository.findByEmail(parsedData.email)
         if(existingUser){
             const error:any = new Error("Usuário já cadastrado!")
             error.code = ErrorCode.CONFLICT
@@ -28,24 +24,20 @@ export class UserService{
 
         //Sendo feita essa verificação, usuário instrutor criado:
 
-        const hashedPassword = await bcrypt.hash(password, 10)
-        const user = await UserRepository.create({username, email, password: hashedPassword})
+        const hashedPassword = await bcrypt.hash(parsedData.password, 10)
+        
+        const user = await UserRepository.create({username: parsedData.username, email: parsedData.email, password: hashedPassword})
     
         return user
     }
 
     //Cadastro de Usuários Administradores
-    static registerUserAdmin = async(username: string, email: string, password: string) =>{
+    static registerUserAdmin = async(data: RegisterInput) =>{
 
-        //Caso falte algum dado
-        if(!username || !email || !password){
-            const error:any = new Error("Estão faltando dados obrigatórios!")
-            error.code = ErrorCode.BAD_REQUEST
-            throw error
-        }
+        const parsedData: RegisterInput = registerSchema.parse(data)
 
         //Caso o usuário já esteja cadastrado
-        const existingUser = await UserRepository.findByEmail(email)
+        const existingUser = await UserRepository.findByEmail(parsedData.email)
         if(existingUser){
             const error:any = new Error("Usuário já cadastrado!")
             error.code = ErrorCode.CONFLICT
@@ -54,8 +46,9 @@ export class UserService{
 
         //Sendo feita essa verificação, usuário administrador criado:
 
-        const hashedPassword = await bcrypt.hash(password, 10)
-        const user = await UserRepository.create({username, email, password: hashedPassword, role: Role.ADMIN})
+        const hashedPassword = await bcrypt.hash(parsedData.password, 10)
+
+        const user = await UserRepository.create({username: parsedData.username, email: parsedData.email, password: hashedPassword, role: Role.ADMIN})
     
         return user
     }
