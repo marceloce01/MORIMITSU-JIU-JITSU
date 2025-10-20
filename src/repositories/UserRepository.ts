@@ -8,16 +8,39 @@ export class UserRepository{
 
     //Cria um usuário na tabela User
     static create = async( data: {username: string, email: string, password: string, role?: Role}) => {
-       return prisma.user.create({data})
+       return prisma.user.create({data: {username: data.username, email: data.email, password: data.password, role: data.role}})
     } 
 
     //Consulta um usuário pelo ID
     static findById = async(id: number) =>{
-       return prisma.user.findUnique({where: {id:id}})
+       return prisma.user.findUnique({
+         where: {id:id},
+         select: {
+            id: true,
+            username: true,
+            email: true,
+            password: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
+         }
+      
+      })
     }
 
     //Consulta um usuário pelo Email
     static findByEmail = async(email: string) =>{
-       return prisma.user.findUnique({where: {email:email}})
+       return prisma.user.findUnique({
+         where: {email:email},
+         select: {
+            id: true,
+            username: true,
+            email: true,
+            password: true,
+            role: true,
+            createdAt: true,
+            updatedAt: true
+         }
+      })
     }
 }

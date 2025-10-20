@@ -59,7 +59,21 @@ export class UserService{
     
         return user
     }
+
+    static getUserById = async(userId: number) =>{
+
+        const user = await UserRepository.findById(userId)
+        if(!user){
+            const error:any = new Error("Usuário não encontrado!")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        //Se houver:
+        return user
+    }
 }
+
 
 
 
