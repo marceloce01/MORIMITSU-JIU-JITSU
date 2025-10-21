@@ -6,7 +6,7 @@ export class AuthMiddleware{
     static authenticate = (req: AuthenticatedRequest, res: Response, next: NextFunction)=>{
         try{
 
-            const token = req.header("Authorization")?.replace("Bearer ","")
+            const token = req.header("Authorization")?.replace("Bearer ", "")
 
             if(!token){
                 return res.status(401).json({message: "Token não forecido!"})
