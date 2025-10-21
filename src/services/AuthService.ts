@@ -28,6 +28,12 @@ export class AuthService{
             throw error
         }
 
+        if(user.role != parsedData.role){
+            const error:any = new Error(`Usuário não está cadastrado como ${user.role}`)
+            error.code = ErrorCode.FORBIDDEN
+            throw error
+        }
+
         //Caso a senha do usuário esteja errada
         const isMatch = await bcrypt.compare(parsedData.password, user.password)
         if(!isMatch){

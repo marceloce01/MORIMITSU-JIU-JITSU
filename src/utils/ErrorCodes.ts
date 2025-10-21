@@ -7,7 +7,8 @@ export enum ErrorCode {
     CONFLICT = "CONFLICT", //Dados duplicados
     UNAUTHORIZED = "UNAUTHORIZED", // Credenciais inválidas
     NOT_FOUND = "NOT_FOUND", //Recurso não encontrado
-    INTERNAL = "INTERNAL" //Erro interno no servidor
+    INTERNAL = "INTERNAL", //Erro interno no servidor
+    FORBIDDEN = "FORBIDDEN" //(PROIBIDO) Pedido recebido, mas recusado
 }
 
 //Função para saber o status HTTP através do ErrorCode
@@ -26,6 +27,9 @@ export function statusHTTP(code: string | undefined): number {
 
         case ErrorCode.NOT_FOUND:
             return 404
+
+        case ErrorCode.FORBIDDEN:
+            return 403
 
         default:
             return 500
