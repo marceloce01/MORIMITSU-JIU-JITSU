@@ -13,17 +13,18 @@ dotenv.config();
 
 const PORT = Number(process.env.PORT) || 3000
 
-app.get('/', (req, res) => {
-  res.send('Servidor rodando!');
-});
-
 app.use(cors(
     {
-      origin:['*'],
+      origin:'*',
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       allowedHeaders: ['Content-Type', 'Authorization']
     }
 ));
+
+
+app.get('/', (req, res) => {
+  res.send('Servidor rodando!');
+});
 
 app.use(express.json())
 
