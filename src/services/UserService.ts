@@ -12,6 +12,13 @@ export class UserService{
     //Cadastro de Usuários Instrutores
     static registerUserTeacher = async(data: RegisterInput) =>{
 
+        //Caso falte algum dado
+        if(!data.email || !data.password){
+            const error:any = new Error("Email e Senha obrigatórios!")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
+        }
+
         const parsedData: RegisterInput = registerSchema.parse(data)
 
         //Caso o usuário já esteja cadastrado
@@ -25,7 +32,7 @@ export class UserService{
         //Sendo feita essa verificação, usuário instrutor criado:
 
         const hashedPassword = await bcrypt.hash(parsedData.password, 10)
-        
+
         const user = await UserRepository.create({username: parsedData.username, email: parsedData.email, password: hashedPassword})
     
         return user
@@ -33,6 +40,13 @@ export class UserService{
 
     //Cadastro de Usuários Administradores
     static registerUserAdmin = async(data: RegisterInput) =>{
+
+        //Caso falte algum dado
+        if(!data.email || !data.password){
+            const error:any = new Error("Email e Senha obrigatórios!")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
+        }
 
         const parsedData: RegisterInput = registerSchema.parse(data)
 
@@ -53,7 +67,7 @@ export class UserService{
         return user
     }
 
-    static getUserById = async(userId: number) =>{
+    static getUserById = async(userId: string) =>{
 
         const user = await UserRepository.findById(userId)
         if(!user){

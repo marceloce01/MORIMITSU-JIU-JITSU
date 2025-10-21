@@ -12,9 +12,9 @@ export class UserRepository{
     } 
 
     //Consulta um usuário pelo ID
-    static findById = async(id: number) =>{
+    static findById = async(id: string) =>{
        return prisma.user.findUnique({
-         where: {id:id},
+         where: {id: id},
          select: {
             id: true,
             username: true,

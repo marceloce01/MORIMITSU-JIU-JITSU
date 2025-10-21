@@ -10,7 +10,7 @@ export class UserController{
     static registerUserTeacher = async(req: Request, res: Response) => {
         try{
             const data: RegisterInput = req.body
-            const user = await UserService.registerUserAdmin(data)
+            const user = await UserService.registerUserTeacher(data)
             res.status(201).json(user)
 
         }catch(error:any){ 
@@ -43,7 +43,7 @@ export class UserController{
 
     static getUserById = async(req: Request, res: Response) =>{
         try{
-        const userId = Number(req.params.id)
+        const userId = req.params.id
         const user = await UserService.getUserById(userId)
         return res.status(200).json(user)
 

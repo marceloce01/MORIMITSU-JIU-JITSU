@@ -25,7 +25,7 @@ export function statusHTTP(code: string | undefined): number {
             return 401
 
         case ErrorCode.NOT_FOUND:
-            return 400
+            return 404
 
         default:
             return 500
