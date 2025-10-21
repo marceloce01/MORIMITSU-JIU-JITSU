@@ -13,34 +13,11 @@ export class UserRepository{
 
     //Consulta um usuário pelo ID
     static findById = async(id: string) =>{
-       return prisma.user.findUnique({
-         where: {id: id},
-         select: {
-            id: true,
-            username: true,
-            email: true,
-            password: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true
-         }
-      
-      })
+       return prisma.user.findUnique({where: {id}})
     }
 
     //Consulta um usuário pelo Email
     static findByEmail = async(email: string) =>{
-       return prisma.user.findUnique({
-         where: {email:email},
-         select: {
-            id: true,
-            username: true,
-            email: true,
-            password: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true
-         }
-      })
+       return prisma.user.findUnique({where: {email}})
     }
 }
