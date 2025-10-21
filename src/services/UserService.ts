@@ -1,9 +1,9 @@
 //Serviços de Usuário: local onde basicamente se trata de regras de negócios dos usuários, ou melhor, verificações de cadastro do usuário, como falta de campos obrigatórios, verificar a existência de um usuário, etc
 
 import bcrypt, { compare } from "bcryptjs";
-import { registerSchema, RegisterInput } from "../schemas/RegisterSchema";
-import { UserRepository } from "../repositories/UserRepository";
-import { ErrorCode } from "../utils/ErrorCodes";
+import { registerSchema, RegisterInput } from "../schemas/RegisterSchema.js";
+import { UserRepository } from "../repositories/UserRepository.js";
+import { ErrorCode } from "../utils/ErrorCodes.js";
 import { Role} from "@prisma/client";
 
 //Classe de serviços de Users

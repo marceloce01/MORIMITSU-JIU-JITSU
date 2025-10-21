@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { LoginInput } from "../schemas/LoginSchema";
-import { AuthService } from "../services/AuthService";
+import { LoginInput } from "../schemas/LoginSchema.js";
+import { AuthService } from "../services/AuthService.js";
 import { ZodError } from "zod";
-import { ErrorCode, statusHTTP } from "../utils/ErrorCodes"
+import { ErrorCode, statusHTTP } from "../utils/ErrorCodes.js"
 
 export class AuthController{
 

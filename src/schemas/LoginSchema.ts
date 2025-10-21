@@ -1,5 +1,5 @@
 import {z} from "zod"
-import { allowedDomain } from "./RegisterSchema"
+import { allowedDomain } from "./RegisterSchema.js"
 
 export const loginSchema = z.object({
     email: z.string().email("Email inválido!").refine((val) => {

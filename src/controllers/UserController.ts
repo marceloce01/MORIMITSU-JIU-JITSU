@@ -1,8 +1,8 @@
 //Controle de Usuário:
 import { Request, Response } from "express"
-import { RegisterInput } from "../schemas/RegisterSchema"
-import { UserService } from "../services/UserService"
-import { ErrorCode, statusHTTP } from "../utils/ErrorCodes"
+import { RegisterInput } from "../schemas/RegisterSchema.js"
+import { UserService } from "../services/UserService.js"
+import { ErrorCode, statusHTTP } from "../utils/ErrorCodes.js"
 import { ZodError } from "zod"
 
 export class UserController{
