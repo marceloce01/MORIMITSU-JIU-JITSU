@@ -17,6 +17,6 @@
   },
   
   /* Arquivos a incluir e excluir */
-  "include": ["c:/Users/marce/Desktop/MORIMITSU JIU-JITSU/tsconfig.json"],                    /* Inclui todos os arquivos dentro da pasta 'src' */
+  "include": ["src"],                    /* Inclui todos os arquivos dentro da pasta 'src' */
   "exclude": ["node_modules", "dist"]
 }
