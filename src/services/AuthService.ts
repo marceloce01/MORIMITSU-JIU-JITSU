@@ -1,6 +1,6 @@
-import { UserRepository } from "../repositories/UserRepository"
-import { loginSchema, LoginInput } from "../schemas/LoginSchema";
-import { ErrorCode } from "../utils/ErrorCodes"
+import { UserRepository } from "../repositories/UserRepository.js"
+import { loginSchema, LoginInput } from "../schemas/LoginSchema.js";
+import { ErrorCode } from "../utils/ErrorCodes.js"
 import bcrypt from "bcryptjs"
 import jwt from 'jsonwebtoken';
 
