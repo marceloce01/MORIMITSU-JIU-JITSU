@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    /* Módulos e Saída */
+    "target": "ES2022",                      /* Define a versão JS de saída (compatível com Node moderno) */
+    "module": "NodeNext",                     /* Usa o sistema de módulos moderno do Node.js (ES Modules) */
+    "moduleResolution": "NodeNext",           /* Define como o TypeScript resolve os caminhos dos módulos (melhor para ESM) */
+    "outDir": "dist",                       /* CRUCIAL: Onde colocar os arquivos .js compilados */
+    "rootDir": "src",                       /* Onde encontrar o código-fonte .ts */
+    "esModuleInterop": true,                  /* Permite importações mistas (padrão) */
+    "resolveJsonModule": true,                /* Permite importar arquivos .json (necessário para o seu Swagger) */
+
+    /* Configurações de Código */
+    "strict": true,                           /* Habilita todas as verificações rigorosas (boa prática) */
+    "skipLibCheck": true,                     /* Ignora a verificação de tipo em arquivos de bibliotecas */
+    "forceConsistentCasingInFileNames": true, /* Ajuda a evitar erros entre sistemas operacionais (Windows vs. Linux) */
+    "isolatedModules": true                   /* Garante que os arquivos são tratados como módulos */
+  },
+  
+  /* Arquivos a incluir e excluir */
+  "include": ["c:/Users/marce/Desktop/MORIMITSU JIU-JITSU/tsconfig.json"],                    /* Inclui todos os arquivos dentro da pasta 'src' */
+  "exclude": ["node_modules", "dist"]
+}
