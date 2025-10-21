@@ -11,16 +11,13 @@ dotenv.config();
 const PORT = process.env.PORT || 3000
 const HOST = process.env.HOST || 'localhost'
 
-app.listen(PORT, () => console.log(`Servidor rodando em http://${HOST}:${PORT}`))
-
-
 app.get('/', (req, res) => {
   res.send('Servidor rodando!');
 });
 
 app.use(cors(
     {
-      origin:['http:/localhost:8000']
+      origin:['http://localhost:3000']
     }
 ));
 
@@ -28,3 +25,5 @@ app.use(express.json())
 
 app.use("/user", userRouter)
 app.use("/auth", authRouter)
+
+app.listen(PORT, () => console.log(`Servidor rodando em http://${HOST}:${PORT}`))
