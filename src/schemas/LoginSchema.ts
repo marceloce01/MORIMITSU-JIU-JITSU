@@ -11,7 +11,7 @@ export const loginSchema = z.object({
         message: "Email inválido!"
     }),
     password: z.string(),
-    role: Role
+    role: z.enum(["ADMIN", "TEACHER"])
 
 })
 

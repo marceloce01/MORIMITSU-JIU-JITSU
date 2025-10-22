@@ -28,6 +28,7 @@ export class AuthService{
             throw error
         }
 
+        //Caso o usuário tente logar no campo errado
         if(user.role != parsedData.role){
             const error:any = new Error(`Usuário não está cadastrado como ${user.role}`)
             error.code = ErrorCode.FORBIDDEN
