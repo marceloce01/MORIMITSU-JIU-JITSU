@@ -16,6 +16,17 @@ model User {
   role      Role     @default(TEACHER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  resetPassword ResetPasswordToken[]
+}
+
+model ResetPasswordToken {
+  id        String @id @default(cuid())
+  token     String @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  userId    String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
 }
 
 model Student {

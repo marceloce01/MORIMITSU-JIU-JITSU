@@ -11,6 +11,10 @@ export class UserRepository{
        return prisma.user.create({data: {username: data.username, email: data.email, password: data.password, role: data.role}})
     } 
 
+    static update = async(userId: string, data: {username?: string, email?: string, password?: string, role?: Role}) => {
+      return prisma.user.update({where: {id: userId}, data})
+    }
+
     //Consulta um usuário pelo ID
     static findById = async(id: string) =>{
        return prisma.user.findUnique({where: {id}})

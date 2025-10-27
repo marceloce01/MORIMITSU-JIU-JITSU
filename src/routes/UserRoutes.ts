@@ -3,10 +3,7 @@ import { UserController } from "../controllers/UserController.js";
 
 export const userRouter = Router()
 
-//Rota que cadastra usuário como instrutor
-userRouter.post("/registerUserTeacher", UserController.registerUserTeacher)
-
-//Rota que cadastra usuário como administrador
-userRouter.post("/registerUserAdmin", UserController.registerUserAdmin)
+//Rota que cadastra usuário 
+userRouter.post("/register", UserController.registerUser)
 
 userRouter.get("/:id", UserController.getUserById)

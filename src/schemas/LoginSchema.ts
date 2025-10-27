@@ -1,14 +1,13 @@
 import {z} from "zod"
 import { allowedDomain } from "./RegisterSchema.js"
-import { Role } from "@prisma/client"
 
 export const loginSchema = z.object({
-    email: z.string().email("Email inválido!").refine((val) => {
+    email: z.string().email().refine((val) => {
         const domain = val.split("@")[1]
         return allowedDomain.includes(domain)
     
     }, {
-        message: "Email inválido!"
+        message: "Erro ao validar dados!"
     }),
     password: z.string(),
     role: z.enum(["ADMIN", "TEACHER"])

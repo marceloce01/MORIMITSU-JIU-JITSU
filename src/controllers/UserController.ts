@@ -7,33 +7,15 @@ import { ZodError } from "zod"
 
 export class UserController{
 
-    static registerUserTeacher = async(req: Request, res: Response) => {
+    static registerUser = async(req: Request, res: Response) => {
         try{
             const data: RegisterInput = req.body
-            const user = await UserService.registerUserTeacher(data)
+            const user = await UserService.registerUser(data)
             res.status(201).json(user)
 
         }catch(error:any){ 
              if(error instanceof ZodError){
-                const messages = error.issues.map(e => e.message)
-                return res.status(400).json({message: messages})
-            }
-            const status = statusHTTP(error.code)
-            res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
-        
-        }
-    }
-
-    static registerUserAdmin = async(req: Request, res: Response) => {
-        try{
-            const data: RegisterInput = req.body
-            const user = await UserService.registerUserAdmin(data)
-            res.status(201).json(user)
-
-        }catch(error:any){ 
-            if(error instanceof ZodError){
-                const messages = error.issues.map(e => e.message)
-                return res.status(400).json({message: messages})
+                return res.status(422).json({message: "Dados Inválidos!"})
             }
             const status = statusHTTP(error.code)
             res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})

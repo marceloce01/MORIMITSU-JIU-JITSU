@@ -1,8 +1,7 @@
 import express from 'express'
 import dotenv from "dotenv"
 import cors from "cors"
-import swaggerUi from "swagger-ui-express"
-import { swaggerSpec } from './docs/swaggerConfig.js'
+import { setupSwagger } from './docs/swaggerConfig.js';
 import { userRouter } from './routes/UserRoutes.js';
 import { authRouter } from './routes/AuthRoutes.js';
 
@@ -28,8 +27,7 @@ app.get('/', (req, res) => {
 
 app.use(express.json())
 
-app.use("/apiDocs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-
+setupSwagger(app)
 app.use("/user", userRouter)
 app.use("/auth", authRouter)
 

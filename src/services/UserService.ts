@@ -4,42 +4,12 @@ import bcrypt, { compare } from "bcryptjs";
 import { registerSchema, RegisterInput } from "../schemas/RegisterSchema.js";
 import { UserRepository } from "../repositories/UserRepository.js";
 import { ErrorCode } from "../utils/ErrorCodes.js";
-import { Role} from "@prisma/client";
 
 //Classe de serviços de Users
 export class UserService{
 
-    //Cadastro de Usuários Instrutores
-    static registerUserTeacher = async(data: RegisterInput) =>{
-
-        //Caso falte algum dado
-        if(!data.email || !data.password){
-            const error:any = new Error("Email e Senha obrigatórios!")
-            error.code = ErrorCode.BAD_REQUEST
-            throw error
-        }
-
-        const parsedData: RegisterInput = registerSchema.parse(data)
-
-        //Caso o usuário já esteja cadastrado
-        const existingUser = await UserRepository.findByEmail(parsedData.email)
-        if(existingUser){
-            const error:any = new Error("Usuário já cadastrado!")
-            error.code = ErrorCode.CONFLICT
-            throw error
-        }
-
-        //Sendo feita essa verificação, usuário instrutor criado:
-
-        const hashedPassword = await bcrypt.hash(parsedData.password, 10)
-
-        const user = await UserRepository.create({username: parsedData.username, email: parsedData.email, password: hashedPassword})
-    
-        return user
-    }
-
     //Cadastro de Usuários Administradores
-    static registerUserAdmin = async(data: RegisterInput) =>{
+    static registerUser = async(data: RegisterInput) =>{
 
         //Caso falte algum dado
         if(!data.email || !data.password){
@@ -62,7 +32,7 @@ export class UserService{
 
         const hashedPassword = await bcrypt.hash(parsedData.password, 10)
 
-        const user = await UserRepository.create({username: parsedData.username, email: parsedData.email, password: hashedPassword, role: Role.ADMIN})
+        const user = await UserRepository.create({username: parsedData.username, email: parsedData.email, password: hashedPassword, role: parsedData.role})
     
         return user
     }
