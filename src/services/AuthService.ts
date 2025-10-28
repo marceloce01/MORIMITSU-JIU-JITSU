@@ -1,10 +1,11 @@
 import { UserRepository } from "../repositories/UserRepository.js"
 import z from "zod";
+import { randomInt } from "crypto";
 import { allowedDomain } from "../schemas/Email.js";
 import { ErrorCode } from "../utils/ErrorCodes.js"
 import bcrypt from "bcryptjs"
 import jwt from 'jsonwebtoken';
-import { ResetPasswordTokenRepository } from "../repositories/ResetPasswordTokenRepository.js";
+import { ResetPasswordCodeRepository } from "../repositories/ResetPassCodeRepository.js";
 import { sendMail } from "../utils/mailer.js";
 import { Role } from "@prisma/client";
 
@@ -86,28 +87,51 @@ export class AuthService{
             throw error
         }
 
-        const resetToken = crypto.randomUUID()
+        const resetCode = randomInt(100000, 999999).toString()
         const expiresAt = new Date(Date.now() + 1000 * 60 * 15)
 
-        await ResetPasswordTokenRepository.create({token: resetToken, userId: user.id, expiresAt})
-
-        const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000"
-        const resetLink = `http://localhost:3000/auth/reset-password/${resetToken}`
+        await ResetPasswordCodeRepository.create({code: resetCode, userId: user.id, expiresAt})
 
         await sendMail(
             user.email,
             "Redefinição de senha",
             `
             <h2> Olá, ${user.username} </h2>
-            <p> Você solicitou redefinição de senha. Clique no link abaixo para redefinir: </p>
-            <a href="${resetLink}"> Redefinir minha senha </a>
-            <p> Esse link expira em 15 minutos. </p>
+            <p> Você solicitou redefinição de senha. Código de Redefinição
+            : </p>
+            <h1> ${resetCode} </h1>
+            <p> Esse código expira em 15 minutos. </p>
             `
         )
     }
 
+    //Função que verifica o código
+    static verifyCode = async(code: string)=>{
+        if(!code){
+            const error:any = new Error("Código obrigatório!")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
+        }
+
+        const codeSchema = z.object({
+                code: z.string().min(6)
+        })
+
+        codeSchema.parse({code})
+
+        const resetCode = await ResetPasswordCodeRepository.findByCode(code)
+        if(!resetCode || resetCode.expiresAt <= new Date()){
+            const error:any = new Error("Código Inválido ou Expirado!")
+            error.code = ErrorCode.UNAUTHORIZED
+            throw error
+        }
+
+        return {userId: resetCode.userId, codeId: resetCode.id}
+
+    }
+
     //Essa é a função que vai redefinir a senha
-    static resetPassword = async(token: string, newPassword: string)=>{
+    static resetPassword = async(userId: string, codeId: string, newPassword: string)=>{
 
         //Caso falte algum dado 
         if(!newPassword){
@@ -122,27 +146,16 @@ export class AuthService{
 
         passwordSchema.parse({newPassword})
 
-        //Vai verificar se o token fornecido existe ou já expirou
-        const resetToken = await ResetPasswordTokenRepository.findByToken(token)
-        if(!resetToken || resetToken.expiresAt <= new Date()){
-            const error:any = new Error("Token Inválido ou Expirado!")
-            error.code = ErrorCode.UNAUTHORIZED
-            throw error
-        }
-
-        //Acredito que desnecessário
-        const user = await UserRepository.findById(resetToken.userId)
+        const user = await UserRepository.findById(userId)
         if(!user){
             const error:any = new Error("Usuário não encontrado!")
             error.code = ErrorCode.NOT_FOUND
             throw error
         }
-
-        //Cria o hash da nova senha, redefine a senha e deleta o token de recuperação por segurança
+        
         const hashedPassword = await bcrypt.hash(newPassword, 10)
         await UserRepository.update(user.id, {password: hashedPassword})
-        await ResetPasswordTokenRepository.delete(resetToken.id)
-
+        await ResetPasswordCodeRepository.delete(codeId)
     }
 
     //Função para enviar e-mail ao ADMIN para cadastro

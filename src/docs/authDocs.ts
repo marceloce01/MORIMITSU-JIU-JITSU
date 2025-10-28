@@ -157,7 +157,7 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Se o e-mail estiver cadastrado, você receberá um link de redefinição."                    
+ *                  example: "Se o e-mail estiver cadastrado, você receberá um código de redefinição."                    
  *      
  *       400:
  *         description: Dados faltando
@@ -205,19 +205,10 @@
  *                  example: "UNPROCESSABLE_ENTITY"
  * 
  * @openapi
- * /auth/reset-password/{token}:
+ * /auth/verify-token:
  *   post:
- *     summary: Redefinir senha do usuário
+ *     summary: Verifica o token e retorna os dados necessários para a redefinição de senha
  *     tags: [Auth]
- * 
- *     parameters:
- *     - in: path
- *       name: token
- *       required: true
- *       schema:
- *         type: string
- *         description: Token de redefinição de senha
- * 
  *     requestBody:
  *       required: true
  *       content:
@@ -225,8 +216,105 @@
  *           schema:
  *             type: object
  *             required:
+ *               - code             
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "890465"
+ * 
+ *     responses:
+ *       200:
+ *         description: Código válido!
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: object
+ *                  properties:
+ *                      userId:
+ *                        type: string
+ *                        example: "cmh7xbi0w0000v2z8io457f2m"
+ * 
+ *                      codeId:
+ *                        type: string
+ *                        example: "mhb2m9nj0001v2istq4iooum"
+ *                  
+ *                code: 
+ *                  type: string
+ *                  example: "OK"
+ * 
+ *       400:
+ *         description: Dados faltando
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Código obrigatório" 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "BAD_REQUEST"
+ * 
+ *       401:
+ *         description: Código inválido ou expirado
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Código Inválido ou Expirado!" 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "UNAUTHORIZED"
+ * 
+ *       422:
+ *         description: Código incompleto (ZOD)
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Digite o código completo!" 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "UNPROCESSABLE_ENTITY"
+ * 
+ * @openapi
+ * /auth/reset-password:
+ *   post:
+ *     summary: Redefinir senha do usuário
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - codeId
  *               - newPassword             
  *             properties:
+ *               
+ *               userId:
+ *                 type: string             
+ *                 example: "cmh7xbi0w0000v2z8io457f2m"
+ * 
+ *               codeId:
+ *                 type: string             
+ *                 example: "cmh7xbi0w0000v348io457f2m"
+ * 
  *               newPassword:
  *                 type: string             
  *                 example: "marcelo123"
