@@ -86,12 +86,12 @@ export class AuthService{
             throw error
         }
 
-        
-
         const resetToken = crypto.randomUUID()
         const expiresAt = new Date(Date.now() + 1000 * 60 * 15)
 
         await ResetPasswordTokenRepository.create({token: resetToken, userId: user.id, expiresAt})
+
+        const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000"
         const resetLink = `http://localhost:3000/auth/reset-password/${resetToken}`
 
         await sendMail(
@@ -110,11 +110,17 @@ export class AuthService{
     static resetPassword = async(token: string, newPassword: string)=>{
 
         //Caso falte algum dado 
-        if(!token || !newPassword){
-            const error:any = new Error("Token e Nova Senha obrigatórios!")
+        if(!newPassword){
+            const error:any = new Error("Nova Senha obrigatória!")
             error.code = ErrorCode.BAD_REQUEST
             throw error
         }
+
+        const passwordSchema = z.object({
+                newPassword: z.string().min(6)
+            })
+
+        passwordSchema.parse({newPassword})
 
         //Vai verificar se o token fornecido existe ou já expirou
         const resetToken = await ResetPasswordTokenRepository.findByToken(token)
@@ -137,6 +143,41 @@ export class AuthService{
         await UserRepository.update(user.id, {password: hashedPassword})
         await ResetPasswordTokenRepository.delete(resetToken.id)
 
-        return {message: "Senha redefinida com sucesso!"}
+    }
+
+    //Função para enviar e-mail ao ADMIN para cadastro
+    static requestRegistration = async(email: string)=>{
+
+        //Se o usuário não digitar o email
+        if(!email){
+            const error:any = new Error("Email obrigatório!")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
+        }
+
+        const emailSchema = z.object({
+                email: z.string().email()
+        })
+
+        emailSchema.parse({email})
+
+        const user = await UserRepository.findByEmail(email)
+        if(user){
+            const error:any = new Error("Email já cadastrado!")
+            error.code = ErrorCode.CONFLICT
+            throw error
+        }
+
+        const adminEmail = process.env.ADMIN_EMAIL as string
+
+        await sendMail(
+            adminEmail,
+            "Solicitação de Cadastro",
+            `
+            <h2> Olá, Saulo Bezerra </h2>
+            <p> Um usuário solicitou uma criação de conta com esse e-mail: </p>
+            <p> ${email} </p>
+            `
+        )  
     }
 }

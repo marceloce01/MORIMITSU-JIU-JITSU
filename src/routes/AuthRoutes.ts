@@ -12,5 +12,7 @@ authRouter.get("/profile", AuthMiddleware.authenticate, async (req: Authenticate
 })
 
 authRouter.post("/request-reset", AuthController.requestPasswordReset)
+
 authRouter.post("/reset-password/:token", AuthController.resetPassword)
 
+authRouter.post("/request-registration", AuthController.requestRegistration)

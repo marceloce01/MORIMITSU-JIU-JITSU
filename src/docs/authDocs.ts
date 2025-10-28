@@ -202,5 +202,153 @@
  * 
  *                code:
  *                  type: string              
- *                  example: "UNPROCESSABLE_ENTITY"  
+ *                  example: "UNPROCESSABLE_ENTITY"
+ * 
+ * @openapi
+ * /auth/reset-password/{token}:
+ *   post:
+ *     summary: Redefinir senha do usuário
+ *     tags: [Auth]
+ * 
+ *     parameters:
+ *     - in: path
+ *       name: token
+ *       required: true
+ *       schema:
+ *         type: string
+ *         description: Token de redefinição de senha
+ * 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newPassword             
+ *             properties:
+ *               newPassword:
+ *                 type: string             
+ *                 example: "marcelo123"
+ * 
+ *     responses:
+ *       200:
+ *         description: Senha redefinida
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Senha redefinida com sucesso!"
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "OK"                      
+ *      
+ *       400:
+ *         description: Dados faltando
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Nova Senha obrigatória!" 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "BAD_REQUEST"
+ * 
+ *       422:
+ *         description: Formato de dados inválidos (ZOD)
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Senha muito curta! (Minímo: 6 caracteres)" 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "UNPROCESSABLE_ENTITY"
+ * 
+ * @openapi
+ * /auth/request-registration:
+ *   post:
+ *     summary: Enviar ao ADMIN o e-mail de solicitação de cadastro
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email             
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "usuario@gmail.com"
+ * 
+ *     responses:
+ *       200:
+ *         description: E-mail enviado!
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Seu e-mail foi solicitado ao ADMIN!"                    
+ *      
+ *       400:
+ *         description: Dados faltando
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Email obrigatório!" 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "BAD_REQUEST"
+ * 
+ *       409:
+ *         description: E-mail já cadastrado
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Email já cadastrado!" 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "CONFLICT"   
+ *       422:
+ *         description: Formato de dados inválidos (ZOD)
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Formato de e-mail inválido!" 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "UNPROCESSABLE_ENTITY"
  */
