@@ -15,6 +15,6 @@ authRouter.post("/request-reset", AuthController.requestPasswordReset)
 
 authRouter.post("/verify-code", AuthController.verifyCode)
 
-authRouter.post("/reset-password/:token", AuthController.resetPassword)
+authRouter.post("/reset-password", AuthController.resetPassword)
 
 authRouter.post("/request-registration", AuthController.requestRegistration)
