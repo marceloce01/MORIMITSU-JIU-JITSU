@@ -1,13 +1,11 @@
 import {z} from "zod"
-import { allowedDomain } from "./RegisterSchema.js"
+import { allowedDomain } from "./Email.js"
 
 export const loginSchema = z.object({
     email: z.string().email().refine((val) => {
         const domain = val.split("@")[1]
         return allowedDomain.includes(domain)
     
-    }, {
-        message: "Erro ao validar dados!"
     }),
     password: z.string(),
     role: z.enum(["ADMIN", "TEACHER"])

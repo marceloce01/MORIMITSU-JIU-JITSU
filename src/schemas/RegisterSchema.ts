@@ -1,12 +1,12 @@
 import {z} from "zod"
+import { allowedDomain } from "./Email.js"
 
-export const allowedDomain = ["gmail.com", "ifce.edu.br", "hotmail.com", "yahoo.com", "outlook.com"]
 
 export const registerSchema = z.object({
     username: z.string().min(3, "O nome de usuário precisa conter no mínimo 3 caracteres").max(20).refine((val) => /^[a-zA-Z0-9_ ]+$/.test(val), {
       message: "O nome de usuário só pode conter letras, números e underline",
     }),
-    email: z.string().email("Email inválido!").refine((val) => {
+    email: z.string().email().refine((val) => {
         const domain = val.split("@")[1]
         return allowedDomain.includes(domain)
     

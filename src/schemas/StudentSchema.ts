@@ -1,5 +1,5 @@
 import z from "zod"
-import { allowedDomain } from "./RegisterSchema.js"
+import { allowedDomain } from "./Email.js"
 
 export const studentSchema = z.object({
     name: z.string(),

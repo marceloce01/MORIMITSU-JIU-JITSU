@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { LoginInput } from "../schemas/LoginSchema.js";
 import z from "zod";
 import { AuthService } from "../services/AuthService.js";
 import { ZodError } from "zod";
@@ -10,48 +9,63 @@ export class AuthController{
     //Função de Login do Usuário
     static loginUser = async(req: Request, res: Response) =>{
         try{
-            const data: LoginInput = req.body
-            const {token, user} = await AuthService.loginUser(data)
+            
+            const {email, password, role} = req.body
+            
+            const {token, user} = await AuthService.loginUser(email, password, role)
             return res.status(200).json({token, user})
 
         }catch(error:any){
             if(error instanceof ZodError){
-                return res.status(422).json({message: "Email ou Senha inválidos!"})
+                return res.status(422).json({message: "Formato de e-mail inválido!", code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
-            res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
         }
         
     }
 
-    //Função que enviará um email ao usuário
+    //Função que enviará um email ao usuário para redefinir senha
     static requestPasswordReset = async(req: Request, res: Response) =>{
         try{
-             const {email} = req.body
+            const emailSchema = z.object({
+                email: z.string().email()
+            })
 
+            const {email} = emailSchema.parse(req.body)
+    
             await AuthService.requestPasswordReset(email)
-            return res.status(200).json({message: "Email de redefinição enviado!"})
+            return res.status(200).json({message: "Se o e-mail estiver cadastrado, você receberá um link de redefinição."})
 
         }catch(error: any){
+            if(error instanceof ZodError){
+                return res.status(422).json({message: "Formato de e-mail inválido!", code: ErrorCode.UNPROCESSABLE_ENTITY})
+            }
             const status = statusHTTP(error.code)
-            res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
         }
     }
 
+    //Função que redefine a senha do usuário
     static resetPassword = async(req: Request, res: Response) =>{
         try{
             const token = req.params.token
 
             const passwordSchema = z.object({
-                newPassword: z.string().min(6, "Senha muita curta!")
+                newPassword: z.string().min(6)
             })
 
-            const parsedbody = passwordSchema.parse(req.body)
-            return res.status(200).json({message: "Senha redefinida!"})
+            const {newPassword} = passwordSchema.parse(req.body)
+
+            const result = await AuthService.resetPassword(token, newPassword)
+            return res.status(200).json(result)
 
         }catch(error: any){
+            if(error instanceof ZodError){
+                return res.status(422).json({message: "Senha muito curta! (Minímo: 6 caracteres)", code: ErrorCode.UNPROCESSABLE_ENTITY})
+            }
             const status = statusHTTP(error.code)
-            res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
         }
     }
 }

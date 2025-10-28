@@ -1,53 +1,64 @@
 import { UserRepository } from "../repositories/UserRepository.js"
-import { loginSchema, LoginInput } from "../schemas/LoginSchema.js";
-import { ResetPassInput, resetPassSchema } from "../schemas/ResetPassSchema.js";
+import z from "zod";
+import { allowedDomain } from "../schemas/Email.js";
 import { ErrorCode } from "../utils/ErrorCodes.js"
 import bcrypt from "bcryptjs"
 import jwt from 'jsonwebtoken';
 import { ResetPasswordTokenRepository } from "../repositories/ResetPasswordTokenRepository.js";
 import { sendMail } from "../utils/mailer.js";
-import { id } from "zod/locales";
+import { Role } from "@prisma/client";
 
 const JWT_SECRET = process.env.JWT_SECRET
 
 export class AuthService{
 
     //Função de login do usuário
-    static loginUser = async(data: LoginInput) =>{
+    static loginUser = async(email: string, password: string, role: Role) =>{
 
         //Caso falte dados obrigatórios
-        if(!data.email || !data.password){
+        if(!email || !password){
             const error:any = new Error("Email e Senha obrigatórios!")
             error.code = ErrorCode.BAD_REQUEST
             throw error
         }
 
-        const parsedData = loginSchema.parse(data)
-       
-        //Caso o usuário não esteja cadastrado
-        const user = await UserRepository.findByEmail(parsedData.email)
-        if(!user){
-            const error:any = new Error("Usuário não cadastrado!")
-            error.code = ErrorCode.NOT_FOUND
-            throw error
-        }
+        const loginSchema = z.object({
+            email: z.string().email().refine((val) => {
+                const domain = val.split("@")[1]
+                return allowedDomain.includes(domain)
+            
+            }),
+            password: z.string(),
+            role: z.enum(["ADMIN", "TEACHER"])
+                    
+        })
 
-        //Caso o usuário tente logar no campo errado
-        if(user.role != parsedData.role){
-            const error:any = new Error(`Usuário não está cadastrado como ${parsedData.role}!`)
-            error.code = ErrorCode.FORBIDDEN
+        loginSchema.parse({email, password, role})
+
+        //Caso o usuário não esteja cadastrado
+        const user = await UserRepository.findByEmail(email)
+        if(!user){
+            const error:any = new Error("Email ou Senha incorretos!")
+            error.code = ErrorCode.UNAUTHORIZED
             throw error
         }
 
         //Caso a senha do usuário esteja errada
-        const isMatch = await bcrypt.compare(parsedData.password, user.password)
+        const isMatch = await bcrypt.compare(password, user.password)
         if(!isMatch){
             const error:any = new Error("Email ou Senha incorretos!")
             error.code = ErrorCode.UNAUTHORIZED
             throw error
         }
 
-        const token = jwt.sign({userId: user.id, username: user.username}, JWT_SECRET!, {expiresIn: "1h"})
+        //Caso o usuário tente logar no campo errado
+        if(user.role != role){
+            const error:any = new Error(`Usuário não está cadastrado como ${role}!`)
+            error.code = ErrorCode.FORBIDDEN
+            throw error
+        }
+
+        const token = jwt.sign({userId: user.id, username: user.username, role: user.role}, JWT_SECRET!, {expiresIn: "1h"})
         return {token, user:{id: user.id, name: user.username, email: user.email, role: user.role}}
     } 
 
@@ -80,12 +91,18 @@ export class AuthService{
     }
 
     //Essa é a função que vai redefinir a senha
-    static resetPassword = async(data: ResetPassInput)=>{
+    static resetPassword = async(token: string, newPassword: string)=>{
 
-        const parsedData = resetPassSchema.parse(data)
+        //Caso falte algum dado 
+        if(!token || !newPassword){
+            const error:any = new Error("Token e Nova Senha obrigatórios!")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
+        }
 
-        const resetToken = await ResetPasswordTokenRepository.findByToken(parsedData.token)
-        if(!resetToken || resetToken.expiresAt < new Date()){
+        //Vai verificar se o token fornecido existe ou já expirou
+        const resetToken = await ResetPasswordTokenRepository.findByToken(token)
+        if(!resetToken || resetToken.expiresAt <= new Date()){
             const error:any = new Error("Token Inválido ou Expirado!")
             error.code = ErrorCode.UNAUTHORIZED
             throw error
@@ -99,7 +116,8 @@ export class AuthService{
             throw error
         }
 
-        const hashedPassword = await bcrypt.hash(parsedData.newPassword, 10)
+        //Cria o hash da nova senha, redefine a senha e deleta o token de recuperação por segurança
+        const hashedPassword = await bcrypt.hash(newPassword, 10)
         await UserRepository.update(user.id, {password: hashedPassword})
         await ResetPasswordTokenRepository.delete(resetToken.id)
 
