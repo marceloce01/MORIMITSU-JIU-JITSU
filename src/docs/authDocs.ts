@@ -183,7 +183,7 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Email incorretos" 
+ *                  example: "Email incorreto!" 
  * 
  *                code:
  *                  type: string              
