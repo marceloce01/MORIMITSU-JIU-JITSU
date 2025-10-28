@@ -205,7 +205,7 @@
  *                  example: "UNPROCESSABLE_ENTITY"
  * 
  * @openapi
- * /auth/verify-token:
+ * /auth/verify-code:
  *   post:
  *     summary: Verifica o token e retorna os dados necessários para a redefinição de senha
  *     tags: [Auth]
@@ -218,7 +218,7 @@
  *             required:
  *               - code             
  *             properties:
- *               email:
+ *               code:
  *                 type: string
  *                 example: "890465"
  * 
