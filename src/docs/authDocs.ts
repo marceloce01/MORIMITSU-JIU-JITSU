@@ -19,6 +19,7 @@
  *             required:
  *               - email
  *               - password
+ *               - role
  *             properties:
  *               email:
  *                 type: string
@@ -60,7 +61,11 @@
  * 
  *                      role:
  *                        type: string
- *                        example: "TEACHER"                   
+ *                        example: "TEACHER"    
+ *                code:
+ *                  type: string              
+ *                  example: "OK"
+ *                
  *      
  *       400:
  *         description: Dados faltando
@@ -86,7 +91,7 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Email ou Senha incorretos!" 
+ *                  example: "Email ou Senha incorreto!" 
  * 
  *                code:
  *                  type: string              
@@ -122,4 +127,80 @@
  *                  type: string              
  *                  example: "UNPROCESSABLE_ENTITY"    
  * 
+ * 
+ * @openapi
+ * /auth/request-reset:
+ *   post:
+ *     summary: Enviar ao usuário o e-mail de recuperação 
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email             
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "usuario@gmail.com"
+ * 
+ *     responses:
+ *       200:
+ *         description: E-mail enviado!
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Se o e-mail estiver cadastrado, você receberá um link de redefinição."                    
+ *      
+ *       400:
+ *         description: Dados faltando
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Email obrigatório!" 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "BAD_REQUEST"
+ * 
+ *       401:
+ *         description: E-mail incorreto ou não cadastrado no sistema
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Email incorretos" 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "UNAUTHORIZED"
+ * 
+ *       422:
+ *         description: Formato de dados inválidos (ZOD)
+ *         content:
+ *           application/json:
+ *            schema:
+ *              type: object
+ *              properties:                                                  
+ *                message:
+ *                  type: string              
+ *                  example: "Formato de e-mail inválido!" 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "UNPROCESSABLE_ENTITY"  
  */

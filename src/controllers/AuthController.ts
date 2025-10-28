@@ -13,7 +13,7 @@ export class AuthController{
             const {email, password, role} = req.body
             
             const {token, user} = await AuthService.loginUser(email, password, role)
-            return res.status(200).json({token, user})
+            return res.status(200).json({token, user, code:"OK"})
 
         }catch(error:any){
             if(error instanceof ZodError){
@@ -28,14 +28,11 @@ export class AuthController{
     //Função que enviará um email ao usuário para redefinir senha
     static requestPasswordReset = async(req: Request, res: Response) =>{
         try{
-            const emailSchema = z.object({
-                email: z.string().email()
-            })
 
-            const {email} = emailSchema.parse(req.body)
+            const {email} = req.body
     
             await AuthService.requestPasswordReset(email)
-            return res.status(200).json({message: "Se o e-mail estiver cadastrado, você receberá um link de redefinição."})
+            return res.status(200).json({message: "Se o e-mail estiver cadastrado, você receberá um link de redefinição.", code: "OK"})
 
         }catch(error: any){
             if(error instanceof ZodError){
@@ -58,7 +55,7 @@ export class AuthController{
             const {newPassword} = passwordSchema.parse(req.body)
 
             const result = await AuthService.resetPassword(token, newPassword)
-            return res.status(200).json(result)
+            return res.status(200).json({result, code: "OK"})
 
         }catch(error: any){
             if(error instanceof ZodError){

@@ -64,13 +64,29 @@ export class AuthService{
 
     //Função que vai enviar email ao usuário para redefinir senha
     static requestPasswordReset = async(email: string)=>{
+
+        //Se o usuário não digitar o email
+        if(!email){
+            const error:any = new Error("Email obrigatório!")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
+        }
+
+        const emailSchema = z.object({
+                email: z.string().email()
+        })
+
+        emailSchema.parse({email})
+
         const user = await UserRepository.findByEmail(email)
 
         if(!user){
-            const error:any = new Error("Usuário não encontrado!")
-            error.code = ErrorCode.NOT_FOUND
+            const error:any = new Error("E-mail incorreto!")
+            error.code = ErrorCode.UNAUTHORIZED
             throw error
         }
+
+        
 
         const resetToken = crypto.randomUUID()
         const expiresAt = new Date(Date.now() + 1000 * 60 * 15)

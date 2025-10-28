@@ -24,11 +24,11 @@ const swaggerOptions = {
         ],
     },
 
-    apis: ['./src/routes/*.ts', './src/controllers/*.ts', './src/docs/*.ts'],
+    apis: ['./src/routes/*.js', './src/controllers/*.js', './src/docs/*.js'],
 }
 
 export const swaggerSpec = swaggerJsDoc(swaggerOptions)
 
 export function setupSwagger(app: Express){
-    app.use("/apiDocs", swaggerUi.serve, swaggerUi.setup(swaggerSpec) )
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec) )
 }
