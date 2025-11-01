@@ -12,7 +12,7 @@ export class ResetPasswordCodeRepository{
        return prisma.resetPasswordCode.findUnique({where: {code}})
     }
 
-    static delete = async(id: string) =>{
-        return prisma.resetPasswordCode.delete({where : {id}})
+    static delete = async(userId: string) =>{
+        return prisma.resetPasswordCode.deleteMany({where : {userId}})
     }
 }

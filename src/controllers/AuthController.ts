@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import z from "zod";
 import { AuthService } from "../services/AuthService.js";
 import { ZodError } from "zod";
 import { ErrorCode, statusHTTP } from "../utils/ErrorCodes.js"
+import { AuthenticatedRequest } from "../utils/types.js";
 
 export class AuthController{
 
@@ -47,8 +47,8 @@ export class AuthController{
     static verifyCode = async(req: Request, res: Response) => {
         try{
             const {code} = req.body
-            const message = await AuthService.verifyCode(code)
-            return res.status(200).json({message, code: "OK"})
+            const {token, user} = await AuthService.verifyCode(code)
+            return res.status(200).json({token, user, code: "OK"})
 
         }catch(error: any){
             if(error instanceof ZodError){
@@ -61,12 +61,17 @@ export class AuthController{
     }
 
     //Função que redefine a senha do usuário
-    static resetPassword = async(req: Request, res: Response) =>{
+    static resetPassword = async(req: AuthenticatedRequest, res: Response) =>{
         try{
+            
+            const userId = req.user?.userId
+            const {newPassword} = req.body
 
-            const {userId, codeId, newPassword} = req.body
+            if(!userId){
+                return res.status(401).json({message: "Usuário não autenticado!"})
+            }
 
-            await AuthService.resetPassword(userId, codeId, newPassword)
+            await AuthService.resetPassword(userId, newPassword)
             return res.status(200).json({message: "Senha redefinida com sucesso!", code: "OK"})
 
         }catch(error: any){

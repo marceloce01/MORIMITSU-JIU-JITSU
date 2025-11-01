@@ -60,7 +60,7 @@ export class AuthService{
         }
 
         const token = jwt.sign({userId: user.id, username: user.username, role: user.role}, JWT_SECRET!, {expiresIn: "1h"})
-        return {token, user:{id: user.id, name: user.username, email: user.email, role: user.role}}
+        return {token, user:{id: user.id, username: user.username, email: user.email, role: user.role}}
     } 
 
     //Função que vai enviar email ao usuário para redefinir senha
@@ -126,12 +126,20 @@ export class AuthService{
             throw error
         }
 
-        return {userId: resetCode.userId, codeId: resetCode.id}
+        const user = await UserRepository.findById(resetCode.userId)
+        if(!user){
+            const error:any = new Error("Usuário não encontrado!")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        const token = jwt.sign({userId: user.id, username: user.username, role: user.role}, JWT_SECRET!, {expiresIn: "15m"})
+        return {token, user:{id: user.id, name: user.username, email: user.email, role: user.role}}
 
     }
 
     //Essa é a função que vai redefinir a senha
-    static resetPassword = async(userId: string, codeId: string, newPassword: string)=>{
+    static resetPassword = async(userId: string, newPassword: string)=>{
 
         //Caso falte algum dado 
         if(!newPassword){
@@ -155,7 +163,8 @@ export class AuthService{
         
         const hashedPassword = await bcrypt.hash(newPassword, 10)
         await UserRepository.update(user.id, {password: hashedPassword})
-        await ResetPasswordCodeRepository.delete(codeId)
+        await ResetPasswordCodeRepository.delete(userId)
+
     }
 
     //Função para enviar e-mail ao ADMIN para cadastro

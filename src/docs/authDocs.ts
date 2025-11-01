@@ -207,7 +207,7 @@
  * @openapi
  * /auth/verify-code:
  *   post:
- *     summary: Verifica o token e retorna os dados necessários para a redefinição de senha
+ *     summary: Verifica o código e retorna o token para a redefinição de senha
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -224,7 +224,7 @@
  * 
  *     responses:
  *       200:
- *         description: Código válido!
+ *         description: Código válido! Apenas o token é necessário, retorno os dados por segurança!
  *         content:
  *           application/json:
  *            schema:
@@ -233,17 +233,32 @@
  *                message:
  *                  type: object
  *                  properties:
- *                      userId:
+ *                      token:
  *                        type: string
- *                        example: "cmh7xbi0w0000v2z8io457f2m"
+ *                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWhhbTV5YmswMDAwdjJsMDVweTFwdG9oIiwidXNlcm5hbWUiOiJNYXJjZWxvIEJlemVycmEiLCJyb2xlIjoiVEVBQ0hFUiIsImlhdCI6MTc2MjAyNTI1OSwiZXhwIjoxNzYyMDI2MTU5fQ.Og9xZJyHuc_6CD8DVxmanc2hPvAsXSu-Ao2WJ9rP6sI"
  * 
- *                      codeId:
- *                        type: string
- *                        example: "mhb2m9nj0001v2istq4iooum"
+ *                      user:
+ *                        type: object
+ *                        properties:
+ *                          id:
+ *                            type: string
+ *                            example: "cmh7xbi0w0000v2z8io457f2m"
+ * 
+ *                          username:
+ *                            type: string
+ *                            example: "Lyrane Teixeira"
+ * 
+ *                          email:
+ *                            type: string
+ *                            example: "lyrane@gmail.com"
+ * 
+ *                          role:
+ *                            type: string
+ *                            example: "TEACHER"    
  *                  
- *                code: 
- *                  type: string
- *                  example: "OK"
+ *                      code: 
+ *                        type: string
+ *                        example: "OK"
  * 
  *       400:
  *         description: Dados faltando
@@ -290,11 +305,13 @@
  *                  type: string              
  *                  example: "UNPROCESSABLE_ENTITY"
  * 
- * @openapi
+ * @swagger
  * /auth/reset-password:
  *   post:
  *     summary: Redefinir senha do usuário
  *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:

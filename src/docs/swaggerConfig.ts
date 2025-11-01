@@ -22,6 +22,22 @@ const swaggerOptions = {
                 description: 'Servidor Online',  
             },
         ],
+
+        components: {
+          securitySchemes: {
+            bearerAuth: {
+              type: "http",
+              scheme: "bearer",
+              bearerFormat: "JWT",
+              description: "Insira o token JWT"
+            },
+          },
+        },       
+        security: [
+            {
+                bearerAuth: []
+            }
+        ],
     },
 
     apis: process.env.NODE_ENV === "production"

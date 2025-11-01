@@ -1,8 +1,8 @@
 import { Request } from "express";
 
 interface TokenPayLoad{
-    id: string
-    email: string
+    userId: string
+    username: string
     iat?: number
     exp?: number
 }
