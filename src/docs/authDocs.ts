@@ -64,7 +64,12 @@
  * 
  *                      role:
  *                        type: string
- *                        example: "TEACHER"    
+ *                        example: "TEACHER"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 200
+ *     
  *                code:
  *                  type: string              
  *                  example: "OK"
@@ -81,6 +86,10 @@
  *                  type: string              
  *                  example: "Email e Senha obrigatórios!" 
  * 
+ *                status:
+ *                  type: integer              
+ *                  example: 400
+ * 
  *                code:
  *                  type: string              
  *                  example: "BAD_REQUEST"
@@ -94,7 +103,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Email ou Senha incorreto!" 
+ *                  example: "Email ou Senha incorreto!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 401 
  * 
  *                code:
  *                  type: string              
@@ -109,7 +122,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Usuário não está cadastrado como TEACHER!" 
+ *                  example: "Usuário não está cadastrado como TEACHER!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 403 
  * 
  *                code:
  *                  type: string              
@@ -124,7 +141,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Formato de e-mail inválido!" 
+ *                  example: "Formato de e-mail inválido!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 422 
  * 
  *                code:
  *                  type: string              
@@ -155,7 +176,7 @@
  * 
  *     responses:
  *       200:
- *         description: E-mail enviado!
+ *         description: E-mail enviado
  *         content:
  *           application/json:
  *            schema:
@@ -163,7 +184,15 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Se o e-mail estiver cadastrado, você receberá um código de redefinição."                    
+ *                  example: "Se o e-mail estiver cadastrado, você receberá um código de redefinição."
+ *                
+ *                status:
+ *                  type: integer              
+ *                  example: 200 
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "OK"                   
  *      
  *       400:
  *         description: Dados faltando
@@ -174,7 +203,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Email obrigatório!" 
+ *                  example: "Email obrigatório!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 400
  * 
  *                code:
  *                  type: string              
@@ -189,7 +222,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Email incorreto!" 
+ *                  example: "Email incorreto!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 401 
  * 
  *                code:
  *                  type: string              
@@ -204,7 +241,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Formato de e-mail inválido!" 
+ *                  example: "Formato de e-mail inválido!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 422
  * 
  *                code:
  *                  type: string              
@@ -263,7 +304,11 @@
  * 
  *                          role:
  *                            type: string
- *                            example: "TEACHER"    
+ *                            example: "TEACHER"
+ * 
+ *                      status:
+ *                        type: integer              
+ *                        example: 200    
  *                  
  *                      code: 
  *                        type: string
@@ -278,7 +323,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Código obrigatório" 
+ *                  example: "Código obrigatório"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 400 
  * 
  *                code:
  *                  type: string              
@@ -293,7 +342,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Código Inválido ou Expirado!" 
+ *                  example: "Código Inválido ou Expirado!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 401
  * 
  *                code:
  *                  type: string              
@@ -308,7 +361,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Digite o código completo!" 
+ *                  example: "Digite o código completo!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 422 
  * 
  *                code:
  *                  type: string              
@@ -350,6 +407,10 @@
  *                  type: string              
  *                  example: "Senha redefinida com sucesso!"
  * 
+ *                status:
+ *                  type: integer              
+ *                  example: 200
+ * 
  *                code:
  *                  type: string              
  *                  example: "OK"                      
@@ -363,7 +424,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Nova Senha obrigatória!" 
+ *                  example: "Nova Senha obrigatória!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 400 
  * 
  *                code:
  *                  type: string              
@@ -378,7 +443,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Senha muito curta! (Minímo: 6 caracteres)" 
+ *                  example: "Senha muito curta! (Minímo: 6 caracteres)"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 422 
  * 
  *                code:
  *                  type: string              
@@ -418,7 +487,15 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Seu e-mail foi solicitado ao ADMIN!"                    
+ *                  example: "Seu e-mail foi solicitado ao ADMIN!"
+ *          
+ *                status:
+ *                  type: integer              
+ *                  example: 200
+ * 
+ *                code:
+ *                  type: string              
+ *                  example: "OK"                    
  *      
  *       400:
  *         description: Dados faltando
@@ -429,7 +506,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Email obrigatório!" 
+ *                  example: "Email obrigatório!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 400 
  * 
  *                code:
  *                  type: string              
@@ -444,7 +525,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Email já cadastrado!" 
+ *                  example: "Email já cadastrado!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 409 
  * 
  *                code:
  *                  type: string              
@@ -458,7 +543,11 @@
  *              properties:                                                  
  *                message:
  *                  type: string              
- *                  example: "Formato de e-mail inválido!" 
+ *                  example: "Formato de e-mail inválido!"
+ * 
+ *                status:
+ *                  type: integer              
+ *                  example: 
  * 
  *                code:
  *                  type: string              

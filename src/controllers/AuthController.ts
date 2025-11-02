@@ -13,14 +13,14 @@ export class AuthController{
             const {email, password, role} = req.body
             
             const {token, user} = await AuthService.loginUser(email, password, role)
-            return res.status(200).json({token, user, code:"OK"})
+            return res.status(200).json({token, user, status: 200, code:"OK"})
 
         }catch(error:any){
             if(error instanceof ZodError){
-                return res.status(422).json({message: "Formato de e-mail inválido!", code: ErrorCode.UNPROCESSABLE_ENTITY})
+                return res.status(422).json({message: "Formato de e-mail inválido!", status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
-            return res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
         
     }
@@ -32,14 +32,14 @@ export class AuthController{
             const {email} = req.body
     
             await AuthService.requestPasswordReset(email)
-            return res.status(200).json({message: "Se o e-mail estiver cadastrado, você receberá um código de redefinição.", code: "OK"})
+            return res.status(200).json({message: "Se o e-mail estiver cadastrado, você receberá um código de redefinição.", status: 200,  code: "OK"})
 
         }catch(error: any){
             if(error instanceof ZodError){
-                return res.status(422).json({message: "Formato de e-mail inválido!", code: ErrorCode.UNPROCESSABLE_ENTITY})
+                return res.status(422).json({message: "Formato de e-mail inválido!", status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
-            return res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
 
@@ -48,14 +48,14 @@ export class AuthController{
         try{
             const {code} = req.body
             const {token, user} = await AuthService.verifyCode(code)
-            return res.status(200).json({token, user, code: "OK"})
+            return res.status(200).json({token, user, status: 200, code: "OK"})
 
         }catch(error: any){
             if(error instanceof ZodError){
-                return res.status(422).json({message: "Digite o código completo!", code: ErrorCode.UNPROCESSABLE_ENTITY})
+                return res.status(422).json({message: "Digite o código completo!", status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
-            return res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
         
     }
@@ -68,18 +68,18 @@ export class AuthController{
             const {newPassword} = req.body
 
             if(!userId){
-                return res.status(401).json({message: "Usuário não autenticado!"})
+                return res.status(401).json({message: "Usuário não autenticado!", status: 401, code: "UNAUTHORIZED"})
             }
 
             await AuthService.resetPassword(userId, newPassword)
-            return res.status(200).json({message: "Senha redefinida com sucesso!", code: "OK"})
+            return res.status(200).json({message: "Senha redefinida com sucesso!", status: 200, code: "OK"})
 
         }catch(error: any){
             if(error instanceof ZodError){
-                return res.status(422).json({message: "Senha muito curta! (Minímo: 6 caracteres)", code: ErrorCode.UNPROCESSABLE_ENTITY})
+                return res.status(422).json({message: "Senha muito curta! (Minímo: 6 caracteres)", status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
-            return res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
 
@@ -89,14 +89,14 @@ export class AuthController{
             const {email} = req.body
     
             await AuthService.requestRegistration(email)
-            return res.status(200).json({message: "Seu e-mail foi solicitado ao ADMIN!", code: "OK"})
+            return res.status(200).json({message: "Seu e-mail foi solicitado ao ADMIN!", status: 200, code: "OK"})
 
         }catch(error: any){
             if(error instanceof ZodError){
-                return res.status(422).json({message: "Formato de e-mail inválido!", code: ErrorCode.UNPROCESSABLE_ENTITY})
+                return res.status(422).json({message: "Formato de e-mail inválido!", status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
-            return res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
 }
