@@ -59,7 +59,7 @@ export class AuthService{
             throw error
         }
 
-        const token = jwt.sign({userId: user.id, username: user.username, role: user.role}, JWT_SECRET!, {expiresIn: "1h"})
+        const token = jwt.sign({userId: user.id, username: user.username, role: user.role}, JWT_SECRET!, {expiresIn: "7d"})
         return {token, user:{id: user.id, username: user.username, email: user.email, role: user.role}}
     } 
 

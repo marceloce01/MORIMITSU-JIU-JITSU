@@ -1,10 +1,13 @@
+//Auth
 /**
  * @openapi
  * tags:
  *  name: Auth
- *  description: Endpoints de Autenticação
- * 
- * 
+ *  description: Endpoints de Autenticação 
+ */
+
+//login
+/**
  * @openapi
  * /auth/login:
  *   post:
@@ -125,9 +128,12 @@
  * 
  *                code:
  *                  type: string              
- *                  example: "UNPROCESSABLE_ENTITY"    
+ *                  example: "UNPROCESSABLE_ENTITY"   
  * 
- * 
+ */ 
+
+//request-reset
+/**
  * @openapi
  * /auth/request-reset:
  *   post:
@@ -203,7 +209,10 @@
  *                code:
  *                  type: string              
  *                  example: "UNPROCESSABLE_ENTITY"
- * 
+ */
+
+//verify-code
+/**
  * @openapi
  * /auth/verify-code:
  *   post:
@@ -303,9 +312,12 @@
  * 
  *                code:
  *                  type: string              
- *                  example: "UNPROCESSABLE_ENTITY"
- * 
- * @swagger
+ *                  example: "UNPROCESSABLE_ENTITY" 
+ */ 
+ 
+//reset-password
+/**
+ * @openapi
  * /auth/reset-password:
  *   post:
  *     summary: Redefinir senha do usuário
@@ -318,20 +330,10 @@
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - userId
- *               - codeId
+ *             required:   
  *               - newPassword             
  *             properties:
- *               
- *               userId:
- *                 type: string             
- *                 example: "cmh7xbi0w0000v2z8io457f2m"
- * 
- *               codeId:
- *                 type: string             
- *                 example: "cmh7xbi0w0000v348io457f2m"
- * 
+ *                                
  *               newPassword:
  *                 type: string             
  *                 example: "marcelo123"
@@ -382,6 +384,11 @@
  *                  type: string              
  *                  example: "UNPROCESSABLE_ENTITY"
  * 
+ * 
+ */ 
+
+//request-registration
+/**
  * @openapi
  * /auth/request-registration:
  *   post:
