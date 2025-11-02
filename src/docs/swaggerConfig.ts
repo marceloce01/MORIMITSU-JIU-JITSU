@@ -33,11 +33,6 @@ const swaggerOptions = {
             },
           },
         },       
-        security: [
-            {
-                bearerAuth: []
-            }
-        ],
     },
 
     apis: process.env.NODE_ENV === "production"
