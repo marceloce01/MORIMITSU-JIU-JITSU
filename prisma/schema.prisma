@@ -5,32 +5,30 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id        String      @id @default(cuid())
-  username  String
-  email     String   @unique
-  password  String
-  role      Role     @default(TEACHER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String              @id @default(cuid())
+  username      String
+  email         String              @unique
+  password      String
+  role          Role                @default(TEACHER)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
   resetPassword ResetPasswordCode[]
 }
 
 model ResetPasswordCode {
-  id        String @id @default(cuid())
-  code     String @unique
+  id        String   @id @default(cuid())
+  code      String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
   userId    String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Student {
-  id               String           @id @default(cuid())
+  id               String         @id @default(cuid())
   name             String
   phone            String
   email            String         @unique
@@ -41,12 +39,7 @@ model Student {
   currentFrequency Int
   belt             Belt
   grade            Int
-  role             Role    @default(TEACHER)
-  city             String
-  street           String
-  district         String
-  number           Int
-  complement       String?
+  role             RoleStudent    @default(STUDENT)
   guardianPhone    String
   totalFrequency   Int
   createdAt        DateTime       @default(now())
@@ -55,7 +48,7 @@ model Student {
 }
 
 model Class {
-  id         String            @id @default(cuid())
+  id         String         @id @default(cuid())
   teacher_id Int
   name       String
   createdAt  DateTime       @default(now())
@@ -64,7 +57,7 @@ model Class {
 }
 
 model StudentClass {
-  id         String     @id @default(cuid())
+  id         String  @id @default(cuid())
   student_id String
   class_id   String
   class      Class   @relation(fields: [class_id], references: [id])
@@ -72,14 +65,14 @@ model StudentClass {
 }
 
 model Classroom {
-  id         String      @id @default(cuid())
+  id         String   @id @default(cuid())
   teacher_id Int
   class_id   Int
   date       DateTime
 }
 
 model StudentPresence {
-  id           String     @id @default(cuid())
+  id           String  @id @default(cuid())
   classroom_id Int
   student_id   Int
   presence     Boolean
@@ -117,3 +110,7 @@ enum Gender {
   FEMALE
 }
 
+enum RoleStudent {
+  TEACHER
+  STUDENT
+}
