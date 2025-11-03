@@ -4,17 +4,15 @@ import dotenv from "dotenv"
 dotenv.config({override: true})
 
 export const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: process.env.SMTP_HOST,
     port: 465,
     secure: true,
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
 
     },
-    tls:{
-        rejectUnauthorized: false
-    }
 })
 
 //Função enviar email ao usuário que solicita criação de conta
