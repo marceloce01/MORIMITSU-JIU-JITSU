@@ -12,6 +12,9 @@ export const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS,
 
     },
+    tls:{
+        rejectUnauthorized: false
+    }
 })
 
 //Função enviar email ao usuário que solicita criação de conta
