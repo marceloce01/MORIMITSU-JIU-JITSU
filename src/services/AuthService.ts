@@ -23,6 +23,7 @@ export class AuthService{
             throw error
         }
 
+        //Valida formato de dados do login usando a biblioteca zod
         const loginSchema = z.object({
             email: z.string().email().refine((val) => {
                 const domain = val.split("@")[1]
@@ -34,6 +35,7 @@ export class AuthService{
                     
         })
 
+        //Faz essa verificação
         loginSchema.parse({email, password, role})
 
         //Caso o usuário não esteja cadastrado
@@ -59,6 +61,7 @@ export class AuthService{
             throw error
         }
 
+        //Cria o token de acesso
         const token = jwt.sign({userId: user.id, username: user.username, role: user.role}, JWT_SECRET!, {expiresIn: "7d"})
         return {token, user:{id: user.id, username: user.username, email: user.email, role: user.role}}
     } 
@@ -73,14 +76,16 @@ export class AuthService{
             throw error
         }
 
+        //Valida o formato de e-email usando a biblioteca zod
         const emailSchema = z.object({
                 email: z.string().email()
         })
 
+        //Faz essa verificação
         emailSchema.parse({email})
 
+        //Através do e-mail digitado ele busca o usuário, se não existir, por segurança, retornamos uma mensagem genérica
         const user = await UserRepository.findByEmail(email)
-
         if(!user){
             const error:any = new Error("E-mail incorreto!")
             error.code = ErrorCode.UNAUTHORIZED
