@@ -1,26 +1,24 @@
 import nodemailer from "nodemailer"
 import dotenv from "dotenv"
 
-dotenv.config({override: true})
+dotenv.config()
 
-export const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: 587,
-    secure: false,
-    requireTLS: true,
-    auth: {
+const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
 
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-
-    },
-})
+        },
+    })
 
 //Função enviar email ao usuário que solicita criação de conta
 export async function sendMail(to: string, subject: string, html: string){
     try{
         await transporter.sendMail({
-            from: `<${process.env.EMAIL_USER}>`,
+            from:`"Suporte:" <${process.env.EMAIL_USER}>`,
             to,
             subject,
             html
