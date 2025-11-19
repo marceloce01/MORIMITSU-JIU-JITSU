@@ -41,15 +41,15 @@ model Student {
   belt              Belt
   grade             Int
   role              Role           @default(STUDENT)
-  guardian_phone    String
+  guardian_phone    String?
   total_frequency   Int
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
-  city              String         @default("")
-  street            String         @default("")
-  district          String         @default("")
-  number            Int            @default(0)
-  complement        String
+  city              String         
+  street            String         
+  district          String         
+  number            Int            
+  complement        String?
   classes           StudentClass[]
 }
 

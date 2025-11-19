@@ -44,8 +44,8 @@ export class StudentRepository{
             street: data.street!,
             district: data.district!,
             number: data.number,
-            complement: data.complement ?? null,
-            guardian_phone: data.guardian_phone ?? null,
+            complement: data.complement,
+            guardian_phone: data.guardian_phone,
             total_frequency: data.current_frequency
 
         }})
