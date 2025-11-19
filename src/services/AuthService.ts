@@ -6,7 +6,6 @@ import { ErrorCode } from "../utils/ErrorCodes.js"
 import bcrypt from "bcryptjs"
 import jwt from 'jsonwebtoken';
 import { ResetPasswordCodeRepository } from "../repositories/ResetPassCodeRepository.js";
-import { sendMail } from "../utils/mailer.js";
 import { Role } from "@prisma/client";
 
 const JWT_SECRET = process.env.JWT_SECRET
@@ -96,18 +95,7 @@ export class AuthService{
         const expiresAt = new Date(Date.now() + 1000 * 60 * 15)
 
         await ResetPasswordCodeRepository.create({code: resetCode, userId: user.id, expiresAt})
-
-        await sendMail(
-            user.email,
-            "Redefinição de senha",
-            `
-            <h2> Olá, ${user.username} </h2>
-            <p> Você solicitou redefinição de senha. Código de Redefinição
-            : </p>
-            <h1> ${resetCode} </h1>
-            <p> Esse código expira em 15 minutos. </p>
-            `
-        )
+             
     }
 
     //Função que verifica o código
@@ -196,15 +184,5 @@ export class AuthService{
         }
 
         const adminEmail = process.env.ADMIN_EMAIL as string
-
-        await sendMail(
-            adminEmail,
-            "Solicitação de Cadastro",
-            `
-            <h2> Olá, Saulo Bezerra </h2>
-            <p> Um usuário solicitou uma criação de conta com esse e-mail: </p>
-            <p> ${email} </p>
-            `
-        )  
     }
 }

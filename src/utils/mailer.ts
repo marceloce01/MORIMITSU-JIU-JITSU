@@ -1,13 +1,6 @@
+/*
 import sgMail from "@sendgrid/mail"
 import { env } from "../env/index.js"
-
-sgMail.setApiKey(env.API_KEY)
-
-/** 
- * @param to 
- * @param subject 
- * @param html 
- */
 
 //Função enviar email ao usuário que solicita criação de conta
 export async function sendMail(to: string, subject: string, html: string){
@@ -27,3 +20,4 @@ export async function sendMail(to: string, subject: string, html: string){
         throw error
     }
 }
+*/
