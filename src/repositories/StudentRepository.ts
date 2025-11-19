@@ -98,7 +98,26 @@ export class StudentRepository{
         }
 
     )=>{
-        return prisma.student.update({where: {id}, data})
+        const dataUpdated: any = {}
+        if(data.name != undefined) dataUpdated.name = data.name
+        if(data.phone != undefined) dataUpdated.phone = data.phone
+        if(data.email != undefined) dataUpdated.email = data.email
+        if(data.cpf != undefined) dataUpdated.cpf = data.cpf
+        if(data.gender != undefined) dataUpdated.gender = data.gender
+        if(data.birth_date != undefined) dataUpdated.birth_date = data.birth_date
+        if(data.enrollment!= undefined) dataUpdated.enrollment = data.enrollment
+        if(data.current_frequency != undefined) dataUpdated.current_frequency = data.current_frequency
+        if(data.belt != undefined) dataUpdated.belt = data.belt
+        if(data.grade!= undefined) dataUpdated.grade = data.grade
+        if(data.city != undefined) dataUpdated.city = data.city
+        if(data.street != undefined) dataUpdated.street = data.street
+        if(data.district != undefined) dataUpdated.district = data.district
+        if(data.number != undefined) dataUpdated.number = data.number
+        if(data.complement != undefined) dataUpdated.complement = data.complement
+        if(data.guardian_phone != undefined) dataUpdated.guardian_phone= data.guardian_phone
+        if(data.total_frequency != undefined) dataUpdated.total_frequency = data.total_frequency
+        
+        return prisma.student.update({where: {id}, data: dataUpdated})
     }
     static delete = async(id: string)=>{
         return prisma.student.delete({where: {id}})
