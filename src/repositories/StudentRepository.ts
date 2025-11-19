@@ -30,22 +30,22 @@ export class StudentRepository{
         
         return prisma.student.create({data: {
             
-            name: data.name, 
-            phone: data.phone,
-            email: data.email,
-            cpf: data.cpf,
+            name: data.name!, 
+            phone: data.phone!,
+            email: data.email!,
+            cpf: data.cpf!,
             gender: data.gender,
             birth_date: data.birth_date,
-            enrollment: data.enrollment,
+            enrollment: data.enrollment ?? null,
             current_frequency: data.current_frequency,
             belt: data.belt,
             grade: data.grade,
-            city: data.city,
-            street: data.street,
-            district: data.district,
+            city: data.city!,
+            street: data.street!,
+            district: data.district!,
             number: data.number,
-            complement: data.complement,
-            guardian_phone: data.guardian_phone,
+            complement: data.complement ?? null,
+            guardian_phone: data.guardian_phone ?? null,
             total_frequency: data.current_frequency
 
         }})
@@ -116,7 +116,7 @@ export class StudentRepository{
         if(data.complement != undefined) dataUpdated.complement = data.complement
         if(data.guardian_phone != undefined) dataUpdated.guardian_phone= data.guardian_phone
         if(data.total_frequency != undefined) dataUpdated.total_frequency = data.total_frequency
-        
+
         return prisma.student.update({where: {id}, data: dataUpdated})
     }
     static delete = async(id: string)=>{
