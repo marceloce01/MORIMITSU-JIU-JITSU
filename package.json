@@ -29,12 +29,12 @@
   },
   "dependencies": {
     "@prisma/client": "^6.17.1",
+    "@sendgrid/mail": "^8.1.6",
     "bcryptjs": "^3.0.2",
     "config": "^4.1.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "googleapis": "^164.1.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.10",
     "nodemon": "^3.1.10",

@@ -3,6 +3,7 @@ import { AuthService } from "../services/AuthService.js";
 import { ZodError } from "zod";
 import { ErrorCode, statusHTTP } from "../utils/ErrorCodes.js"
 import { AuthenticatedRequest } from "../utils/types.js";
+import { zodMessage } from "../utils/ZodErrorFormat.js";
 
 export class AuthController{
 
@@ -17,7 +18,8 @@ export class AuthController{
 
         }catch(error:any){
             if(error instanceof ZodError){
-                return res.status(422).json({message: "Formato de e-mail inválido!", status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
+                return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
+
             }
             const status = statusHTTP(error.code)
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
@@ -36,7 +38,7 @@ export class AuthController{
 
         }catch(error: any){
             if(error instanceof ZodError){
-                return res.status(422).json({message: "Formato de e-mail inválido!", status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
+                return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
@@ -52,7 +54,7 @@ export class AuthController{
 
         }catch(error: any){
             if(error instanceof ZodError){
-                return res.status(422).json({message: "Digite o código completo!", status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
+                return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
@@ -76,7 +78,7 @@ export class AuthController{
 
         }catch(error: any){
             if(error instanceof ZodError){
-                return res.status(422).json({message: "Senha muito curta! (Minímo: 6 caracteres)", status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
+                return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
@@ -93,7 +95,7 @@ export class AuthController{
 
         }catch(error: any){
             if(error instanceof ZodError){
-                return res.status(422).json({message: "Formato de e-mail inválido!", status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
+                return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})

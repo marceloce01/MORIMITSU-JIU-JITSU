@@ -1,29 +1,26 @@
-import nodemailer from "nodemailer"
-import dotenv from "dotenv"
+import sgMail from "@sendgrid/mail"
+import { env } from "../env/index.js"
 
-dotenv.config()
+sgMail.setApiKey(env.API_KEY)
 
-const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-
-        },
-    })
+/** 
+ * @param to 
+ * @param subject 
+ * @param html 
+ */
 
 //Função enviar email ao usuário que solicita criação de conta
 export async function sendMail(to: string, subject: string, html: string){
     try{
-        await transporter.sendMail({
-            from:`"Suporte:" <${process.env.EMAIL_USER}>`,
+        const response = {
+            from:`Suporte: ${env.EMAIL_USER}`,
             to,
             subject,
             html
-        })
-        console.log("Email enviado com sucesso!")
+        }
+
+        console.log("Email enviado com sucesso!", response)
+        return response
 
     }catch(error){
         console.error("Erro ao validar e-mail", error)
