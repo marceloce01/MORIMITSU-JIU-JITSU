@@ -66,7 +66,7 @@ export class StudentRepository{
     static findByEnrollment = async(enrollment?: number | null)=>{
        const where: any = {}
        if(enrollment != undefined){
-         enrollment = where.enrollment
+         where.enrollment = enrollment
        }
        return prisma.student.findMany({where})
     }
