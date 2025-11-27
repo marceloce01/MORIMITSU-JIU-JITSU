@@ -34,4 +34,16 @@ export class UserController{
             res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
         }  
     }
+
+    static getAllUsers = async(req: Request, res: Response) =>{
+
+            try{
+                const students = await UserService.getAllUsers()
+                return res.status(200).json({students, status: 200, code:"OK"})
+    
+            }catch(error:any){
+                const status = statusHTTP(error.code)
+                return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            }
+        }
 }

@@ -5,12 +5,14 @@ import { setupSwagger } from './docs/swaggerConfig.js';
 import { userRouter } from './routes/UserRoutes.js';
 import { authRouter } from './routes/AuthRoutes.js';
 import { studentRouter } from './routes/StudentRoutes.js';
+import { classRouter } from './routes/ClassRoutes.js';
 
 
 const app = express();
 
 dotenv.config();
-console.log("DATABASE_URL:", process.env.DA)
+
+console.log("DATABASE_URL:", process.env.DATABASE_URL)
 const PORT = Number(process.env.PORT) || 3000
 
 app.use(cors(
@@ -32,5 +34,6 @@ setupSwagger(app)
 app.use("/user", userRouter)
 app.use("/auth", authRouter)
 app.use("/student", studentRouter)
+app.use("/class", classRouter)
 
 app.listen(PORT, "0.0.0.0", () => console.log(`Servidor rodando na porta ${PORT}`))

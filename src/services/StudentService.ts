@@ -4,6 +4,7 @@ import { allowedDomain } from "../schemas/Email.js";
 import { Role, Belt, Gender} from "@prisma/client";
 import { phoneValidation } from "../utils/validations/phone.js";
 import { ErrorCode } from "../utils/ErrorCodes.js";
+import { beltAgeValidation } from "../utils/validations/beltAge.ts";
 
 //Dados de entrada
 type StudentInput = {
@@ -30,6 +31,7 @@ export class StudentService{
     //Cadastrar Aluno
     static registerStudent = async(data: StudentInput)=>{
 
+        //Para reduzir a quantidade de itens da verificação, só listei eles
         const requiredFields = ["name", "phone", "email", "cpf", "gender", "birth_date", "current_frequency", "belt", "grade", "city", "street", "district", "number"]
         
         const missingFields = requiredFields.some(field => !data[field as keyof StudentInput])
@@ -71,6 +73,9 @@ export class StudentService{
             error.code = ErrorCode.CONFLICT
             throw error
         }
+
+        //Verifica se a faixa etária é correspondente a faixa
+        const beltAge = beltAgeValidation(parsed.birth_date, parsed.belt)
 
         if(parsed.enrollment !== undefined && parsed.enrollment !== null){
             const existingEnrollment = await StudentRepository.findByEnrollment(parsed.enrollment)

@@ -1,8 +1,26 @@
-import {prisma} from "./prisma.js"
+import {prisma} from "./prismaClient.ts"
 
 export class ClassRepository{
-    static create = async( data: {code: string, userId: string, expiresAt: Date}) => {
-       const expirationTime = new Date()
-       return prisma.resetPasswordCode.create({data: {code: data.code, userId: data.userId, expiresAt: data.expiresAt}})
+    //Criar uma turma na tabela Class
+    static create = async( data: {name: string, teacher_id: string, local: string}) => {
+       return prisma.class.create({data:{name: data.name, teacher_id: data.teacher_id, local: data.local}})
+    }
+
+    //Atualizar dados de uma turma
+    static update = async(id: string, data: {name?: string, teacher_id?: string, local?: string}) => {
+          return prisma.class.update({where: {id}, data})
+    }
+
+    //Procurar uma turma pelo id
+    static findById = async(id: string)=>{
+       return prisma.class.findUnique({where: {id}})
+    }
+
+    //Deletar uma turma
+    static delete = async(id: string)=>{
+        return prisma.class.delete({where: {id}})
     }
 }
+
+
+    

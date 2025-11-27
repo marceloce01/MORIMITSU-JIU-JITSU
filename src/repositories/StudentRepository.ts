@@ -1,5 +1,5 @@
 import { Gender, Belt} from "@prisma/client";
-import {prisma} from "./prisma.js"
+import {prisma} from "./prismaClient.ts"
 
 export class StudentRepository{
 
@@ -119,6 +119,7 @@ export class StudentRepository{
 
         return prisma.student.update({where: {id}, data: dataUpdated})
     }
+    
     static delete = async(id: string)=>{
         return prisma.student.delete({where: {id}})
     }

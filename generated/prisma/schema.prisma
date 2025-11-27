@@ -1,10 +1,10 @@
-generator client {
-  provider = "prisma-client-js"
+datasource db {
+  provider = "postgresql"
 }
 
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 model User {
@@ -28,29 +28,29 @@ model ResetPasswordCode {
 }
 
 model Student {
-  id                String         @id @default(cuid())
+  id                String            @id @default(cuid())
   name              String
   phone             String
-  email             String         @unique
-  cpf               String         @unique
+  email             String            @unique
+  cpf               String            @unique
   gender            Gender
   birth_date        DateTime
-  enrollment        Int?           @unique
+  enrollment        Int?              @unique
   current_frequency Int
   belt              Belt
   grade             Int
-  role              Role           @default(STUDENT)
+  role              Role              @default(STUDENT)
   guardian_phone    String?
   total_frequency   Int
-  city              String         
-  street            String         
-  district          String         
-  number            Int            
+  city              String
+  street            String
+  district          String
+  number            Int
   complement        String?
   classes           StudentClass[]
   presences         StudentPresence[]
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 }
 
 model Class {
@@ -64,47 +64,47 @@ model Class {
 }
 
 model StudentClass {
-  id         String  @id @default(cuid())
+  id         String   @id @default(cuid())
   student_id String
   class_id   String
-  class      Class   @relation(fields: [class_id], references: [id])
-  student    Student @relation(fields: [student_id], references: [id])
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  class      Class    @relation(fields: [class_id], references: [id])
+  student    Student  @relation(fields: [student_id], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Classroom {
-  id         String   @id @default(cuid())
-  teacher_id String
-  class_id   String
-  classroom_date       DateTime
-  presences  StudentPresence[]
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  id             String            @id @default(cuid())
+  teacher_id     String
+  class_id       String
+  classroom_date DateTime
+  presences      StudentPresence[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
 }
 
 model StudentPresence {
-  id           String  @id @default(cuid())
+  id           String    @id @default(cuid())
   student_id   String
   classroom_id String
   presence     Boolean
-  student      Student @relation(fields: [student_id], references: [id])
-  classroom     Classroom @relation(fields: [classroom_id], references: [id])
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  student      Student   @relation(fields: [student_id], references: [id])
+  classroom    Classroom @relation(fields: [classroom_id], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@unique([student_id, classroom_id])
 }
 
 model Config {
-  id         String   @id @default(cuid())
-  min_age    Int
-  max_age    Int?
-  min_belt   Belt
-  max_belt   Belt?
+  id            String   @id @default(cuid())
+  min_age       Int
+  max_age       Int?
+  min_belt      Belt
+  max_belt      Belt?
   max_frequency Int
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 enum Role {
@@ -138,4 +138,3 @@ enum Gender {
   MALE
   FEMALE
 }
-

@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
     /* Módulos e Saída */
-    "target": "ES2022",                      /* Define a versão JS de saída (compatível com Node moderno) */
-    "module": "NodeNext",                     /* Usa o sistema de módulos moderno do Node.js (ES Modules) */
+    "target": "ES2020",                       /* Define a versão JS de saída (compatível com Node moderno) */
+    "module": "nodenext",                     /* Usa o sistema de módulos moderno do Node.js (ES Modules) */
     "moduleResolution": "NodeNext",           /* Define como o TypeScript resolve os caminhos dos módulos (melhor para ESM) */
-    "outDir": "dist",                       /* CRUCIAL: Onde colocar os arquivos .js compilados */
+    "outDir": "dist",                         /* CRUCIAL: Onde colocar os arquivos .js compilados */
     "rootDir": "src",                       /* Onde encontrar o código-fonte .ts */
     "esModuleInterop": true,                  /* Permite importações mistas (padrão) */
-    "resolveJsonModule": true,                /* Permite importar arquivos .json (necessário para o seu Swagger) */
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,                           /* Permite importar arquivos .json (necessário para o seu Swagger) */
 
     /* Configurações de Código */
     "strict": true,                           /* Habilita todas as verificações rigorosas (boa prática) */
@@ -17,6 +19,6 @@
   },
   
   /* Arquivos a incluir e excluir */
-  "include": ["src"],                    /* Inclui todos os arquivos dentro da pasta 'src' */
-  "exclude": ["node_modules", "dist"]
+  "include": ["src", "prisma.config.ts"],                    /* Inclui todos os arquivos dentro da pasta 'src' */
+  "exclude": ["node_modules", "dist", "prisma.config.ts"]
 }

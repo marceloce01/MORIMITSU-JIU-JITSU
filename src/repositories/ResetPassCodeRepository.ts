@@ -1,4 +1,4 @@
-import {prisma} from "./prisma.js"
+import {prisma} from "./prismaClient.ts"
 
 export class ResetPasswordCodeRepository{
 

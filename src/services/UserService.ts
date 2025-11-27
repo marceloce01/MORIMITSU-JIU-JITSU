@@ -49,6 +49,10 @@ export class UserService{
         //Se houver:
         return user
     }
+
+    static getAllUsers = async()=>{
+        return await UserRepository.findAll()
+    }
 }
 
 
