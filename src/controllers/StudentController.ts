@@ -32,7 +32,7 @@ export class StudentController {
             
             const {student, age} = await StudentService.updateStudent(id, data)
 
-            return res.status(200).json({message: "Atualizado!", student, age, status: 200, code:"OK"})
+            return res.status(200).json({message: "As alterações foram salvas!", student, age, status: 200, code:"OK"})
 
         }catch(error:any){
             if(error instanceof ZodError){

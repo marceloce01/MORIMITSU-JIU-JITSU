@@ -6,6 +6,7 @@ import { userRouter } from './routes/UserRoutes.js';
 import { authRouter } from './routes/AuthRoutes.js';
 import { studentRouter } from './routes/StudentRoutes.js';
 import { classRouter } from './routes/ClassRoutes.js';
+import { beltRouter } from './routes/BeltRoutes.ts';
 
 
 const app = express();
@@ -35,5 +36,6 @@ app.use("/user", userRouter)
 app.use("/auth", authRouter)
 app.use("/student", studentRouter)
 app.use("/class", classRouter)
+app.use("/belt-config", beltRouter)
 
 app.listen(PORT, "0.0.0.0", () => console.log(`Servidor rodando na porta ${PORT}`))

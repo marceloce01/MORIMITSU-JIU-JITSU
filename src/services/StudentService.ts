@@ -5,10 +5,12 @@ import { Role, Belt, Gender} from "@prisma/client";
 import { phoneValidation } from "../utils/validations/phone.js";
 import { ErrorCode } from "../utils/ErrorCodes.js";
 import { beltAgeValidation } from "../utils/validations/beltAge.ts";
+import { beltValidation } from "../utils/validations/beltValidation.ts";
 
 //Dados de entrada
 type StudentInput = {
         name: string,
+        image_student_url?: string,
         phone: string,
         email: string,
         cpf: string,
@@ -32,39 +34,41 @@ export class StudentService{
     static registerStudent = async(data: StudentInput)=>{
 
         //Para reduzir a quantidade de itens da verificação, só listei eles
-        const requiredFields = ["name", "phone", "email", "cpf", "gender", "birth_date", "current_frequency", "belt", "grade", "city", "street", "district", "number"]
+        const requiredFields = ["name", "phone", "email", "cpf", "gender", "birth_date", "belt", "grade", "city", "street", "district", "number"]
         
         const missingFields = requiredFields.some(field => !data[field as keyof StudentInput])
         if(missingFields){
-            const error:any = new Error("Preencha todos os campos obrigatórios!")
+            const error:any = new Error("Preencha todos os campos obrigatórios.")
             error.code = ErrorCode.BAD_REQUEST
             throw error
         }
    
         const studentSchema = z.object({
-            name: z.string(),
-            phone: z.string().refine((val) => phoneValidation(val), "Telefone Inválido!"),
-            email: z.string().email("Email inválido!").refine((val) => {
+            name: z.string().min(3, "O nome deve conter ao menos 3 caracteres."),
+            phone: z.string().refine((val) => phoneValidation(val), "Informe um número de telefone válido."),
+            image_student_url: z.string().url(),
+            email: z.string().email("Digite um e-mail válido.").refine((val) => {
                 const domain = val.split("@")[1]
                 return allowedDomain.includes(domain)
-            }),
-            cpf: z.string().length(11, "O CPF deve conter 11 dígitos"),
-            gender: z.nativeEnum(Gender),
-            birth_date: z.coerce.date(),
-            enrollment: z.coerce.number().optional(),
-            current_frequency: z.coerce.number().int().min(0).default(0),
-            belt: z.nativeEnum(Belt),
-            grade: z.coerce.number().int().min(1).max(4, "Grau Inexistente"),
-            city: z.string().min(3),
-            street: z.string().min(2),
-            district: z.string().min(2),
-            number: z.coerce.number().int().min(1),
+            }, "Domínio de e-mail não autorizado."),
+            cpf: z.string().length(11, "O CPF deve conter 11 dígitos."),
+            gender: z.nativeEnum(Gender, "Selecione um gênero válido."),
+            birth_date: z.coerce.date("Digite uma data válida."),
+            enrollment: z.coerce.number("A matrícula deve ser um número válido.").optional(),
+            current_frequency: z.coerce.number("A frequência do aluno deve ser um número válido.").int("A frequência deve ser um número inteiro.").min(0, "A frequência não pode ser negativa.").default(0),
+            belt: z.nativeEnum(Belt, "Selecione uma faixa válida."),
+            grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro de 1 a 4.").min(1, "O grau deve ser um número de 1 a 4.").max(4, "O grau deve ser um número de 1 a 4."),
+            city: z.string().min(3, "A cidade deve conter ao menos 3 caracteres."),
+            street: z.string().min(2, "A rua deve conter ao menos 2 caracteres."),
+            district: z.string().min(1, "O bairro deve conter ao menos 1 caractere."),
+            number: z.string().regex(/^(S\/N|s\/n|\d+[A-Za-z]?(-[A-Za-z0-9]+)?)$/, "Digite um número de residência válido."),
             complement: z.string().optional(),
-            guardian_phone: z.string().refine(val => val === null || val === "" || phoneValidation(val), "Telefone inválido!").optional(),
+            guardian_phone: z.string().refine(val => val === null || val === "" || phoneValidation(val), "Telefone do Responsável: Informe um número de telefone válido.").optional(),
         })
 
         const parsed = studentSchema.parse(data)
         
+        //Verifica se os dados únicos do usuário já são cadastrados
         const existingEmail = await StudentRepository.findByEmail(parsed.email)
         const existingCPF = await StudentRepository.findByCPF(parsed.cpf)
 
@@ -74,9 +78,6 @@ export class StudentService{
             throw error
         }
 
-        //Verifica se a faixa etária é correspondente a faixa
-        const beltAge = beltAgeValidation(parsed.birth_date, parsed.belt)
-
         if(parsed.enrollment !== undefined && parsed.enrollment !== null){
             const existingEnrollment = await StudentRepository.findByEnrollment(parsed.enrollment)
             if(existingEnrollment.length> 0){
@@ -84,6 +85,13 @@ export class StudentService{
                 error.code = ErrorCode.CONFLICT
                 throw error
             }
+        }
+
+        const validation = await beltValidation(parsed.birth_date, parsed.belt, parsed.current_frequency)
+        if(validation != true){
+            const error:any = new Error(validation)
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
         }
 
         const today = new Date()
@@ -96,13 +104,13 @@ export class StudentService{
         }
 
         if(age < 18 && !parsed.guardian_phone){
-            const error:any = new Error("O campo guardian_phone é obrigatório!")
+            const error:any = new Error("O telefone do responsável é obrigatório.")
             error.code = ErrorCode.BAD_REQUEST
             throw error
         }
 
         if(age >= 18 && parsed.guardian_phone){
-            const error:any = new Error("O campo guardian_phone é obrigatório apenas para menores de 18 anos!")
+            const error:any = new Error("O telefone do responsável é obrigatório apenas para menores de 18 anos.")
             error.code = ErrorCode.BAD_REQUEST
             throw error
         }
@@ -147,62 +155,69 @@ export class StudentService{
             }
 
             const updateSchema = z.object({
-            name: z.string().optional(),
-            phone: z.string().refine((val) => phoneValidation(val), "Telefone Inválido!").optional(),
-            email: z.string().email("Email inválido!").refine((val) => {
+            name: z.string().min(3, "O nome deve conter ao menos 3 caracteres.").optional(),
+            phone: z.string().refine((val) => phoneValidation(val), "Informe um número de telefone válido.").optional(),
+            email: z.string().email("Digite um e-mail válido.").refine((val) => {
                 const domain = val.split("@")[1]
                 return allowedDomain.includes(domain)
-            }).optional(),
+            }, "Domínio de e-mail não autorizado.").optional(),
             cpf: z.string().length(11, "O CPF deve conter 11 dígitos").optional(),
             role: z.nativeEnum(Role).optional(),
-            gender: z.nativeEnum(Gender).optional(),
-            birth_date: z.coerce.date().optional(),
-            enrollment: z.coerce.number().optional(),
-            current_frequency: z.coerce.number().int().min(0).default(0).optional(),
-            belt: z.nativeEnum(Belt).optional(),
-            grade: z.coerce.number().int().min(1).max(4, "Grau Inexistente").optional(),
-            city: z.string().min(3).optional(),
-            street: z.string().min(2).optional(),
+            gender: z.nativeEnum(Gender, "Selecione um gênero válido.").optional(),
+            birth_date: z.coerce.date("Digite uma data válida.").optional(),
+            enrollment: z.coerce.number("A matrícula deve ser um número válido.").optional(),
+            current_frequency: z.coerce.number("A frequência do aluno deve ser um número válido.").int("A frequência deve ser um número inteiro.").min(0, "A frequência não pode ser negativa.").optional(),
+            belt: z.nativeEnum(Belt, "Selecione uma faixa válida.").optional(),
+            grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro de 1 a 4.").min(1, "O grau deve ser um número de 1 a 4.").max(4, "O grau deve ser um número de 1 a 4.").optional(),
+            city: z.string().min(3, "A cidade deve conter ao menos 3 caracteres.").optional(),
+            street: z.string().min(2, "A rua deve conter ao menos 2 caracteres.").optional(),
             district: z.string().min(2).optional(),
-            number: z.coerce.number().int().min(1).optional(),
+            number: z.string().regex(/^(S\/N|s\/n|\d+[A-Za-z]?(-[A-Za-z0-9]+)?)$/, "Digite um número de residência válido.").optional(),
             complement: z.string().optional(),
-            guardian_phone: z.string().refine(val => val === null || val === "" || phoneValidation(val), "Telefone inválido!").optional(),
+            guardian_phone: z.string().refine(val => val === null || val === "" || phoneValidation(val), "Telefone do Responsável: Informe um número de telefone válido.").optional(),
             })
 
             const parsed = updateSchema.parse(data)
+
+            //Variáveis que serão utilizadas para a verificações
+            const birthDate = parsed.birth_date ?? existingStudent.birth_date
+            const belt = parsed.belt ?? existingStudent.belt
+            const currentFrequency = parsed.current_frequency ?? existingStudent.current_frequency
+            const guardianPhone = parsed.guardian_phone ?? existingStudent.guardian_phone
             
-            const student = await StudentRepository.update(id, parsed)
-
+            const validation = await beltValidation(birthDate, belt, currentFrequency)
+            if(validation != true){
+                const error:any = new Error(validation)
+                error.code = ErrorCode.BAD_REQUEST
+                throw error
+            }
+            
             let age: number | undefined = undefined
-            if(student.birth_date){
+            if(birthDate){
                 const today = new Date()
-                age = today.getFullYear() - student.birth_date.getFullYear()
-                const month = today.getMonth() - student.birth_date.getMonth()
+                age = today.getFullYear() - birthDate.getFullYear()
+                const month = today.getMonth() - birthDate.getMonth()
 
-                if(month < 0 || (month === 0 && today.getDate() < student.birth_date.getDate())){
+                if(month < 0 || (month === 0 && today.getDate() < birthDate.getDate())){
                     age--
                 }
 
-                if(age < 18 && !parsed.guardian_phone && !existingStudent.guardian_phone){
+                if(age < 18 && (!guardianPhone || guardianPhone === "")){
                     const error:any = new Error("O campo guardian_phone é obrigatório para menores de 18 anos!")
                     error.code = ErrorCode.BAD_REQUEST
                     throw error
                 }
-            if((student.guardian_phone === undefined || student.guardian_phone === "") && age < 18){
-                const error:any = new Error("O campo guardian_phone é obrigatório para menores de 18 anos!")
-                error.code = ErrorCode.BAD_REQUEST
-                throw error
-            }
 
-            if(student.birth_date && age >= 18 && existingStudent.guardian_phone){
-                
-                const updateStudent = await StudentRepository.update(id, {guardian_phone: ""})
-                return {student: updateStudent, age}
-            }
+                if(age >= 18 && existingStudent.guardian_phone){
+                    const updateStudent = await StudentRepository.update(id, {guardian_phone: ""})
+                    if(updateStudent.guardian_phone === undefined){
+                        updateStudent.guardian_phone = null
+                    }
+                    return {student: updateStudent, age}
+                }
         }
-            
+            const student = await StudentRepository.update(id, parsed)
             return {student, age}
-
         }
 
         static getById = async(id: string)=>{

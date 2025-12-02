@@ -38,8 +38,8 @@ export class UserController{
     static getAllUsers = async(req: Request, res: Response) =>{
 
             try{
-                const students = await UserService.getAllUsers()
-                return res.status(200).json({students, status: 200, code:"OK"})
+                const users = await UserService.getAllUsers()
+                return res.status(200).json({users, status: 200, code:"OK"})
     
             }catch(error:any){
                 const status = statusHTTP(error.code)

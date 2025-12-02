@@ -23,6 +23,7 @@
  *             required:
  *               - name
  *               - phone
+ *               - image_student_url
  *               - email
  *               - cpf
  *               - gender
@@ -45,6 +46,9 @@
  *               phone:
  *                 type: string           
  *                 example: "33998764356"
+ *               image_student_url:
+ *                 type: string           
+ *                 example: ""
  *               email:
  *                 type: string
  *                 format: email
@@ -232,10 +236,118 @@
  *                      
  */
  
+//studente/update
+/**
+ * @openapi
+ * /student/update/{id}:
+ *   put:
+ *     summary: Atualizar dados do aluno selecionando ID
+ *     tags: [Students]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID do Aluno
+ *         required: true
+ *         schema: 
+ *           type: string
+ *           example: "ccdsfkadftd-jgdttfga"
+ *     
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - phone
+ *               - email
+ *               - cpf
+ *               - gender
+ *               - birth_date
+ *               - current_frequency
+ *               - belt
+ *               - grade
+ *               - city
+ *               - street
+ *               - district
+ *               - number
+ *               - complement
+ *               - guardian_phone
+ *               - enrollment
+ *  
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "José Marcelo Bezerra Filho"
+ *               phone:
+ *                 type: string           
+ *                 example: "33998764356"
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "marcelo@gmail.com"
+ *               cpf:
+ *                 type: string
+ *                 example: "09865432145"
+ *               gender:
+ *                 type: string
+ *                 example: "MALE"
+ *               birth_date:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-10-31"
+ *               current_frequency:
+ *                 type: string          
+ *                 example: "13"
+ *               belt:
+ *                 type: string           
+ *                 example: "WHITE"
+ *               grade:
+ *                 type: string           
+ *                 example: "1"
+ *               city:
+ *                 type: string           
+ *                 example: "Cedro"
+ *               street:
+ *                 type: string           
+ *                 example: "Rua B"
+ *               district:
+ *                 type: string           
+ *                 example: "Prado"
+ *               number:
+ *                 type: string           
+ *                 example: "123"
+ *               complement:
+ *                 type: string           
+ *                 example: "Casa"
+ *               guardian_phone:
+ *                 type: string           
+ *                 example: "33998764356"
+ *               enrollment:
+ *                 type: string           
+ *                 example: "12"
+ * 
+ *     responses:
+ *       200:
+ *         description: Dados atualizados
+ * 
+ *       404:
+ *         description: ID não fornecido ou Aluno não encontrado
+ * 
+ *       400:
+ *         description: ID não fornecido ou Aluno não encontrado
+ * 
+ *       422:
+ *         description: Mensagem de erro do ZOD
+ *         
+ * 
+ */
+
 //student/filtrar todos os alunos
 /**
  * @openapi
- * /student/:
+ * /student:
  *   get:
  *     summary: Filtrar todos os alunos
  *     tags: [Students]
@@ -315,4 +427,30 @@
  *                code:
  *                  type: string              
  *                  example: "OK"
+ */
+
+//studente/delete
+/**
+ * @openapi
+ * /student/{id}:
+ *   delete:
+ *     summary: Deletar o aluno selecionando ID
+ *     tags: [Students]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID do Aluno
+ *         required: true
+ *         schema: 
+ *           type: string
+ *           example: "ccdsfkadftd-jgdttfga"
+ * 
+ *     responses:
+ *       200:
+ *         description: Aluno deletado
+ * 
+ *       404:
+ *         description: Aluno não encontrado
+ *         
+ * 
  */

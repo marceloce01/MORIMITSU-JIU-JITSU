@@ -12,7 +12,7 @@ export function beltAgeValidation(birth_date: Date, belt: Belt): boolean{
             age--
         }
 
-        //Verifica se o usuário tem uma idade >= 16 e lhe é selecionado uma faixa para <16
+        //Verifica se o usuário tem uma idade <= 16 e lhe é selecionado uma faixa para >16
         if(age < 16 && belt === Belt.BLUE || Belt.PURPLE || Belt.BROWN || Belt.BLACK || Belt.RED){
                 return false
         }

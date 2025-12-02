@@ -51,7 +51,8 @@ export class UserService{
     }
 
     static getAllUsers = async()=>{
-        return await UserRepository.findAll()
+        const users=  await UserRepository.findAll()
+        return users
     }
 }
 

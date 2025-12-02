@@ -19,7 +19,7 @@ export class StudentRepository{
             city: string,
             street: string,
             district: string,
-            number: number,
+            number: string,
             complement?: string,
             guardian_phone?: string,
             total_frequency: number
@@ -91,7 +91,7 @@ export class StudentRepository{
             city?: string,
             street?: string,
             district?: string,
-            number?: number,
+            number?: string,
             complement?: string,
             guardian_phone?: string,
             total_frequency?: number
@@ -114,7 +114,7 @@ export class StudentRepository{
         if(data.district != undefined) dataUpdated.district = data.district
         if(data.number != undefined) dataUpdated.number = data.number
         if(data.complement != undefined) dataUpdated.complement = data.complement
-        if(data.guardian_phone != undefined) dataUpdated.guardian_phone= data.guardian_phone
+        if(data.guardian_phone != undefined) dataUpdated.guardian_phone= data.guardian_phone ?? undefined
         if(data.total_frequency != undefined) dataUpdated.total_frequency = data.total_frequency
 
         return prisma.student.update({where: {id}, data: dataUpdated})

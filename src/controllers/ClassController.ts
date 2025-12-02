@@ -7,6 +7,7 @@ import { zodMessage } from "../utils/ZodErrorFormat.js";
 
 export class ClassController{
 
+    //Criar uma turma
     static createClass = async(req: Request, res: Response) =>{
             
             try{
@@ -24,4 +25,20 @@ export class ClassController{
                 return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             }
         }
+
+        //Deletar uma turma
+        static deleteStudent = async(req: Request, res: Response) =>{
+                
+                try{
+                    const {id} = req.params
+                    
+                    const result = await ClassService.deleteClass(id)
+        
+                    return res.status(200).json({result, status: 200, code:"OK"})
+        
+                }catch(error:any){
+                    const status = statusHTTP(error.code)
+                    return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+                }
+            }
 }

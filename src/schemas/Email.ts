@@ -7,8 +7,6 @@ export const emailSchema = z.object({
         const domain = val.split("@")[1]
         return allowedDomain.includes(domain)
     
-    }, {
-        message: "Erro ao validar dados!"
     }),
 })
 

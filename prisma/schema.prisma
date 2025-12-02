@@ -11,6 +11,7 @@ model User {
   id            String              @id @default(cuid())
   username      String
   email         String              @unique
+  image_user_url String?
   password      String
   role          Role                @default(TEACHER)
   createdAt     DateTime            @default(now())
@@ -30,6 +31,7 @@ model ResetPasswordCode {
 model Student {
   id                String         @id @default(cuid())
   name              String
+  image_student_url String?
   phone             String
   email             String         @unique
   cpf               String         @unique
@@ -40,12 +42,13 @@ model Student {
   belt              Belt
   grade             Int
   role              Role           @default(STUDENT)
+  status            Status         @default(ATIVO)
   guardian_phone    String?
   total_frequency   Int
   city              String         
   street            String         
   district          String         
-  number            Int            
+  number            String            
   complement        String?
   classes           StudentClass[]
   presences         StudentPresence[]
@@ -54,13 +57,14 @@ model Student {
 }
 
 model Class {
-  id         String         @id @default(cuid())
-  teacher_id String
-  name       String
-  local      String?
-  students   StudentClass[]
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  id               String         @id @default(cuid())
+  teacher_id       String
+  image_class_url  String?
+  name             String
+  local            String?
+  students         StudentClass[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 }
 
 model StudentClass {
@@ -89,19 +93,18 @@ model StudentPresence {
   classroom_id String
   presence     Boolean
   student      Student @relation(fields: [student_id], references: [id])
-  classroom     Classroom @relation(fields: [classroom_id], references: [id])
+  classroom    Classroom @relation(fields: [classroom_id], references: [id])
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
 
   @@unique([student_id, classroom_id])
 }
 
-model Config {
+model ConfigBelt {
   id         String   @id @default(cuid())
   min_age    Int
   max_age    Int?
-  min_belt   Belt
-  max_belt   Belt?
+  belt       Belt         @unique
   max_frequency Int
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
@@ -137,5 +140,10 @@ enum Belt {
 enum Gender {
   MALE
   FEMALE
+}
+
+enum Status {
+  ATIVO
+  DESATIVO
 }
 
