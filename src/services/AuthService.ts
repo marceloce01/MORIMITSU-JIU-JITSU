@@ -24,11 +24,11 @@ export class AuthService{
 
         //Valida formato de dados do login usando a biblioteca zod
         const loginSchema = z.object({
-            email: z.string().email().refine((val) => {
+            email: z.string().email("Digite um e-mail válido.").refine((val) => {
                 const domain = val.split("@")[1]
                 return allowedDomain.includes(domain)
             
-            }),
+            }, "Domínio de e-mail não autorizado."),
             password: z.string(),
             role: z.enum(["ADMIN", "TEACHER"])
                     
