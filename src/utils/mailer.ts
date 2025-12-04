@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer"
-import { EMAIL_USER, EMAIL_PASS } from "./env.ts"
+import { EMAIL_USER, EMAIL_PASS } from "./env.js"
 
 //Função enviar email ao usuário que solicita criação de conta
 export const transporter = nodemailer.createTransport({

@@ -1,4 +1,4 @@
-import {prisma} from "./prismaClient.ts"
+import {prisma} from "./prismaClient.js"
 import { Belt } from "@prisma/client"
 
 export class ConfigBeltRepository {

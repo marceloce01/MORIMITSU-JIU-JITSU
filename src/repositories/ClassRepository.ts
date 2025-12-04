@@ -1,4 +1,4 @@
-import {prisma} from "./prismaClient.ts"
+import {prisma} from "./prismaClient.js"
 
 export class ClassRepository{
     //Criar uma turma na tabela Class

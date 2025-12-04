@@ -1,5 +1,5 @@
 import { Gender, Belt} from "@prisma/client";
-import {prisma} from "./prismaClient.ts"
+import {prisma} from "./prismaClient.js"
 
 export class StudentRepository{
 

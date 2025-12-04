@@ -1,7 +1,7 @@
 //Repositório de Usuários: local onde vou fazer ligações diretas com o banco de dados, como criar, ler, atualizar e deletar o usuário  diretamente, depois utilizá-lo em services e controllers
 
 import { Role } from "@prisma/client";
-import {prisma} from "./prismaClient.ts"
+import {prisma} from "./prismaClient.js"
 
 //Classe onde irei ter basicamente o CRUD de Users
 export class UserRepository{

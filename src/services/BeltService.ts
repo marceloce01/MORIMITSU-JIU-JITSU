@@ -1,6 +1,6 @@
 import { Belt } from "@prisma/client"
-import { ErrorCode } from "../utils/ErrorCodes.ts"
-import { ConfigBeltRepository } from "../repositories/ConfigBeltRepository.ts"
+import { ErrorCode } from "../utils/ErrorCodes.js"
+import { ConfigBeltRepository } from "../repositories/ConfigBeltRepository.js"
 
 type BelConfigInput = {
     

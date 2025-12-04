@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { ErrorCode } from "../utils/ErrorCodes.ts";
-import { BeltService } from "../services/BeltService.ts";
-import { statusHTTP } from "../utils/ErrorCodes.ts";
+import { ErrorCode } from "../utils/ErrorCodes.js";
+import { BeltService } from "../services/BeltService.js";
+import { statusHTTP } from "../utils/ErrorCodes.js";
 
 export class BeltController{
 

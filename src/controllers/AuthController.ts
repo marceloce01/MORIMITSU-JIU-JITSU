@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { AuthService } from "../services/AuthService.js";
 import { ZodError } from "zod";
 import { ErrorCode, statusHTTP } from "../utils/ErrorCodes.js"
-import { AuthenticatedRequest } from "../utils/types.js";
 import { zodMessage } from "../utils/ZodErrorFormat.js";
 
 export class AuthController{
