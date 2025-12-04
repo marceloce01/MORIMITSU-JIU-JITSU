@@ -16,7 +16,7 @@ export async function sendMail(to: string, subject: string, html: string){
     try{
 
        await transporter.sendMail({
-            from:` "Suporte"  ${EMAIL_USER}`,
+            from:`"Suporte" <${EMAIL_USER}>`,
             to,
             subject,
             html
