@@ -19,7 +19,7 @@ authRouter.post("/request-reset", AuthController.requestPasswordReset)
 authRouter.post("/verify-code", AuthController.verifyCode)
 
 //Rota que redefine a senha do usuário
-authRouter.post("/reset-password", AuthMiddleware.authenticate, AuthController.resetPassword)
+authRouter.post("/reset-password/:userId", AuthController.resetPassword)
 
 //Rota que solicita ao ADM o cadastro
 authRouter.post("/request-registration", AuthController.requestRegistration)

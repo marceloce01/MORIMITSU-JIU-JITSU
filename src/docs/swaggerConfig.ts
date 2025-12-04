@@ -36,8 +36,8 @@ const swaggerOptions = {
     },
 
     apis: process.env.NODE_ENV === "production"
-    ? ["./dist/routes/*.js", "./dist/controllers/*.js", "./dist/docs/*.js"] // Produção
-    : ["./src/routes/*.ts", "./src/controllers/*.ts", "./src/docs/*.ts"]    // Local
+    ? ["./dist/**/*.js"] // Produção
+    : ["./src/**/*.ts"]    // Local
 }
 
 export const swaggerSpec = swaggerJsDoc(swaggerOptions)

@@ -7,6 +7,7 @@ export class StudentRepository{
         data: {
 
             name: string,
+            image_student_url?: string,
             phone: string,
             email: string,
             cpf: string,
@@ -31,6 +32,7 @@ export class StudentRepository{
         return prisma.student.create({data: {
             
             name: data.name!, 
+            image_student_url: data.image_student_url,
             phone: data.phone!,
             email: data.email!,
             cpf: data.cpf!,
@@ -79,6 +81,7 @@ export class StudentRepository{
         id: string,
         data: {
             name?: string,
+            image_student_url?: string,
             phone?: string,
             email?: string,
             cpf?: string,
@@ -100,6 +103,7 @@ export class StudentRepository{
     )=>{
         const dataUpdated: any = {}
         if(data.name != undefined) dataUpdated.name = data.name
+        if(data.image_student_url != undefined) dataUpdated.image_student_url = data.image_student_url
         if(data.phone != undefined) dataUpdated.phone = data.phone
         if(data.email != undefined) dataUpdated.email = data.email
         if(data.cpf != undefined) dataUpdated.cpf = data.cpf

@@ -375,12 +375,18 @@
 //reset-password
 /**
  * @openapi
- * /auth/reset-password:
+ * /auth/reset-password/{userId}:
  *   post:
  *     summary: Redefinir senha do usuário
  *     tags: [Auth]
- *     security:
- *       - bearerAuth: []
+ *     parameters:
+ *       - name: userId 
+ *         in: path
+ *         description: ID do Aluno retornado
+ *         required: true
+ *         schema: 
+ *           type: string
+ *                   
  *     requestBody:
  *       required: true
  *       content:
@@ -393,7 +399,7 @@
  *                                
  *               newPassword:
  *                 type: string             
- *                 example: "marcelo123"
+ *                 example: "Marcelo@234"
  * 
  *     responses:
  *       200:

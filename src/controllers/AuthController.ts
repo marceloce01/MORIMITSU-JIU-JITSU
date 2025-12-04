@@ -49,8 +49,8 @@ export class AuthController{
     static verifyCode = async(req: Request, res: Response) => {
         try{
             const {code} = req.body
-            const {token, user} = await AuthService.verifyCode(code)
-            return res.status(200).json({token, user, status: 200, code: "OK"})
+            const {userId} = await AuthService.verifyCode(code)
+            return res.status(200).json({userId, status: 200, code: "OK"})
 
         }catch(error: any){
             if(error instanceof ZodError){
@@ -63,15 +63,11 @@ export class AuthController{
     }
 
     //Função que redefine a senha do usuário
-    static resetPassword = async(req: AuthenticatedRequest, res: Response) =>{
+    static resetPassword = async(req: Request, res: Response) =>{
         try{
             
-            const userId = req.user?.userId
+            const {userId} = req.params
             const {newPassword} = req.body
-
-            if(!userId){
-                return res.status(401).json({message: "Usuário não autenticado!", status: 401, code: "UNAUTHORIZED"})
-            }
 
             await AuthService.resetPassword(userId, newPassword)
             return res.status(200).json({message: "Senha redefinida com sucesso!", status: 200, code: "OK"})

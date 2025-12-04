@@ -4,8 +4,8 @@ import { allowedDomain } from "../schemas/Email.js";
 import { Role, Belt, Gender} from "@prisma/client";
 import { phoneValidation } from "../utils/validations/phone.js";
 import { ErrorCode } from "../utils/ErrorCodes.js";
-import { beltAgeValidation } from "../utils/validations/beltAge.ts";
-import { beltValidation } from "../utils/validations/beltValidation.ts";
+import { beltValidation } from "../utils/validations/belt.ts";
+import { cpfValidation } from "../utils/validations/cpf.ts";
 
 //Dados de entrada
 type StudentInput = {
@@ -46,12 +46,12 @@ export class StudentService{
         const studentSchema = z.object({
             name: z.string().min(3, "O nome deve conter ao menos 3 caracteres."),
             phone: z.string().refine((val) => phoneValidation(val), "Informe um número de telefone válido."),
-            image_student_url: z.string().url(),
+            image_student_url: z.string().url("Selecione uma URL válida.").regex(/\.(png|jpg|jpeg|gif|webp|svg)$/i, "Selecione uma URL de imagem válida.").optional(),
             email: z.string().email("Digite um e-mail válido.").refine((val) => {
                 const domain = val.split("@")[1]
                 return allowedDomain.includes(domain)
             }, "Domínio de e-mail não autorizado."),
-            cpf: z.string().length(11, "O CPF deve conter 11 dígitos."),
+            cpf: z.string().refine((val) => cpfValidation(val), "Informe um CPF válido."),
             gender: z.nativeEnum(Gender, "Selecione um gênero válido."),
             birth_date: z.coerce.date("Digite uma data válida."),
             enrollment: z.coerce.number("A matrícula deve ser um número válido.").optional(),
@@ -117,6 +117,7 @@ export class StudentService{
 
         const student = await StudentRepository.create({
                 name: parsed.name, 
+                image_student_url: parsed.image_student_url,
                 phone: parsed.phone,
                 email: parsed.email,
                 cpf: parsed.cpf,
@@ -156,12 +157,13 @@ export class StudentService{
 
             const updateSchema = z.object({
             name: z.string().min(3, "O nome deve conter ao menos 3 caracteres.").optional(),
+            image_student_url: z.string().url("Selecione uma URL válida.").regex(/\.(png|jpg|jpeg|gif|webp|svg)$/i, "Selecione uma URL de imagem válida.").optional(),
             phone: z.string().refine((val) => phoneValidation(val), "Informe um número de telefone válido.").optional(),
             email: z.string().email("Digite um e-mail válido.").refine((val) => {
                 const domain = val.split("@")[1]
                 return allowedDomain.includes(domain)
             }, "Domínio de e-mail não autorizado.").optional(),
-            cpf: z.string().length(11, "O CPF deve conter 11 dígitos").optional(),
+            cpf: z.string().refine((val) => cpfValidation(val), "Informe um CPF válido."),
             role: z.nativeEnum(Role).optional(),
             gender: z.nativeEnum(Gender, "Selecione um gênero válido.").optional(),
             birth_date: z.coerce.date("Digite uma data válida.").optional(),

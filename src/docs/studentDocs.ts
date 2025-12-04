@@ -4,7 +4,7 @@
  * @openapi
  * tags:
  *  name: Students
- *  description: Endpoints relacionados a alunos
+ *  description: Endpoints de Aluno
  */
 
 //student/register
@@ -48,7 +48,7 @@
  *                 example: "33998764356"
  *               image_student_url:
  *                 type: string           
- *                 example: ""
+ *                 example: "https://coisadefotografa.com/wp-content/uploads/2021/09/como-ter-fotos-mais-nitidas-scaled.jpg"
  *               email:
  *                 type: string
  *                 format: email
@@ -249,8 +249,7 @@
  *         description: ID do Aluno
  *         required: true
  *         schema: 
- *           type: string
- *           example: "ccdsfkadftd-jgdttfga"
+ *           type: string           
  *     
  *     requestBody:
  *       required: true
@@ -260,6 +259,7 @@
  *             type: object
  *             required:
  *               - name
+ *               - image_student_url
  *               - phone
  *               - email
  *               - cpf
@@ -280,6 +280,11 @@
  *               name:
  *                 type: string
  *                 example: "José Marcelo Bezerra Filho"
+ * 
+ *               image_student_url:
+ *                 type: string
+ *                 example: "https://coisadefotografa.com/wp-content/uploads/2021/09/como-ter-fotos-mais-nitidas-scaled.jpg"
+ * 
  *               phone:
  *                 type: string           
  *                 example: "33998764356"

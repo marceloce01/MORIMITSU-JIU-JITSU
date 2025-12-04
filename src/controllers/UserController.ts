@@ -4,18 +4,19 @@ import { RegisterInput } from "../schemas/RegisterSchema.js"
 import { UserService } from "../services/UserService.js"
 import { ErrorCode, statusHTTP } from "../utils/ErrorCodes.js"
 import { ZodError } from "zod"
+import { zodMessage } from "../utils/ZodErrorFormat.ts"
 
 export class UserController{
 
     static registerUser = async(req: Request, res: Response) => {
         try{
-            const data: RegisterInput = req.body
+            const data = req.body
             const user = await UserService.registerUser(data)
-            res.status(201).json(user)
+            res.status(201).json({message: "Cadastro realizado.", user})
 
         }catch(error:any){ 
              if(error instanceof ZodError){
-                return res.status(422).json({message: "Dados Inválidos!"})
+                return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
             res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
