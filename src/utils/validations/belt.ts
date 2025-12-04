@@ -1,6 +1,6 @@
 import { Belt } from "@prisma/client";
-import { ConfigBeltRepository } from "../../repositories/ConfigBeltRepository.ts";
-import { ErrorCode } from "../ErrorCodes.ts";
+import { ConfigBeltRepository } from "../../repositories/ConfigBeltRepository.js";
+import { ErrorCode } from "../ErrorCodes.js";
 
 export async function beltValidation(birth_date: Date, belt: Belt, frequency: number): Promise <true | string>{
     const colorBelt = await ConfigBeltRepository.findByBelt(belt)
