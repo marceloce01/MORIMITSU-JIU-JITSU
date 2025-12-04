@@ -4,11 +4,14 @@ import { EMAIL_USER, EMAIL_PASS, SMTP_HOST, SMTP_PORT} from "./env.js"
 //Função enviar email ao usuário que solicita criação de conta
 export const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    port: 465,
+    secure: true,
     auth:{
         user: EMAIL_USER,
         pass: EMAIL_PASS
+    },
+    tls:{
+        rejectUnauthorized: false
     }
 })
 
