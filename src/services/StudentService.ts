@@ -4,8 +4,8 @@ import { allowedDomain } from "../schemas/Email.js";
 import { Role, Belt, Gender} from "@prisma/client";
 import { phoneValidation } from "../utils/validations/phone.js";
 import { ErrorCode } from "../utils/ErrorCodes.js";
-import { beltValidation } from "../utils/validations/belt.ts";
-import { cpfValidation } from "../utils/validations/cpf.ts";
+import { beltValidation } from "../utils/validations/belt.js";
+import { cpfValidation } from "../utils/validations/cpf.js";
 
 //Dados de entrada
 type StudentInput = {

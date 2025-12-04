@@ -1,7 +1,7 @@
 //Serviços de Usuário: local onde basicamente se trata de regras de negócios dos usuários, ou melhor, verificações de cadastro do usuário, como falta de campos obrigatórios, verificar a existência de um usuário, etc
 
 import bcrypt from "bcryptjs";
-import { allowedDomain } from "../schemas/Email.ts";
+import { allowedDomain } from "../schemas/Email.js";
 import { UserRepository } from "../repositories/UserRepository.js";
 import { ErrorCode } from "../utils/ErrorCodes.js";
 import { Role } from "@prisma/client";

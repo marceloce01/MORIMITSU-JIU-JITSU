@@ -8,8 +8,7 @@
     "rootDir": "src",                       /* Onde encontrar o código-fonte .ts */
     "esModuleInterop": true,                  /* Permite importações mistas (padrão) */
     "resolveJsonModule": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true,                           /* Permite importar arquivos .json (necessário para o seu Swagger) */
+    "noEmit": false,                          /* Permite importar arquivos .json (necessário para o seu Swagger) */
 
     /* Configurações de Código */
     "strict": true,                           /* Habilita todas as verificações rigorosas (boa prática) */

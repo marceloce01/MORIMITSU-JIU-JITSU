@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs"
 import jwt from 'jsonwebtoken';
 import { ResetPasswordCodeRepository } from "../repositories/ResetPassCodeRepository.js";
 import { Role } from "@prisma/client";
-import { sendMail } from "../utils/mailer.ts";
+import { sendMail } from "../utils/mailer.js";
 
 const JWT_SECRET = process.env.JWT_SECRET
 

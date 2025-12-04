@@ -6,7 +6,7 @@ import { userRouter } from './routes/UserRoutes.js';
 import { authRouter } from './routes/AuthRoutes.js';
 import { studentRouter } from './routes/StudentRoutes.js';
 import { classRouter } from './routes/ClassRoutes.js';
-import { beltRouter } from './routes/BeltRoutes.ts';
+import { beltRouter } from './routes/BeltRoutes.js';
 
 
 const app = express();
