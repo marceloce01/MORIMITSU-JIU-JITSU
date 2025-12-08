@@ -1,23 +1,25 @@
 {
   "compilerOptions": {
     /* Módulos e Saída */
-    "target": "ES2020",                       /* Define a versão JS de saída (compatível com Node moderno) */
-    "module": "nodenext",                     /* Usa o sistema de módulos moderno do Node.js (ES Modules) */
-    "moduleResolution": "NodeNext",           /* Define como o TypeScript resolve os caminhos dos módulos (melhor para ESM) */
-    "outDir": "dist",                         /* CRUCIAL: Onde colocar os arquivos .js compilados */
-    "rootDir": "src",                       /* Onde encontrar o código-fonte .ts */
-    "esModuleInterop": true,                  /* Permite importações mistas (padrão) */
+    "target": "ES2020",                       
+    "module": "nodenext",                    
+    "moduleResolution": "NodeNext",          
+    "outDir": "dist",                        
+    "rootDir": "src",                      
+    "esModuleInterop": true,                  
     "resolveJsonModule": true,
-    "noEmit": false,                          /* Permite importar arquivos .json (necessário para o seu Swagger) */
+    "noEmit": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,                        
 
     /* Configurações de Código */
-    "strict": true,                           /* Habilita todas as verificações rigorosas (boa prática) */
-    "skipLibCheck": true,                     /* Ignora a verificação de tipo em arquivos de bibliotecas */
-    "forceConsistentCasingInFileNames": true, /* Ajuda a evitar erros entre sistemas operacionais (Windows vs. Linux) */
-    "isolatedModules": true                   /* Garante que os arquivos são tratados como módulos */
+    "strict": true,                         
+    "skipLibCheck": true,                   
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true                  
   },
   
   /* Arquivos a incluir e excluir */
-  "include": ["src", "prisma.config.ts"],                    /* Inclui todos os arquivos dentro da pasta 'src' */
+  "include": ["src", "prisma.config.ts"],                    
   "exclude": ["node_modules", "dist", "prisma.config.ts"]
 }

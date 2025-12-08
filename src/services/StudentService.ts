@@ -1,5 +1,5 @@
 import { StudentRepository } from "../repositories/StudentRepository.js";
-import z, { string } from "zod"
+import z from "zod"
 import { allowedDomain } from "../schemas/Email.js";
 import { Role, Belt, Gender} from "@prisma/client";
 import { phoneValidation } from "../utils/validations/phone.js";
@@ -8,7 +8,7 @@ import { beltValidation } from "../utils/validations/belt.js";
 import { cpfValidation } from "../utils/validations/cpf.js";
 
 //Dados de entrada
-type StudentInput = {
+export type StudentInput = {
         name: string,
         image_student_url?: string,
         phone: string,
@@ -46,7 +46,7 @@ export class StudentService{
         const studentSchema = z.object({
             name: z.string().min(3, "O nome deve conter ao menos 3 caracteres."),
             phone: z.string().refine((val) => phoneValidation(val), "Informe um número de telefone válido."),
-            image_student_url: z.string().url("Selecione uma URL válida.").regex(/\.(png|jpg|jpeg|gif|webp|svg)$/i, "Selecione uma URL de imagem válida.").optional(),
+            image_student_url: z.string().optional(),
             email: z.string().email("Digite um e-mail válido.").refine((val) => {
                 const domain = val.split("@")[1]
                 return allowedDomain.includes(domain)
@@ -104,7 +104,7 @@ export class StudentService{
         }
 
         if(age < 18 && !parsed.guardian_phone){
-            const error:any = new Error("O telefone do responsável é obrigatório.")
+            const error:any = new Error("O telefone do responsável é obrigatório para menores de 18 anos.")
             error.code = ErrorCode.BAD_REQUEST
             throw error
         }
@@ -136,6 +136,8 @@ export class StudentService{
                 total_frequency: parsed.current_frequency
             })
 
+        console.log(`Aluno cadastrado com sucesso: ${student.name}`)
+
         return {student, age}
         }
 
@@ -157,13 +159,13 @@ export class StudentService{
 
             const updateSchema = z.object({
             name: z.string().min(3, "O nome deve conter ao menos 3 caracteres.").optional(),
-            image_student_url: z.string().url("Selecione uma URL válida.").regex(/\.(png|jpg|jpeg|gif|webp|svg)$/i, "Selecione uma URL de imagem válida.").optional(),
+            image_student_url: z.string().optional(),
             phone: z.string().refine((val) => phoneValidation(val), "Informe um número de telefone válido.").optional(),
             email: z.string().email("Digite um e-mail válido.").refine((val) => {
                 const domain = val.split("@")[1]
                 return allowedDomain.includes(domain)
             }, "Domínio de e-mail não autorizado.").optional(),
-            cpf: z.string().refine((val) => cpfValidation(val), "Informe um CPF válido."),
+            cpf: z.string().refine((val) => cpfValidation(val), "Informe um CPF válido.").optional(),
             role: z.nativeEnum(Role).optional(),
             gender: z.nativeEnum(Gender, "Selecione um gênero válido.").optional(),
             birth_date: z.coerce.date("Digite uma data válida.").optional(),
@@ -204,24 +206,28 @@ export class StudentService{
                     age--
                 }
 
-                if(age < 18 && (!guardianPhone || guardianPhone === "")){
-                    const error:any = new Error("O campo guardian_phone é obrigatório para menores de 18 anos!")
+                if(age!=undefined){
+
+                    if(age < 18 && (!guardianPhone || guardianPhone === "")){
+                    const error:any = new Error("O telefone do responsável é obrigatório para menores de 18 anos.")
                     error.code = ErrorCode.BAD_REQUEST
                     throw error
+
+                    }
+
+                    if(age >= 18 && guardianPhone){
+                        parsed.guardian_phone = undefined
+                    }
                 }
 
-                if(age >= 18 && existingStudent.guardian_phone){
-                    const updateStudent = await StudentRepository.update(id, {guardian_phone: ""})
-                    if(updateStudent.guardian_phone === undefined){
-                        updateStudent.guardian_phone = null
-                    }
-                    return {student: updateStudent, age}
-                }
-        }
+                const student = await StudentRepository.update(id, {...parsed, guardian_phone: parsed.guardian_phone})
+                return {student, age}    
+            }
+
             const student = await StudentRepository.update(id, parsed)
             return {student, age}
         }
-
+            
         static getById = async(id: string)=>{
             const student = await StudentRepository.findById(id)
             if(!student){

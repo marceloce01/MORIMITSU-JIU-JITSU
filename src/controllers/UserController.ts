@@ -12,6 +12,7 @@ export class UserController{
             const data = req.body
             const user = await UserService.registerUser(data)
             res.status(201).json({message: "Cadastro realizado.", user})
+            
 
         }catch(error:any){ 
              if(error instanceof ZodError){
@@ -24,11 +25,12 @@ export class UserController{
     }
 
     static getUserById = async(req: Request, res: Response) =>{
+
         try{
         const userId = req.params.id
         const user = await UserService.getUserById(userId)
         return res.status(200).json(user)
-
+        
         }catch(error:any){
             const status = statusHTTP(error.code)
             res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})

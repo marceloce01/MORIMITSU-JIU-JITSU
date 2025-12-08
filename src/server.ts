@@ -8,7 +8,6 @@ import { studentRouter } from './routes/StudentRoutes.js';
 import { classRouter } from './routes/ClassRoutes.js';
 import { beltRouter } from './routes/BeltRoutes.js';
 
-
 const app = express();
 
 dotenv.config();
@@ -24,12 +23,12 @@ app.use(cors(
     }
 ));
 
-
 app.get('/', (req, res) => {
   res.send('Servidor rodando!');
 });
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
 
 setupSwagger(app)
 app.use("/user", userRouter)

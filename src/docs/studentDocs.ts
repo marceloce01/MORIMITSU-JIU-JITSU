@@ -17,27 +17,22 @@
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
  *               - name
- *               - phone
- *               - image_student_url
+ *               - phone              
  *               - email
  *               - cpf
  *               - gender
  *               - birth_date
- *               - current_frequency
  *               - belt
  *               - grade
  *               - city
  *               - street
  *               - district
  *               - number
- *               - complement
- *               - guardian_phone
- *               - enrollment
  *  
  *             properties:
  *               name:
@@ -47,7 +42,8 @@
  *                 type: string           
  *                 example: "33998764356"
  *               image_student_url:
- *                 type: string           
+ *                 type: string
+ *                 format: binary           
  *                 example: "https://coisadefotografa.com/wp-content/uploads/2021/09/como-ter-fotos-mais-nitidas-scaled.jpg"
  *               email:
  *                 type: string
@@ -254,84 +250,64 @@
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             type: object
- *             required:
- *               - name
- *               - image_student_url
- *               - phone
- *               - email
- *               - cpf
- *               - gender
- *               - birth_date
- *               - current_frequency
- *               - belt
- *               - grade
- *               - city
- *               - street
- *               - district
- *               - number
- *               - complement
- *               - guardian_phone
- *               - enrollment
- *  
+ *             type: object            
  *             properties:
  *               name:
  *                 type: string
- *                 example: "José Marcelo Bezerra Filho"
  * 
  *               image_student_url:
  *                 type: string
- *                 example: "https://coisadefotografa.com/wp-content/uploads/2021/09/como-ter-fotos-mais-nitidas-scaled.jpg"
+ *                 format: binary
  * 
  *               phone:
  *                 type: string           
- *                 example: "33998764356"
+ *                 
  *               email:
  *                 type: string
  *                 format: email
- *                 example: "marcelo@gmail.com"
+ * 
  *               cpf:
- *                 type: string
- *                 example: "09865432145"
+ *                 type: string  
+ *              
  *               gender:
  *                 type: string
- *                 example: "MALE"
+ * 
  *               birth_date:
  *                 type: string
  *                 format: date
- *                 example: "2025-10-31"
+ * 
  *               current_frequency:
- *                 type: string          
- *                 example: "13"
+ *                 type: integer          
+ * 
  *               belt:
  *                 type: string           
- *                 example: "WHITE"
+ * 
  *               grade:
- *                 type: string           
- *                 example: "1"
+ *                 type: integer           
+ *                 
  *               city:
  *                 type: string           
- *                 example: "Cedro"
+ *                 
  *               street:
  *                 type: string           
- *                 example: "Rua B"
+ *                 
  *               district:
  *                 type: string           
- *                 example: "Prado"
+ *                 
  *               number:
  *                 type: string           
- *                 example: "123"
+ *                 
  *               complement:
  *                 type: string           
- *                 example: "Casa"
+ *                 
  *               guardian_phone:
  *                 type: string           
- *                 example: "33998764356"
+ *                 
  *               enrollment:
- *                 type: string           
- *                 example: "12"
+ *                 type: integer           
+ *                 
  * 
  *     responses:
  *       200:

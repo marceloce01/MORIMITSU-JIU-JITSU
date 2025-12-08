@@ -4,24 +4,38 @@ import { ZodError } from "zod";
 import { ErrorCode } from "../utils/ErrorCodes.js";
 import { statusHTTP } from "../utils/ErrorCodes.js";
 import { zodMessage } from "../utils/ZodErrorFormat.js";
+import path from "path";
+import fs from "fs"
+import { StudentInput } from "../services/StudentService.js";
+import { uploadInCloud } from "../config/cloudinary.js";
+import { url } from "inspector";
 
 export class StudentController {
 
     static registerStudent = async(req: Request, res: Response) =>{
-        
         try{
-            const data = req.body
+
+            let url : string | undefined = undefined
+
+            if(req.file){
+                url = await uploadInCloud(req.file.path) ?? undefined
+            }
+
+            const data = {
+                ...req.body,
+                image_student_url: url
+            } 
             
             const {student, age} = await StudentService.registerStudent(data)
 
-            return res.status(201).json({message: "Aluno cadastrado!", student, age, status: 201, code:"CREATED"})
+            return res.status(201).json({message: "Aluno cadastrado.", student, age,  status: 201, code:"CREATED"})
 
         }catch(error:any){
             if(error instanceof ZodError){
                 return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
-            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})  
         }
     }
 
@@ -29,10 +43,16 @@ export class StudentController {
         try{
             const {id} = req.params
             const data = req.body
-            
+
+            let url : string | undefined = undefined
+            if(req.file){
+                url = await uploadInCloud(req.file.path) ?? undefined
+                data.image_student_url = url
+            }
+
             const {student, age} = await StudentService.updateStudent(id, data)
 
-            return res.status(200).json({message: "As alterações foram salvas!", student, age, status: 200, code:"OK"})
+            return res.status(200).json({message: "As alterações foram salvas.", student, age, status: 200, code:"OK"})
 
         }catch(error:any){
             if(error instanceof ZodError){
