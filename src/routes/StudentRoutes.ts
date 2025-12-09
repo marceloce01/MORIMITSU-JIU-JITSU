@@ -1,5 +1,6 @@
 import { Router } from "express"
 import { StudentController } from "../controllers/StudentController.js"
+import { GraduationController } from "../controllers/GraduationController.js"
 import { upload } from "../config/multer.js"
 import { uploadInCloud } from "../config/cloudinary.js"
 
@@ -32,3 +33,6 @@ studentRouter.get("/:id", StudentController.getStudent)
 studentRouter.get("/", StudentController.getAllStudents)
 
 studentRouter.delete("/:id", StudentController.deleteStudent)
+
+studentRouter.patch("/graduate/:id", GraduationController.graduateStudent)
+

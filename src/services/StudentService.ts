@@ -132,7 +132,7 @@ export class StudentService{
                 district: parsed.district,
                 number: parsed.number,
                 complement: parsed.complement,
-                guardian_phone: parsed.guardian_phone,
+                guardian_phone: parsed.guardian_phone || undefined,
                 total_frequency: parsed.current_frequency
             })
 
@@ -206,12 +206,18 @@ export class StudentService{
                     age--
                 }
 
+                if(age < 4){
+                    const error:any = new Error("A idade mínima n")
+                    error.code = ErrorCode.BAD_REQUEST
+                    throw error
+                }
+
                 if(age!=undefined){
 
                     if(age < 18 && (!guardianPhone || guardianPhone === "")){
-                    const error:any = new Error("O telefone do responsável é obrigatório para menores de 18 anos.")
-                    error.code = ErrorCode.BAD_REQUEST
-                    throw error
+                        const error:any = new Error("O telefone do responsável é obrigatório para menores de 18 anos.")
+                        error.code = ErrorCode.BAD_REQUEST
+                        throw error
 
                     }
 
@@ -252,5 +258,55 @@ export class StudentService{
             }
             await StudentRepository.delete(id)
             return "Aluno deletado!"
+        }
+
+        static getCelebrantsBirth = async()=>{
+
+            const today = new Date()
+            const month = new Date().getMonth()+1
+
+            const students = await StudentRepository.findAll()
+
+            const celebrants = students.filter(student => new Date(student.birth_date).getMonth() + 1 === month).sort(
+                (x,y) => new Date(x.birth_date).getDate() - new Date(y.birth_date).getDate()).map(student => {
+
+                    const birth_day = new Date(student.birth_date).getDate()
+
+                    let age
+                    age = today.getFullYear() - student.birth_date.getFullYear()
+                    const _month = today.getMonth() - student.birth_date.getMonth()
+
+                    if(_month < 0 || (_month === 0 && today.getDate() < student.birth_date.getDate())){
+                        age--
+                    }
+
+                    const thisYearBirth = new Date(today.getFullYear(), student.birth_date.getMonth(), birth_day)
+
+                    let quant_days = Math.ceil((thisYearBirth.getTime() - today.getTime())/(1000*60*60*24)) + 1
+
+                    let message : string
+                    if(quant_days === 0){
+                        message = `Faz ${age + 1} anos hoje!`
+
+                    } else if(quant_days === 1){
+                        message = `Fará ${age + 1} anos amanhã!`
+
+                    } else if(quant_days > 1){
+                        message = `Fará ${age + 1} anos em ${quant_days} dias.`
+                    }else{
+                        quant_days = Math.abs(quant_days)
+                        message = `Fez ${age} anos há ${quant_days} dias atrás.`
+                    }
+
+
+                    return {
+                        id: student.id,
+                        name: student.name,
+                        image_student_url: student.image_student_url,
+                        description: message
+                    }
+                })
+
+                return {celebrants}
         }
 }

@@ -7,6 +7,7 @@ import { authRouter } from './routes/AuthRoutes.js';
 import { studentRouter } from './routes/StudentRoutes.js';
 import { classRouter } from './routes/ClassRoutes.js';
 import { beltRouter } from './routes/BeltRoutes.js';
+import { StudentController } from './controllers/StudentController.js';
 
 const app = express();
 
@@ -26,6 +27,8 @@ app.use(cors(
 app.get('/', (req, res) => {
   res.send('Servidor rodando!');
 });
+
+app.get('/celebrants-birth-day', StudentController.getCelebrantsBirth)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));

@@ -4,11 +4,7 @@ import { ZodError } from "zod";
 import { ErrorCode } from "../utils/ErrorCodes.js";
 import { statusHTTP } from "../utils/ErrorCodes.js";
 import { zodMessage } from "../utils/ZodErrorFormat.js";
-import path from "path";
-import fs from "fs"
-import { StudentInput } from "../services/StudentService.js";
 import { uploadInCloud } from "../config/cloudinary.js";
-import { url } from "inspector";
 
 export class StudentController {
 
@@ -27,14 +23,15 @@ export class StudentController {
             } 
             
             const {student, age} = await StudentService.registerStudent(data)
-
             return res.status(201).json({message: "Aluno cadastrado.", student, age,  status: 201, code:"CREATED"})
 
         }catch(error:any){
             if(error instanceof ZodError){
+                console.error({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
                 return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})  
         }
     }
@@ -77,8 +74,7 @@ export class StudentController {
         }
     }
 
-    static getAllStudents = async(req: Request, res: Response) =>{
-    
+    static getAllStudents = async(req: Request, res: Response) => {
         try{
             const students = await StudentService.getAllStudents()
             return res.status(200).json({students, status: 200, code:"OK"})
@@ -90,13 +86,23 @@ export class StudentController {
     }
 
     static deleteStudent = async(req: Request, res: Response) =>{
-        
         try{
             const {id} = req.params
             
             const result = await StudentService.deleteStudent(id)
 
             return res.status(200).json({result, status: 200, code:"OK"})
+
+        }catch(error:any){
+            const status = statusHTTP(error.code)
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        }
+    }
+
+    static getCelebrantsBirth = async(req: Request, res: Response) => {
+        try{
+            const {celebrants} = await StudentService.getCelebrantsBirth()
+            return res.status(200).json({celebrants, status: 200, code: "OK"})
 
         }catch(error:any){
             const status = statusHTTP(error.code)
