@@ -8,6 +8,7 @@ import { studentRouter } from './routes/StudentRoutes.js';
 import { classRouter } from './routes/ClassRoutes.js';
 import { beltRouter } from './routes/BeltRoutes.js';
 import { StudentController } from './controllers/StudentController.js';
+import { AuthMiddleware } from './middlewares/authMiddlewares.js';
 import { classroomRouter } from './routes/ClassroomRoutes.js';
 import { presenceRouter } from './routes/PresenceRoutes.js';
 
@@ -30,7 +31,7 @@ app.get('/', (req, res) => {
   res.send('Servidor rodando!');
 });
 
-app.get('/celebrants-birth-day', StudentController.getCelebrantsBirth)
+app.get('/celebrants-birth-day', AuthMiddleware.authenticate, StudentController.getCelebrantsBirth)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
