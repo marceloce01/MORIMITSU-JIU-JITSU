@@ -11,6 +11,8 @@
  *   patch:
  *     summary: Graduar Aluno
  *     tags: [Graduation]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -22,6 +24,8 @@
  *     responses:
  *       200:
  *         description: Aluno graduado
+ *       401:
+ *         description: Acesso negado
  *       404:
  *         description: Aluno não encontrado ou não selecionado
  */

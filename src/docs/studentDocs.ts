@@ -14,6 +14,8 @@
  *   post:
  *     summary: Cadastro de aluno
  *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -99,6 +101,9 @@
  *      
  *       400:
  *         description: Dados faltando
+ *    
+ *       401:
+ *         description: Acesso negado
  *         
  *       409:
  *         description: Dados já cadastrados
@@ -114,6 +119,8 @@
  *   put:
  *     summary: Atualizar dados do aluno selecionando ID
  *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -189,6 +196,9 @@
  *     responses:
  *       200:
  *         description: Dados atualizados
+ *       
+ *       401:
+ *         description: Acesso negado
  * 
  *       404:
  *         description: ID não fornecido ou Aluno não encontrado
@@ -209,6 +219,8 @@
  *   get:
  *     summary: Filtrar aluno por algum atributo
  *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: query
@@ -288,6 +300,9 @@
  *     responses:
  *       200:
  *         description: Filtragem de alunos sucedida
+ *       
+ *       401:
+ *         description: Acesso negado
  * 
  *       404:
  *         description: Aluno não encontrado
@@ -302,10 +317,14 @@
  *   get:
  *     summary: Filtrar todos os alunos
  *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
  * 
  *     responses:
  *       200:
  *         description: Lista de alunos 
+ *       401:
+ *         description: Acesso negado
  *         
  */
 
@@ -316,6 +335,8 @@
  *   delete:
  *     summary: Deletar o aluno selecionando ID
  *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -328,9 +349,13 @@
  *     responses:
  *       200:
  *         description: Aluno deletado
+ *       
+ *       401:
+ *         description: Acesso negado
  * 
  *       404:
  *         description: Aluno não encontrado
+ * 
  *         
  * 
  */

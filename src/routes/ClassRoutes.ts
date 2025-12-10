@@ -2,8 +2,11 @@ import { Router } from "express"
 import { ClassController } from "../controllers/ClassController.js"
 import { upload } from "../config/multer.js"
 import { uploadInCloud } from "../config/cloudinary.js"
+import { AuthMiddleware } from "../middlewares/authMiddlewares.js"
 
 export const classRouter = Router()
+
+classRouter.use(AuthMiddleware.authenticate)
 
 classRouter.post("/create", upload.single('image_class_url'), (req, res, next) => {
     if(!req.file){

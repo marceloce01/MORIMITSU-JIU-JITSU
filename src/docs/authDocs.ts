@@ -91,7 +91,7 @@
  * @openapi
  * /auth/verify-code:
  *   post:
- *     summary: Verifica o código e retorna o token para a redefinição de senha
+ *     summary: Verifica o código e retorna o user_id para a redefinição de senha
  *     tags: [Auth]
  *     requestBody:
  *       required: true

@@ -5,11 +5,19 @@ import { ErrorCode } from "../utils/ErrorCodes.js";
 import { statusHTTP } from "../utils/ErrorCodes.js";
 import { zodMessage } from "../utils/ZodErrorFormat.js";
 import { uploadInCloud } from "../config/cloudinary.js";
+import { AuthenticatedRequest } from "../utils/types.js";
 
 export class StudentController {
 
-    static registerStudent = async(req: Request, res: Response) =>{
+    static registerStudent = async(req: AuthenticatedRequest, res: Response) =>{
         try{
+            const user = req.user
+            if(!user){
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            if(user.role !== "ADMIN"){
+                return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+            }
 
             let url : string | undefined = undefined
 
@@ -36,8 +44,16 @@ export class StudentController {
         }
     }
 
-    static updateStudent = async(req: Request, res: Response) =>{
+    static updateStudent = async(req: AuthenticatedRequest, res: Response) =>{
         try{
+            const user = req.user
+            if(!user){
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            if(user.role !== "ADMIN"){
+                return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+            }
+
             const {id} = req.params
             const data = req.body
 
@@ -76,8 +92,16 @@ export class StudentController {
         }
     }
 
-    static filterStudents= async(req: Request, res: Response) => {
+    static filterStudents= async(req: AuthenticatedRequest, res: Response) => {
         try{
+            const user = req.user
+            if(!user){
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            if(user.role !== "ADMIN"){
+                return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+            }
+
             const filters = req.query
             const students = await StudentService.filterStudents(filters)
             return res.status(200).json({students, status: 200, code:"OK"})
@@ -88,8 +112,15 @@ export class StudentController {
         }
     }
 
-    static getAllStudents = async(req: Request, res: Response) => {
+    static getAllStudents = async(req: AuthenticatedRequest, res: Response) => {
         try{
+            const user = req.user
+            if(!user){
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            if(user.role !== "ADMIN"){
+                return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+            }
             const students = await StudentService.getAllStudents()
             return res.status(200).json({students, status: 200, code:"OK"})
 
@@ -99,8 +130,16 @@ export class StudentController {
         }
     }
 
-    static deleteStudent = async(req: Request, res: Response) =>{
+    static deleteStudent = async(req: AuthenticatedRequest, res: Response) =>{
         try{
+            const user = req.user
+            if(!user){
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            if(user.role !== "ADMIN"){
+                return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            
             const {id} = req.params
             
             const result = await StudentService.deleteStudent(id)
@@ -113,8 +152,12 @@ export class StudentController {
         }
     }
 
-    static getCelebrantsBirth = async(req: Request, res: Response) => {
+    static getCelebrantsBirth = async(req: AuthenticatedRequest, res: Response) => {
         try{
+            const user = req.user
+            if(!user){
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }    
             const {celebrants} = await StudentService.getCelebrantsBirth()
             return res.status(200).json({celebrants, status: 200, code: "OK"})
 

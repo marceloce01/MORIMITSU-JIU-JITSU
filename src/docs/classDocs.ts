@@ -11,6 +11,8 @@
  *   post:
  *     summary: Criar uma nova turma
  *     tags: [Class]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -34,6 +36,8 @@
  *     responses:
  *       201:
  *         description: Turma criada com sucesso
+ *       401:
+ *         description: Acesso negado
  *       404:
  *         description: Instrutor não encontrado
  * 
@@ -45,6 +49,8 @@
  *   post:
  *     summary: Enturmar um aluno na turma
  *     tags: [Class]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: class_id
  *         in: path
@@ -69,6 +75,9 @@
  *     responses:
  *       200:
  *         description: Aluno enturmado
+ *       
+ *       401:
+ *         description: Acesso negado
  * 
  *       404:
  *         description: Turma ou Aluno não encontrado
@@ -81,6 +90,8 @@
  *   delete:
  *     summary: Deletar turma
  *     tags: [Class]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -92,6 +103,8 @@
  *     responses:
  *       200:
  *         description: Turma deletada
+ *       401:
+ *         description: Acesso negado
  *       404:
  *         description: Turma não encontrada
  */      

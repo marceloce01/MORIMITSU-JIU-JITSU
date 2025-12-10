@@ -5,12 +5,20 @@ import { ErrorCode } from "../utils/ErrorCodes.js";
 import { statusHTTP } from "../utils/ErrorCodes.js";
 import { zodMessage } from "../utils/ZodErrorFormat.js";
 import { uploadInCloud } from "../config/cloudinary.js";
+import { AuthenticatedRequest } from "../utils/types.js";
 
 export class ClassController{
 
     //Criar uma turma
-    static createClass = async(req: Request, res: Response) =>{
+    static createClass = async(req: AuthenticatedRequest, res: Response) =>{
         try{
+            const user = req.user
+            if(!user){
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            if(user.role !== "ADMIN"){
+                return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+            }
 
             let url : string | undefined = undefined
             
@@ -37,14 +45,22 @@ export class ClassController{
         }
     }
 
-    static addStudentInClass = async(req: Request, res: Response) =>{
+    static addStudentInClass = async(req: AuthenticatedRequest, res: Response) =>{
         try{
-                const {class_id} = req.params
-                const {student_id} = req.body
-                
-                const message = await ClassService.addStudentInClass(class_id, student_id)
-    
-                return res.status(200).json({message, status: 200, code:"OK"})
+            const user = req.user
+            if(!user){
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            if(user.role !== "ADMIN"){
+                return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+            }
+
+            const {class_id} = req.params
+            const {student_id} = req.body
+            
+            const message = await ClassService.addStudentInClass(class_id, student_id)
+
+            return res.status(200).json({message, status: 200, code:"OK"})
     
         }catch(error:any){
             const status = statusHTTP(error.code)
@@ -55,8 +71,15 @@ export class ClassController{
     }
 
     //Deletar uma turma
-    static deleteStudent = async(req: Request, res: Response) =>{
+    static deleteStudent = async(req: AuthenticatedRequest, res: Response) =>{
             try{
+                const user = req.user
+                if(!user){
+                    return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                }
+                if(user.role !== "ADMIN"){
+                    return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+                }
                 const {id} = req.params
                 
                 const result = await ClassService.deleteClass(id)

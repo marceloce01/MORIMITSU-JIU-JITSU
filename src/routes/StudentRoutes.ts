@@ -3,8 +3,11 @@ import { StudentController } from "../controllers/StudentController.js"
 import { GraduationController } from "../controllers/GraduationController.js"
 import { upload } from "../config/multer.js"
 import { uploadInCloud } from "../config/cloudinary.js"
+import { AuthMiddleware } from "../middlewares/authMiddlewares.js"
 
 export const studentRouter = Router()
+
+studentRouter.use(AuthMiddleware.authenticate)
 
 studentRouter.post("/register", upload.single('image_student_url'), (req, res, next) => {
     if(!req.file){

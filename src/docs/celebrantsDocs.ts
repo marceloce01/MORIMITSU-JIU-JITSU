@@ -13,6 +13,8 @@
  *   get:
  *     summary: Aniversariantes do Mês
  *     tags: [Celebrants]
+ *     security:
+ *       - bearerAuth: []
  * 
  *     responses:
  *       200:
