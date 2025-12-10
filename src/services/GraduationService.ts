@@ -34,7 +34,7 @@ export class GraduationService {
         }
         const current_frequency = student.current_frequency
 
-        if((grade >= 1 && grade < 4) && ((current_frequency === config_belt.max_frequency) || (age < 12 && current_frequency === 15))){
+        if((grade >= 0 && grade < config_belt.grade) && ((current_frequency === config_belt.max_frequency) || (age < 12 && current_frequency === 15))){
             student.grade = grade + 1
             student.current_frequency = 0
 
@@ -42,11 +42,11 @@ export class GraduationService {
             console.log(`Aluno(a) ${student.name} promovido(a) para o ${student.grade}º grau da faixa ${student.belt}.`)
             return `Aluno(a) ${student.name} promovido(a) para o ${student.grade}º grau da faixa ${student.belt}.`
 
-        }else if((grade === 4) && ((current_frequency === config_belt.max_frequency) || (age < 12 && current_frequency === 15))){
+        }else if((grade === config_belt.grade) && ((current_frequency === config_belt.max_frequency) || (age < 12 && current_frequency === 15))){
 
             const belts = []
 
-            for(const belt of [Belt.WHITE, Belt.GRAY_WHITE, Belt.GRAY, Belt.GRAY_BLACK, Belt.YELLOW_WHITE, Belt.YELLOW, Belt.YELLOW_BLACK, Belt.ORANGE_WHITE, Belt.ORANGE, Belt.ORANGE_BLACK, Belt.GREEN_WHITE, Belt.GREEN, Belt.GREEN_BLACK, Belt.BLUE, Belt.PURPLE, Belt.BROWN, Belt.BLACK, Belt.RED]){
+            for(const belt of [Belt.WHITE, Belt.GRAY_WHITE, Belt.GRAY, Belt.GRAY_BLACK, Belt.YELLOW_WHITE, Belt.YELLOW, Belt.YELLOW_BLACK, Belt.ORANGE_WHITE, Belt.ORANGE, Belt.ORANGE_BLACK, Belt.GREEN_WHITE, Belt.GREEN, Belt.GREEN_BLACK, Belt.BLUE, Belt.PURPLE, Belt.BROWN, Belt.BLACK, Belt.RED_BLACK, Belt.RED_WHITE,Belt.RED]){
             
                 const belt_config = await ConfigBeltRepository.findByBelt(belt)
                 if(!belt_config){

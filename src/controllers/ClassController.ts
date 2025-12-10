@@ -28,11 +28,30 @@ export class ClassController{
 
         }catch(error:any){
             if(error instanceof ZodError){
+                console.error({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
                 return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
+    }
+
+    static addStudentInClass = async(req: Request, res: Response) =>{
+        try{
+                const {class_id} = req.params
+                const {student_id} = req.body
+                
+                const message = await ClassService.addStudentInClass(class_id, student_id)
+    
+                return res.status(200).json({message, status: 200, code:"OK"})
+    
+        }catch(error:any){
+            const status = statusHTTP(error.code)
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+
+            }
     }
 
     //Deletar uma turma

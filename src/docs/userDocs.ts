@@ -5,6 +5,7 @@
  *  description: Endpoints de Usuários 
  */
 
+ //Cadastrar Usuário
  /**
  * @openapi
  * /user/register:
@@ -43,4 +44,63 @@
  *         description: Usuário já cadastrado
  *       422:
  *         description: Mensagem de erro ZOD
+ */
+
+ //Filtrar Usuário
+ /**
+ * @openapi
+ * /user/filter:
+ *   get:
+ *     summary: Filtrar usuário por algum atributo
+ *     tags: [Users]
+ *     parameters:
+ *       - name: id
+ *         in: query
+ *         description: ID do Aluno
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: username
+ *         in: query
+ *         description: Nome de usuário
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: email
+ *         in: query
+ *         description: E-mail do usuário
+ *         schema: 
+ *           type: string
+ *           format: email
+ * 
+ *       - name: role
+ *         in: query
+ *         description: Apelido do aluno
+ *         schema: 
+ *           type: string
+ *           enum: [ADMIN, TEACHER]
+ * 
+ *       - name: class_id
+ *         in: query
+ *         description: ID de uma Turma
+ *         schema: 
+ *           type: string
+ * 
+ *     responses:
+ *       200:
+ *         description: Filtragem de alunos
+ * 
+ */
+
+ /**
+ * @openapi
+ * /user/:
+ *   get:
+ *     summary: Filtrar todos os usuários
+ *     tags: [Users]
+ * 
+ *     responses:
+ *       200:
+ *         description: Lista de usuários
+ *         
  */

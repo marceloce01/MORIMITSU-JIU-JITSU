@@ -53,9 +53,11 @@ export class StudentController {
 
         }catch(error:any){
             if(error instanceof ZodError){
+                console.error({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
                 return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
             const status = statusHTTP(error.code)
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
@@ -67,6 +69,18 @@ export class StudentController {
             const student = await StudentService.getById(id)
 
             return res.status(200).json({student, status: 200, code:"OK"})
+
+        }catch(error:any){
+            const status = statusHTTP(error.code)
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        }
+    }
+
+    static filterStudents= async(req: Request, res: Response) => {
+        try{
+            const filters = req.query
+            const students = await StudentService.filterStudents(filters)
+            return res.status(200).json({students, status: 200, code:"OK"})
 
         }catch(error:any){
             const status = statusHTTP(error.code)

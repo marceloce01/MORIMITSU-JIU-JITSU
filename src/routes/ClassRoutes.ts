@@ -15,3 +15,7 @@ classRouter.post("/create", upload.single('image_class_url'), (req, res, next) =
    next()
 
 }, ClassController.createClass)
+
+classRouter.post("/add-student/:class_id", ClassController.addStudentInClass)
+
+classRouter.delete("/:id", ClassController.deleteStudent)

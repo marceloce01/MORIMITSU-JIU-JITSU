@@ -2,7 +2,7 @@
 
 import bcrypt from "bcryptjs";
 import { allowedDomain } from "../schemas/Email.js";
-import { UserRepository } from "../repositories/UserRepository.js";
+import { UserFilter, UserRepository } from "../repositories/UserRepository.js";
 import { ErrorCode } from "../utils/ErrorCodes.js";
 import { Role } from "@prisma/client";
 import z from "zod";
@@ -55,6 +55,18 @@ export class UserService{
         const user = await UserRepository.create({username: parsed.username, email: parsed.email, password: hashedPassword, role: parsed.role})
     
         return {id: user.id, username: user.username, email: user.email, role: user.role}
+    }
+
+    static filterUsers = async(filters: UserFilter) =>{
+        const users = await UserRepository.filter(filters)
+        if(!users){
+            const error:any = new Error("Nenhum aluno encontrado.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+
+        }else{
+            return users
+        }
     }
 
     static getUserById = async(userId: string) =>{

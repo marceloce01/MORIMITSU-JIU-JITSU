@@ -2,7 +2,7 @@
  * @openapi
  * tags:
  *   name: Graduation
- *   description: Endpoints de Turma
+ *   description: Endpoints de Graduação
  */
 
 /**

@@ -4,12 +4,12 @@ import { Belt } from "@prisma/client"
 export class ConfigBeltRepository {
 
     //Criar uma configuração de faixa na tabela Config
-    static create = async( data: {min_age: number, max_age: number, belt: Belt, max_frequency: number }) => {
-       return prisma.configBelt.create({data:{min_age: data.min_age, max_age: data.max_age, belt: data.belt, max_frequency: data.max_frequency}})
+    static create = async( data: {min_age: number, max_age: number, belt: Belt, grade: number, max_frequency: number }) => {
+       return prisma.configBelt.create({data:{min_age: data.min_age, max_age: data.max_age, belt: data.belt, grade: data.grade, max_frequency: data.max_frequency}})
     }
 
     //Atualizar dados da configuração de faixa
-    static update = async(id: string, data: {min_age?: number, max_age?: number, min_belt?: Belt, max_belt?: Belt, max_frequency?:         number }) => {
+    static update = async(id: string, data: {min_age?: number, max_age?: number, min_belt?: Belt, grade?: number, max_belt?: Belt, max_frequency?: number }) => {
        return prisma.configBelt.update({where: {id}, data})
     }
 

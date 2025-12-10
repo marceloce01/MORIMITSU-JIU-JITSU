@@ -111,7 +111,7 @@ model ConfigBelt {
   id         String   @id @default(cuid())
   min_age    Int
   max_age    Int?
-  grade      Int
+  grade      Int     @default(0)
   belt       Belt         @unique
   max_frequency Int
   createdAt  DateTime       @default(now())
@@ -142,6 +142,8 @@ enum Belt {
   PURPLE
   BROWN
   BLACK
+  RED_BLACK
+  RED_WHITE
   RED
 }
 

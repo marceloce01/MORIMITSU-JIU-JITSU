@@ -6,6 +6,6 @@ export const userRouter = Router()
 //Rota que cadastra usuário 
 userRouter.post("/register", UserController.registerUser)
 
-userRouter.get("/:id", UserController.getUserById)
+userRouter.get("/filter", UserController.filterUsers)
 
 userRouter.get("/", UserController.getAllUsers)

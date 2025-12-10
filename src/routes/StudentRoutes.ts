@@ -28,7 +28,9 @@ studentRouter.put("/update/:id", upload.single('image_student_url'), (req, res, 
 
 }, StudentController.updateStudent)
 
-studentRouter.get("/:id", StudentController.getStudent)
+//studentRouter.get("/:id", StudentController.getStudent)
+
+studentRouter.get("/filter", StudentController.filterStudents)
 
 studentRouter.get("/", StudentController.getAllStudents)
 

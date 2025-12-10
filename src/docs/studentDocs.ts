@@ -38,6 +38,9 @@
  *               name:
  *                 type: string
  *                 example: "José Marcelo Bezerra Filho"
+ *               social_name:
+ *                 type: string
+ *                 example: "Marcelo Bezerra"
  *               phone:
  *                 type: string           
  *                 example: "33998764356"
@@ -54,7 +57,7 @@
  *                 example: "09865432145"
  *               gender:
  *                 type: string
- *                 example: "MALE"
+ *                 enum: [MALE, FEMALE]
  *               birth_date:
  *                 type: string
  *                 format: date
@@ -63,8 +66,8 @@
  *                 type: string          
  *                 example: "13"
  *               belt:
- *                 type: string           
- *                 example: "WHITE"
+ *                 type: string                           
+ *                 enum: [WHITE, GRAY_WHITE, GRAY, GRAY_BLACK, YELLOW_WHITE, YELLOW, YELLOW_BLACK, ORANGE_WHITE, ORANGE, ORANGE_BLACK, GREEN_WHITE, GREEN, GREEN_BLACK, BLUE, PURPLE, BROWN, BLACK, RED_BLACK, RED_WHITE, RED]
  *               grade:
  *                 type: string           
  *                 example: "1"
@@ -145,6 +148,7 @@
  *              
  *               gender:
  *                 type: string
+ *                 enum: [MALE, FEMALE]
  * 
  *               birth_date:
  *                 type: string
@@ -154,7 +158,8 @@
  *                 type: integer          
  * 
  *               belt:
- *                 type: string           
+ *                 type: string
+ *                 enum: [WHITE, GRAY_WHITE, GRAY, GRAY_BLACK, YELLOW_WHITE, YELLOW, YELLOW_BLACK, ORANGE_WHITE, ORANGE, ORANGE_BLACK, GREEN_WHITE, GREEN, GREEN_BLACK, BLUE, PURPLE, BROWN, BLACK, RED_BLACK, RED_WHITE, RED]           
  * 
  *               grade:
  *                 type: integer           
@@ -193,6 +198,99 @@
  * 
  *       422:
  *         description: Mensagem de erro do ZOD
+ *         
+ * 
+ */
+
+//Filtrar aluno
+/**
+ * @openapi
+ * /student/filter:
+ *   get:
+ *     summary: Filtrar aluno por algum atributo
+ *     tags: [Students]
+ *     parameters:
+ *       - name: id
+ *         in: query
+ *         description: ID do Aluno
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: class_id
+ *         in: query
+ *         description: ID de uma Turma
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: name
+ *         in: query
+ *         description: Nome do aluno
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: social_name
+ *         in: query
+ *         description: Apelido do aluno
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: phone
+ *         in: query
+ *         description: Telefone do aluno
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: email
+ *         in: query
+ *         description: E-mail do aluno
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: cpf
+ *         in: query
+ *         description: CPF do aluno
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: gender
+ *         in: query
+ *         description: Gênero do aluno
+ *         schema: 
+ *           type: string
+ *           enum: [MALE, FEMALE]
+ *       
+ *       - name: birth_date
+ *         in: query
+ *         description: Data de aniversário do aluno      
+ *         schema: 
+ *           type: string
+ *           format: date
+ * 
+ *       - name: enrollment
+ *         in: query
+ *         description: Número de matrícula do aluno
+ *         schema: 
+ *           type: integer
+ * 
+ *       - name: belt
+ *         in: query
+ *         description: Faixa do aluno
+ *         schema: 
+ *           type: string
+ *           enum: [WHITE, GRAY_WHITE, GRAY, GRAY_BLACK, YELLOW_WHITE, YELLOW, YELLOW_BLACK, ORANGE_WHITE, ORANGE,     ORANGE_BLACKGREEN_WHITE, GREEN, GREEN_BLACK, BLUE, PURPLE, BROWN, BLACK, RED_BLACK, RED_WHITE, RED]
+ * 
+ *       - name: grade
+ *         in: query
+ *         description: Grau de faixa do aluno
+ *         schema: 
+ *           type: integer
+ * 
+ *     responses:
+ *       200:
+ *         description: Filtragem de alunos sucedida
+ * 
+ *       404:
+ *         description: Aluno não encontrado
  *         
  * 
  */

@@ -24,6 +24,19 @@ export class UserController{
         }
     }
 
+    static filterUsers = async(req: Request, res: Response) =>{
+        try{
+            const filters = req.query
+            const users = await UserService.filterUsers(filters)
+            return res.status(200).json({users, status: 200, code:"OK"})
+        
+        }catch(error:any){
+            const status = statusHTTP(error.code)
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        }       
+
+    }
+
     static getUserById = async(req: Request, res: Response) =>{
 
         try{
@@ -38,7 +51,6 @@ export class UserController{
     }
 
     static getAllUsers = async(req: Request, res: Response) =>{
-
             try{
                 const users = await UserService.getAllUsers()
                 return res.status(200).json({users, status: 200, code:"OK"})

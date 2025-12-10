@@ -2,16 +2,12 @@ import { Belt } from "@prisma/client"
 import { ErrorCode } from "../utils/ErrorCodes.js"
 import { ConfigBeltRepository } from "../repositories/ConfigBeltRepository.js"
 
-type BelConfigInput = {
-    
-}
-
 export class BeltService {
 
-    static createBeltConfig = async(min_age: number, max_age: number, belt: Belt, max_frequency: number) =>{
+    static createBeltConfig = async(min_age: number, max_age: number, belt: Belt, grade: number, max_frequency: number) =>{
 
         //Caso falte dados obrigatórios
-        if((min_age === undefined || min_age === null) || !belt || !max_frequency){
+        if((min_age === undefined || min_age === null) || !belt || !max_frequency || !grade){
             const error:any = new Error("Digite todos os dados obrigatórios!")
             error.code = ErrorCode.BAD_REQUEST
             throw error
@@ -32,6 +28,6 @@ export class BeltService {
             throw error
         }
 
-        return await ConfigBeltRepository.create({min_age, max_age, belt, max_frequency})
+        return await ConfigBeltRepository.create({min_age, max_age, belt, grade, max_frequency})
     }
  }

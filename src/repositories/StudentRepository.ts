@@ -1,12 +1,27 @@
 import { Gender, Belt} from "@prisma/client";
 import {prisma} from "./prismaClient.js"
 
+export type StudentFilter = {
+    id?: string,
+    name?: string,
+    social_name?: string,
+    phone?: string,
+    email?: string,
+    cpf?: string,
+    gender?: Gender,
+    birth_date?: Date,
+    enrollment?: number,
+    belt?: Belt,
+    grade?: number,
+    class_id?: string
+}
+
 export class StudentRepository{
 
     static create = async(
         data: {
-
             name: string,
+            social_name?: string
             image_student_url?: string,
             phone: string,
             email: string,
@@ -26,12 +41,12 @@ export class StudentRepository{
             total_frequency: number
         }
 
-
     )=>{
         
         return prisma.student.create({data: {
             
-            name: data.name!, 
+            name: data.name!,
+            social_name: data.social_name, 
             image_student_url: data.image_student_url,
             phone: data.phone!,
             email: data.email!,
@@ -73,8 +88,34 @@ export class StudentRepository{
        return prisma.student.findMany({where})
     }
 
+    static filterStudents = async(filters: StudentFilter) =>{
+        const where: any = {}
+        if(filters.id != undefined) where.id = filters.id
+        if(filters.name != undefined) where.name = {contains: filters.name, mode: "insensitive"}
+        if(filters.social_name != undefined) where.social_name = {contains: filters.social_name, mode: "insensitive"}
+        if(filters.phone != undefined) where.phone = filters.phone
+        if(filters.email != undefined) where.email = filters.email
+        if(filters.cpf != undefined) where.cpf = filters.cpf
+        if(filters.gender != undefined) where.gender = filters.gender
+        if(filters.birth_date != undefined) {
+            where.birth_date = new Date(filters.birth_date)
+        }
+        if(filters.enrollment != undefined){
+            where.enrollment = Number(filters.enrollment)
+        }
+        if(filters.belt != undefined) where.belt = filters.belt
+        if(filters.grade != undefined){
+            where.grade = Number(filters.grade)
+        }
+        if(filters.class_id != undefined) {
+            where.classes = {some: {class_id: filters.class_id}}
+        }
+
+        return prisma.student.findMany({where, include: {classes: true}})
+    }
+
     static findAll = async()=>{
-        return prisma.student.findMany()
+        return prisma.student.findMany({include: {classes: true}})
     }
 
     static update = async(

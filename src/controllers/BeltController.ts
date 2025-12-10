@@ -8,9 +8,9 @@ export class BeltController{
     //Criar uma configuração de faixa
     static createBeltConfig = async(req: Request, res: Response) =>{
             try{
-                const {min_age, max_age, belt, max_frequency} = req.body
+                const {min_age, max_age, belt, grade, max_frequency} = req.body
                 
-                const beltConfig = await BeltService.createBeltConfig(min_age, max_age, belt, max_frequency)
+                const beltConfig = await BeltService.createBeltConfig(min_age, max_age, belt, grade, max_frequency)
                 return res.status(201).json({message: "Faixa configurada!", beltConfig: beltConfig, status: 201, code:"CREATED"})
     
             }catch(error:any){
