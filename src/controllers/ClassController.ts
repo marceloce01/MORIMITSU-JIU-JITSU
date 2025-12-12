@@ -14,9 +14,13 @@ export class ClassController{
         try{
             const user = req.user
             if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
             }
             if(user.role !== "ADMIN"){
+
+                console.error({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
             }
 
@@ -32,6 +36,7 @@ export class ClassController{
             } 
             const newClass = await ClassService.createClass(data)
 
+            console.log({message: "Turma cadastrada!", class: newClass, status: 201, code:"CREATED"})
             return res.status(201).json({message: "Turma cadastrada!", class: newClass, status: 201, code:"CREATED"})
 
         }catch(error:any){
@@ -49,9 +54,14 @@ export class ClassController{
         try{
             const user = req.user
             if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+
             }
             if(user.role !== "ADMIN"){
+
+                console.error({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
             }
 
@@ -60,6 +70,7 @@ export class ClassController{
             
             const message = await ClassService.addStudentInClass(class_id, student_id)
 
+            console.log({message, status: 200, code:"OK"})
             return res.status(200).json({message, status: 200, code:"OK"})
     
         }catch(error:any){
@@ -72,23 +83,31 @@ export class ClassController{
 
     //Deletar uma turma
     static deleteStudent = async(req: AuthenticatedRequest, res: Response) =>{
-            try{
-                const user = req.user
-                if(!user){
-                    return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
-                }
-                if(user.role !== "ADMIN"){
-                    return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
-                }
-                const {id} = req.params
-                
-                const result = await ClassService.deleteClass(id)
-    
-                return res.status(200).json({result, status: 200, code:"OK"})
-    
-            }catch(error:any){
-                const status = statusHTTP(error.code)
-                return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        try{
+            const user = req.user
+            if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
             }
+            if(user.role !== "ADMIN"){
+
+                console.error({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            
+            const {id} = req.params
+            
+            const result = await ClassService.deleteClass(id)
+
+            console.log({result, status: 200, code:"OK"})
+            return res.status(200).json({result, status: 200, code:"OK"})
+
+        }catch(error:any){
+            const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        }
         }
 }

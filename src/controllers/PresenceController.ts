@@ -17,10 +17,14 @@ export class PresenceController {
             
             const add_presence = await PresenceService.create({classroom_id, student_id, presence})
 
+            console.log({presence: add_presence, status: 201, code:"OK"})
             return res.status(201).json({presence: add_presence, status: 201, code:"OK"})
 
         }catch(error:any){
+            
             const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }

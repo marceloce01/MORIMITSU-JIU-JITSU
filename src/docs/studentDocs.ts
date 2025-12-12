@@ -96,7 +96,7 @@
  *                 example: "12"    
  * 
  *     responses:
- *       200:
+ *       201:
  *         description: Aluno cadastrado         
  *      
  *       400:

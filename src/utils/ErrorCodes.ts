@@ -9,7 +9,8 @@ export enum ErrorCode {
     NOT_FOUND = "NOT_FOUND", //Recurso não encontrado
     INTERNAL = "INTERNAL", //Erro interno no servidor
     FORBIDDEN = "FORBIDDEN", //(PROIBIDO) Pedido recebido, mas recusado
-    UNPROCESSABLE_ENTITY = "UNPROCESSABLE_ENTITY"
+    UNPROCESSABLE_ENTITY = "UNPROCESSABLE_ENTITY",
+    METHOD_NOT_ALLOWED = "METHOD_NOT_ALLOWED"
 }
 
 //Função para saber o status HTTP através do ErrorCode
@@ -31,6 +32,9 @@ export function statusHTTP(code: string | undefined): number {
 
         case ErrorCode.FORBIDDEN:
             return 403
+
+        case ErrorCode.METHOD_NOT_ALLOWED:
+            return 405
 
         case ErrorCode.UNPROCESSABLE_ENTITY:
             return 422

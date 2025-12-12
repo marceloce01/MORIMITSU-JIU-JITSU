@@ -28,4 +28,6 @@
  *         description: Acesso negado
  *       404:
  *         description: Aluno não encontrado ou não selecionado
+ *       405:
+ *         description: Aluno não apto à graduar
  */

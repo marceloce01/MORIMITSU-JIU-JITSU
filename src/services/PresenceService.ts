@@ -12,18 +12,20 @@ type PresenceInput = {
 export class PresenceService {
     static create = async(data: PresenceInput)=>{
         if(!data.student_id || !data.classroom_id || data.presence === undefined){
-            return "123"
+            const error:any = new Error("Selecione todos os dados.")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
         }
         const student = await StudentRepository.findById(data.student_id)
         if(!student){
-            const error:any = new Error("Classe não encontrada.")
+            const error:any = new Error("Aluno não encontrada.")
             error.code = ErrorCode.NOT_FOUND
             throw error
         }
 
         const classroom = await ClassroomRepository.findById(data.classroom_id)
-        if(!classroom){
-            const error:any = new Error("Instrutor não encontrado.")
+        if(!classroom || !classroom.class_id){
+            const error:any = new Error("Classe não encontrado.")
             error.code = ErrorCode.NOT_FOUND
             throw error
         }
@@ -35,15 +37,67 @@ export class PresenceService {
             throw error
         }
 
+
         if(data.presence === true){
+            const alreadyPresence = await PresenceRepository.findPresence(data.student_id, data.classroom_id)
+            if(alreadyPresence){
+                const error:any = new Error("Presença já registrada.")
+                error.code = ErrorCode.CONFLICT
+                throw error
+            }
+
             const current_frequency = student.current_frequency + 1
             student.current_frequency = current_frequency
 
             await StudentRepository.update(student.id, {current_frequency: student.current_frequency})
+            await PresenceRepository.create({student_id: data.student_id, classroom_id: data.classroom_id, presence: data.presence})
             return "Presença registrada: +1"
 
         }else{
+            const alreadyPresence = await PresenceRepository.findPresence(data.student_id, data.classroom_id)
+            if(alreadyPresence){
+                const error:any = new Error("Presença já registrada.")
+                error.code = ErrorCode.CONFLICT
+                throw error
+            }
+            await PresenceRepository.create({student_id: data.student_id, classroom_id: data.classroom_id, presence: data.presence})
             return "Presença registrada: 0"
+        }
+    }
+
+    static update = async(data: PresenceInput)=>{
+        if(!data.student_id || !data.classroom_id || data.presence === undefined){
+            const error:any = new Error("Selecione todos os dados.")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
+        }
+        const student = await StudentRepository.findById(data.student_id)
+        if(!student){
+            const error:any = new Error("Aluno não encontrada.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        const classroom = await ClassroomRepository.findById(data.classroom_id)
+        if(!classroom || !classroom.class_id){
+            const error:any = new Error("Classe não encontrado.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        const existingPresence = await PresenceRepository.findPresence(data.student_id, data.classroom_id)
+
+        if(!existingPresence){
+            if(data.presence === true){
+                await StudentRepository.update(student.id, {current_frequency: student.current_frequency + 1})
+                await PresenceRepository.create({student_id: data.student_id, classroom_id: data.classroom_id, presence: data.presence})
+                return "Presença atualizada: +1"
+            }
+        }
+
+        if(existingPresence?.presence === false && data.presence === true){
+            await StudentRepository.update(student.id, {current_frequency: student.current_frequency + 1})
+            
         }
     }
 }

@@ -7,6 +7,7 @@ import { ErrorCode } from "../utils/ErrorCodes.js";
 import { beltValidation } from "../utils/validations/belt.js";
 import { cpfValidation } from "../utils/validations/cpf.js";
 import { prisma } from "../repositories/prismaClient.js";
+import { ConfigBeltRepository } from "../repositories/ConfigBeltRepository.js";
 
 //Dados de entrada
 export type StudentInput = {
@@ -61,7 +62,7 @@ export class StudentService{
             enrollment: z.coerce.number("A matrícula deve ser um número válido.").optional(),
             current_frequency: z.coerce.number("A frequência do aluno deve ser um número válido.").int("A frequência deve ser um número inteiro.").min(0, "A frequência não pode ser negativa.").default(0),
             belt: z.nativeEnum(Belt, "Selecione uma faixa válida."),
-            grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro de 1 a 4.").min(1, "O grau deve ser um número de 1 a 4.").max(4, "O grau deve ser um número de 1 a 4."),
+            grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro de 1 a 4.").min(0, "O grau deve ser um número inteiro positivo."),
             city: z.string().min(3, "A cidade deve conter ao menos 3 caracteres."),
             street: z.string().min(2, "A rua deve conter ao menos 2 caracteres."),
             district: z.string().min(1, "O bairro deve conter ao menos 1 caractere."),
@@ -102,6 +103,13 @@ export class StudentService{
 
         if(age < 4){
             const error:any = new Error("A idade mínima do aluno deve ser 4 anos.")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
+        }
+
+        const belt = await ConfigBeltRepository.findByBelt(parsed.belt)
+        if(belt != undefined && (parsed.grade > belt.grade)){
+            const error:any = new Error("Digite um número de grau coerente à faixa.")
             error.code = ErrorCode.BAD_REQUEST
             throw error
         }
@@ -183,7 +191,7 @@ export class StudentService{
         enrollment: z.coerce.number("A matrícula deve ser um número válido.").optional(),
         current_frequency: z.coerce.number("A frequência do aluno deve ser um número válido.").int("A frequência deve ser um número inteiro.").min(0, "A frequência não pode ser negativa.").optional(),
         belt: z.nativeEnum(Belt, "Selecione uma faixa válida.").optional(),
-        grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro de 1 a 4.").min(1, "O grau deve ser um número de 1 a 4.").max(4, "O grau deve ser um número de 1 a 4.").optional(),
+        grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro de 1 a 4.").min(0, "O grau deve ser um número inteiro positivo.").optional(),
         city: z.string().min(3, "A cidade deve conter ao menos 3 caracteres.").optional(),
         street: z.string().min(2, "A rua deve conter ao menos 2 caracteres.").optional(),
         district: z.string().min(2).optional(),
@@ -295,6 +303,12 @@ export class StudentService{
 
         const students = await StudentRepository.findAll()
 
+        if(!students || students.length === 0){
+            const error:any = new Error("Nenhum aluno aniversariantes neste mês.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
         const celebrants = students.filter(student => new Date(student.birth_date).getMonth() + 1 === month).sort(
             (x,y) => new Date(x.birth_date).getDate() - new Date(y.birth_date).getDate()).map(student => {
 
@@ -330,7 +344,7 @@ export class StudentService{
                     id: student.id,
                     name: student.name,
                     image_student_url: student.image_student_url,
-                    birth_date: `${student.birth_date.getDate()+1}/${student.birth_date.getMonth()+1}/${student.birth_date.getFullYear()}`,
+                    birth_date: `${student.birth_date.getDate()}/${student.birth_date.getMonth()+1}/${student.birth_date.getFullYear()}`,
                     description: message
                 }
             })

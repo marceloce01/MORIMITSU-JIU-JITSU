@@ -13,22 +13,26 @@ export class ClassroomService {
     //Criar uma turma
     static createClassroom = async (data: ClassroomInput) => {
 
-        if(!data.teacher_id || !data.class_id || !data.classroom_date){
+        if(!data.class_id || !data.classroom_date){
             const error:any = new Error("Informe todos os dados obrigatórios!")
             error.code = ErrorCode.BAD_REQUEST
             throw error
         }
 
-        const teacher = await UserRepository.findById(data.teacher_id)
-        if(!teacher){
-            const error:any = new Error("Classe não encontrada!")
+        const class_ = await ClassRepository.findById(data.class_id)
+        if(!class_){
+            const error:any = new Error("Turma não encontrado!")
             error.code = ErrorCode.NOT_FOUND
             throw error
         }
 
-        const class_ = await ClassRepository.findById(data.class_id)
-        if(!class_){
-            const error:any = new Error("Instrutor não encontrado!")
+        if(!data.teacher_id){
+             data.teacher_id = class_.teacher_id
+        }
+
+        const teacher = await UserRepository.findById(data.teacher_id)
+        if(!teacher){
+            const error:any = new Error("Instrutor não encontrada!")
             error.code = ErrorCode.NOT_FOUND
             throw error
         }

@@ -39,7 +39,6 @@ export class GraduationService {
             student.current_frequency = 0
 
             await StudentRepository.update(student.id, {grade: student.grade, current_frequency: student.current_frequency})
-            console.log(`Aluno(a) ${student.name} promovido(a) para o ${student.grade}º grau da faixa ${student.belt}.`)
             return `Aluno(a) ${student.name} promovido(a) para o ${student.grade}º grau da faixa ${student.belt}.`
 
         }else if((grade === config_belt.grade) && ((current_frequency === config_belt.max_frequency) || (age < 12 && current_frequency === 15))){
@@ -69,37 +68,37 @@ export class GraduationService {
                 const next_belt = belts[i]
 
                 if(next_belt && next_belt.min_age && age < next_belt.min_age){
-                    console.log(`Aluno(a) ${student.name} não está apto(a) para graduar.`)
-                    return `Aluno(a) ${student.name} não está apto(a) para graduar.`
+                    const error:any = new Error(`Aluno(a) ${student.name} não está apto(a) para graduar.`)
+                    error.code = ErrorCode.METHOD_NOT_ALLOWED
+                    throw error
                 }
 
                 if(next_belt.max_age != null){
                     if(age >= next_belt.min_age && age <= next_belt.max_age){
                         student.belt = next_belt.belt
-                        student.grade = 1
+                        student.grade = 0
                         student.current_frequency = 0
 
                         await StudentRepository.update(student.id, {belt: student.belt, grade: student.grade, current_frequency: student.current_frequency})
                         
-                        console.log(`Aluno(a) ${student.name} promovido(a) para a ${student.belt}`)
                         return `Aluno(a) ${student.name} promovido(a) para a faixa ${student.belt}.`
                     }
 
                 }else if(age >= next_belt.min_age && next_belt.max_age == null){
                         student.belt = next_belt.belt
-                        student.grade = 1
+                        student.grade = 0
                         student.current_frequency = 0
 
                         await StudentRepository.update(student.id, {belt: student.belt, grade: student.grade, current_frequency: student.current_frequency})
 
-                        console.log(`Aluno(a) ${student.name} promovido(a) para a ${student.belt}`)
                         return `Aluno(a) ${student.name} promovido(a) para a faixa ${student.belt}.`
                 }
             }
 
         }else{
-            console.log(`Aluno(a) ${student.name} não está apto(a) para graduar.`)
-            return "Aluno não está apto à graduação."
+            const error:any = new Error(`Aluno(a) ${student.name} não está apto(a) para graduar.`)
+            error.code = ErrorCode.METHOD_NOT_ALLOWED
+            throw error
         }
     }
 }

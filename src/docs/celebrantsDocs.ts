@@ -19,5 +19,8 @@
  *     responses:
  *       200:
  *         description: Lista de alunos 
+ *      
+ *       404:
+ *         description: Nenhum aluno aniversariante no mês
  *         
  */

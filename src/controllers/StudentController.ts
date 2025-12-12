@@ -13,9 +13,13 @@ export class StudentController {
         try{
             const user = req.user
             if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
             }
             if(user.role !== "ADMIN"){
+
+                console.error({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
             }
 
@@ -31,6 +35,8 @@ export class StudentController {
             } 
             
             const {student, age} = await StudentService.registerStudent(data)
+
+            console.log({message: "Aluno cadastrado.", student, age,  status: 201, code:"CREATED"})
             return res.status(201).json({message: "Aluno cadastrado.", student, age,  status: 201, code:"CREATED"})
 
         }catch(error:any){
@@ -38,7 +44,9 @@ export class StudentController {
                 console.error({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
                 return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
+
             const status = statusHTTP(error.code)
+
             console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})  
         }
@@ -48,9 +56,13 @@ export class StudentController {
         try{
             const user = req.user
             if(!user){
+    
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
             }
             if(user.role !== "ADMIN"){
+
+                console.error({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
             }
 
@@ -65,6 +77,7 @@ export class StudentController {
 
             const {student, age} = await StudentService.updateStudent(id, data)
 
+            console.log({message: "As alterações foram salvas.", student, age, status: 200, code:"OK"})
             return res.status(200).json({message: "As alterações foram salvas.", student, age, status: 200, code:"OK"})
 
         }catch(error:any){
@@ -72,22 +85,10 @@ export class StudentController {
                 console.error({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
                 return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
             }
+
             const status = statusHTTP(error.code)
+
             console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
-            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
-        }
-    }
-
-    static getStudent = async(req: Request, res: Response) =>{
-        try{
-            const {id} = req.params
-            
-            const student = await StudentService.getById(id)
-
-            return res.status(200).json({student, status: 200, code:"OK"})
-
-        }catch(error:any){
-            const status = statusHTTP(error.code)
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
@@ -96,18 +97,23 @@ export class StudentController {
         try{
             const user = req.user
             if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
-            }
-            if(user.role !== "ADMIN"){
-                return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+
             }
 
             const filters = req.query
             const students = await StudentService.filterStudents(filters)
+
+            console.log({students, status: 200, code:"OK"})
             return res.status(200).json({students, status: 200, code:"OK"})
 
         }catch(error:any){
+
             const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
@@ -116,16 +122,21 @@ export class StudentController {
         try{
             const user = req.user
             if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
             }
-            if(user.role !== "ADMIN"){
-                return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
-            }
+
             const students = await StudentService.getAllStudents()
+
+            console.log({students, status: 200, code:"OK"})
             return res.status(200).json({students, status: 200, code:"OK"})
 
         }catch(error:any){
+
             const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
@@ -134,9 +145,13 @@ export class StudentController {
         try{
             const user = req.user
             if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
             }
             if(user.role !== "ADMIN"){
+
+                console.error({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
             }
             
@@ -144,10 +159,13 @@ export class StudentController {
             
             const result = await StudentService.deleteStudent(id)
 
+            console.log({result, status: 200, code:"OK"})
             return res.status(200).json({result, status: 200, code:"OK"})
 
         }catch(error:any){
             const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
@@ -156,13 +174,21 @@ export class StudentController {
         try{
             const user = req.user
             if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
                 return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
-            }    
+            }
+
             const {celebrants} = await StudentService.getCelebrantsBirth()
+
+            console.log({celebrants, status: 200, code: "OK"})
             return res.status(200).json({celebrants, status: 200, code: "OK"})
 
         }catch(error:any){
+
             const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
