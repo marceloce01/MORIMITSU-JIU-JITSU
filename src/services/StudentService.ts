@@ -324,7 +324,7 @@ export class StudentService{
 
                 const thisYearBirth = new Date(today.getFullYear(), student.birth_date.getMonth(), birth_day)
 
-                let quant_days = Math.ceil((thisYearBirth.getTime() - today.getTime())/(1000*60*60*24)) + 1
+                let quant_days = Math.ceil((thisYearBirth.getTime() - today.getTime())/(1000*60*60*24))
 
                 let message : string
                 if(quant_days === 0){
