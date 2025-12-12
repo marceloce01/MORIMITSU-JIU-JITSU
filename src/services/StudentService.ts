@@ -328,7 +328,7 @@ export class StudentService{
 
                 let message : string
                 if(quant_days === 0){
-                    message = `Faz ${age + 1} anos hoje!`
+                    message = `Faz ${age} anos hoje!`
 
                 } else if(quant_days === 1){
                     message = `Fará ${age + 1} anos amanhã!`
