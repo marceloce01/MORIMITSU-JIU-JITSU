@@ -66,6 +66,10 @@ export class ClassService{
         return `Aluno(a) ${student.name} agora está na turma ${class_.name}`
     }
 
+    static filterClass = async(filter: Number) => {
+
+    }
+
     //Deletar uma turma
     static deleteClass = async(id: string)=>{
         const classDelete = await ClassRepository.findById(id)

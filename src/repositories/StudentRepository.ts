@@ -81,11 +81,8 @@ export class StudentRepository{
     }
 
     static findByEnrollment = async(enrollment?: number | null)=>{
-       const where: any = {}
-       if(enrollment != undefined){
-         where.enrollment = enrollment
-       }
-       return prisma.student.findMany({where})
+       if(enrollment === null) return null
+       return prisma.student.findUnique({where: {enrollment}})
     }
 
     static filterStudents = async(filters: StudentFilter) =>{

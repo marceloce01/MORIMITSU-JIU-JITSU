@@ -89,7 +89,7 @@ export class StudentService{
 
         if(parsed.enrollment !== undefined){
             const existingEnrollment = await StudentRepository.findByEnrollment(parsed.enrollment)
-            if(existingEnrollment.length> 0){
+            if(existingEnrollment){
                 const error:any = new Error("Dados Únicos já cadastrados!")
                 error.code = ErrorCode.CONFLICT
                 throw error
@@ -210,7 +210,7 @@ export class StudentService{
 
         if(parsed.email !== undefined){
             const existingEmail = await StudentRepository.findByEmail(parsed.email)
-            if(existingEmail){
+            if(existingEmail && existingEmail.id !== existingStudent.id){
                 const error:any = new Error("Dados Únicos já cadastrados!")
                 error.code = ErrorCode.CONFLICT
                 throw error
@@ -219,7 +219,7 @@ export class StudentService{
         
         if(parsed.cpf !== undefined){
             const existingCPF = await StudentRepository.findByCPF(parsed.cpf)
-            if(existingCPF){
+            if(existingCPF && existingCPF.id != existingStudent.id){
                 const error:any = new Error("Dados Únicos já cadastrados!")
                 error.code = ErrorCode.CONFLICT
                 throw error
@@ -228,7 +228,7 @@ export class StudentService{
 
         if(parsed.enrollment !== undefined){
             const existingEnrollment = await StudentRepository.findByEnrollment(parsed.enrollment)
-            if(existingEnrollment.length> 0){
+            if(existingEnrollment && existingEnrollment.id !== existingStudent.id){
                 const error:any = new Error("Dados Únicos já cadastrados!")
                 error.code = ErrorCode.CONFLICT
                 throw error
@@ -288,7 +288,7 @@ export class StudentService{
 
     static filterStudents = async(filters: StudentFilter) =>{
         const students = await StudentRepository.filterStudents(filters)
-        if(!students){
+        if(!students || students.length === 0){
             const error:any = new Error("Nenhum aluno encontrado.")
             error.code = ErrorCode.NOT_FOUND
             throw error
@@ -371,7 +371,7 @@ export class StudentService{
 
                 }else if(quant_days === -1){
                     quant_days = Math.abs(quant_days)
-                    message = `Fez ${age} anos há ${quant_days} dia atrás.`
+                    message = `Fez ${age} anos ontem.`
 
                 }else{
                     quant_days = Math.abs(quant_days)
