@@ -9,7 +9,7 @@ export class ConfigBeltRepository {
     }
 
     //Atualizar dados da configuração de faixa
-    static update = async(belt: Belt, data: {min_age?: number, max_age?: number, min_belt?: Belt, grade?: number, max_belt?: Belt, max_frequency?: number }) => {
+    static update = async(belt: Belt, data: {min_age?: number, max_age?: number, grade?: number, max_frequency?: number }) => {
        return prisma.configBelt.update({where: {belt}, data})
     }
 

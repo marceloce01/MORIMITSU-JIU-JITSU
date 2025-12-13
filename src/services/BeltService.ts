@@ -31,7 +31,7 @@ export class BeltService {
         return await ConfigBeltRepository.create({min_age, max_age, belt, grade, max_frequency})
     }
 
-    static update = async(belt: Belt, data: {min_age?: number, max_age?: number, min_belt?: Belt, grade?: number, max_frequency?: number}) => {
+    static update = async(belt: Belt, data: {min_age?: number, max_age?: number, grade?: number, max_frequency?: number}) => {
 
         const belt_ = await ConfigBeltRepository.findByBelt(belt)
         if(!belt_){
@@ -39,21 +39,39 @@ export class BeltService {
             error.code = ErrorCode.NOT_FOUND
             throw error
         }
-     
-        if((data.min_age && data.max_age) && (data.min_age > data.max_age)){
+
+        if(!data){
+          const error:any = new Error("Nada enviado!")
+          error.code = ErrorCode.BAD_REQUEST
+          throw error  
+        }
+
+        if((data.min_age !== undefined && belt_.max_age !== null) && (data.min_age > belt_.max_age)){
             const error:any = new Error("Idade mínima digitada incorretamente!")
             error.code = ErrorCode.BAD_REQUEST
             throw error
         }
 
-        if(data.grade && data.grade < 0){
+        if((data.max_age !== undefined && belt_.min_age !== null) && (data.max_age < belt_.min_age)){
+            const error:any = new Error("Idade máxima digitada incorretamente!")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
+        }
+     
+        if((data.min_age !== undefined && data.max_age !== undefined) && (data.min_age > data.max_age)){
+            const error:any = new Error("Idade mínima e máxima digitada incorretamente!")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
+        }
+
+        if(data.grade !== undefined && data.grade < 0){
             const error:any = new Error("A quantidade de graus da faixa deve ser um número inteiro positivo.")
             error.code = ErrorCode.BAD_REQUEST
             throw error
 
         }
 
-        if(data.max_frequency && data.max_frequency < 0){
+        if(data.max_frequency !== undefined && data.max_frequency < 0){
             const error:any = new Error("A quantidade de frequências da faixa deve ser um número inteiro positivo.")
             error.code = ErrorCode.BAD_REQUEST
             throw error
@@ -72,5 +90,9 @@ export class BeltService {
         }else{
             return filter
         }
+    }
+
+    static getAll = async() => {
+        return await ConfigBeltRepository.findAll()
     }
  }

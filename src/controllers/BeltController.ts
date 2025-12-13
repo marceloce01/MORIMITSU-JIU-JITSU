@@ -3,6 +3,7 @@ import { ErrorCode } from "../utils/ErrorCodes.js";
 import { BeltService } from "../services/BeltService.js";
 import { statusHTTP } from "../utils/ErrorCodes.js";
 import { AuthenticatedRequest } from "../utils/types.js";
+import { Belt } from "@prisma/client";
 
 export class BeltController{
 
@@ -50,13 +51,13 @@ export class BeltController{
                 return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
             }
 
-            const {belt} = req.params as any
-            const {data} = req.body 
+            const belt = req.params.belt as Belt
+            const data = req.body 
             
             const beltConfig = await BeltService.update(belt, data)
 
-            console.log({message: "As alterações foram salvas.", beltConfig: beltConfig, status: 200, code:"OK"})
-            return res.status(201).json({message: "As alterações foram salvas.", beltConfig: beltConfig, status: 200, code:"OK"})
+            console.log({message: "As alterações foram salvas.", belt_config: beltConfig, status: 200, code:"OK"})
+            return res.status(201).json({message: "As alterações foram salvas.", belt_config: beltConfig, status: 200, code:"OK"})
 
         }catch(error:any){
             const status = statusHTTP(error.code)
@@ -88,6 +89,35 @@ export class BeltController{
             return res.status(200).json({belt: beltConfig, status: 200, code:"OK"})
 
         }catch(error:any){
+            const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        }
+    }
+
+    static getAll = async(req: AuthenticatedRequest, res: Response) =>{
+        try{
+            const user = req.user
+            if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+
+            if(user.role !== "ADMIN"){
+
+                console.log({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
+            }
+
+            const belts = await BeltService.getAll()
+
+            console.log({belts, status: 200, code:"OK"})
+            return res.status(200).json({belts, status: 200, code:"OK"})
+
+        }catch(error:any){
+
             const status = statusHTTP(error.code)
 
             console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})

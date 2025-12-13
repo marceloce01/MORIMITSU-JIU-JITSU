@@ -7,7 +7,7 @@
 
 /**
  * @openapi
- * /belt-config/update:
+ * /belt-config/update/{belt}:
  *   put:
  *     summary: Alterar as configurações de faixa
  *     tags: [Belts]
@@ -21,6 +21,22 @@
  *         schema: 
  *           type: string
  *           enum: [WHITE, GRAY_WHITE, GRAY, GRAY_BLACK, YELLOW_WHITE, YELLOW, YELLOW_BLACK, ORANGE_WHITE, ORANGE, ORANGE_BLACK, GREEN_WHITE, GREEN, GREEN_BLACK, BLUE, PURPLE, BROWN, BLACK, RED_BLACK, RED_WHITE, RED]
+ * 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object          
+ *             properties:
+ *               min_age:
+ *                 type: integer
+ *               max_age:
+ *                 type: integer
+ *               max_frequency:
+ *                 type: integer           
+ *               grade:
+ *                 type: integer
  *    
  *     responses:
  *       200:
@@ -37,7 +53,7 @@
  * @openapi
  * /belt-config/filter:
  *   get:
- *     summary: Filtrar aconfigurações de faixa
+ *     summary: Filtrar as configurações de faixa
  *     tags: [Belts]
  *     security:
  *       - bearerAuth: []
@@ -57,5 +73,19 @@
  * 
  *       404:
  *         description: Faixa não configurada
+ */
+
+/**
+ * @openapi
+ * /belt-config/belts:
+ *   get:
+ *     summary: Filtrar as configurações de faixa
+ *     tags: [Belts]
+ *     security:
+ *       - bearerAuth: []
+ *    
+ *     responses:
+ *       200:
+ *         description: Filtragem de configuração
  */
 

@@ -8,6 +8,8 @@ beltRouter.use(AuthMiddleware.authenticate)
 
 beltRouter.post("/create", BeltController.createBeltConfig)
 
-beltRouter.put("/update", BeltController.updateBeltConfig)
+beltRouter.put("/update/:belt", BeltController.updateBeltConfig)
 
-beltRouter.get("/filter", BeltController.filterBelt)
+beltRouter.get("/filter/", BeltController.filterBelt)
+
+beltRouter.get("/belts", BeltController.getAll)
