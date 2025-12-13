@@ -8,6 +8,7 @@ import { beltValidation } from "../utils/validations/belt.js";
 import { cpfValidation } from "../utils/validations/cpf.js";
 import { prisma } from "../repositories/prismaClient.js";
 import { ConfigBeltRepository } from "../repositories/ConfigBeltRepository.js";
+import { parse } from "path";
 
 //Dados de entrada
 export type StudentInput = {
@@ -59,7 +60,10 @@ export class StudentService{
             cpf: z.string().refine((val) => cpfValidation(val), "Informe um CPF válido."),
             gender: z.nativeEnum(Gender, "Selecione um gênero válido."),
             birth_date: z.coerce.date("Digite uma data válida."),
-            enrollment: z.coerce.number("A matrícula deve ser um número válido.").optional(),
+            enrollment: z.coerce.number("A matrícula deve ser um número válido.").optional().transform(val => {
+                if(val === undefined || val === null || val === 0) return undefined
+                return val
+            }),
             current_frequency: z.coerce.number("A frequência do aluno deve ser um número válido.").int("A frequência deve ser um número inteiro.").min(0, "A frequência não pode ser negativa.").default(0),
             belt: z.nativeEnum(Belt, "Selecione uma faixa válida."),
             grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro de 1 a 4.").min(0, "O grau deve ser um número inteiro positivo."),
@@ -83,7 +87,7 @@ export class StudentService{
             throw error
         }
 
-        if(parsed.enrollment !== undefined && parsed.enrollment !== null){
+        if(parsed.enrollment !== undefined){
             const existingEnrollment = await StudentRepository.findByEnrollment(parsed.enrollment)
             if(existingEnrollment.length> 0){
                 const error:any = new Error("Dados Únicos já cadastrados!")
@@ -188,7 +192,10 @@ export class StudentService{
         role: z.nativeEnum(Role).optional(),
         gender: z.nativeEnum(Gender, "Selecione um gênero válido.").optional(),
         birth_date: z.coerce.date("Digite uma data válida.").optional(),
-        enrollment: z.coerce.number("A matrícula deve ser um número válido.").optional(),
+        enrollment: z.coerce.number("A matrícula deve ser um número válido.").optional().transform(val => {
+            if(val === undefined || val === null || val === 0) return undefined
+            return val
+        }),
         current_frequency: z.coerce.number("A frequência do aluno deve ser um número válido.").int("A frequência deve ser um número inteiro.").min(0, "A frequência não pode ser negativa.").optional(),
         belt: z.nativeEnum(Belt, "Selecione uma faixa válida.").optional(),
         grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro de 1 a 4.").min(0, "O grau deve ser um número inteiro positivo.").optional(),
@@ -202,7 +209,33 @@ export class StudentService{
 
         const parsed = updateSchema.parse(data)
 
-        //Variáveis que serão utilizadas para a verificações
+        if(parsed.email !== undefined){
+            const existingEmail = await StudentRepository.findByEmail(parsed.email)
+            if(existingEmail){
+                const error:any = new Error("Dados Únicos já cadastrados!")
+                error.code = ErrorCode.CONFLICT
+                throw error
+            } 
+        }
+        
+        if(parsed.cpf !== undefined){
+            const existingCPF = await StudentRepository.findByCPF(parsed.cpf)
+            if(existingCPF){
+                const error:any = new Error("Dados Únicos já cadastrados!")
+                error.code = ErrorCode.CONFLICT
+                throw error
+            } 
+        }   
+
+        if(parsed.enrollment !== undefined){
+            const existingEnrollment = await StudentRepository.findByEnrollment(parsed.enrollment)
+            if(existingEnrollment.length> 0){
+                const error:any = new Error("Dados Únicos já cadastrados!")
+                error.code = ErrorCode.CONFLICT
+                throw error
+            }
+        }
+
         const birthDate = parsed.birth_date ?? existingStudent.birth_date
         const belt = parsed.belt ?? existingStudent.belt
         const currentFrequency = parsed.current_frequency ?? existingStudent.current_frequency
