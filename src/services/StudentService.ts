@@ -162,8 +162,7 @@ export class StudentService{
         console.log(`Aluno cadastrado com sucesso: ${student.name}`)
 
         return {student, age}
-        }
-
+    }
 
     //Atualizar dados do aluno
     static updateStudent = async(id: string, data: Partial<StudentInput>)=>{
@@ -369,6 +368,11 @@ export class StudentService{
 
                 } else if(quant_days > 1){
                     message = `Fará ${age + 1} anos em ${quant_days} dias.`
+
+                }else if(quant_days === -1){
+                    quant_days = Math.abs(quant_days)
+                    message = `Fez ${age} anos há ${quant_days} dia atrás.`
+
                 }else{
                     quant_days = Math.abs(quant_days)
                     message = `Fez ${age} anos há ${quant_days} dias atrás.`
