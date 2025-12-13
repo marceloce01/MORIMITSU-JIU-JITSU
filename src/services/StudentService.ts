@@ -290,6 +290,7 @@ export class StudentService{
         }
 
         await prisma.studentClass.deleteMany({where: {student_id: id}})
+        await prisma.studentPresence.deleteMany({where: {student_id: id}})
         await StudentRepository.delete(id)
         
         console.log(`Aluno(a) ${student.name} deletado(a).`)
@@ -349,7 +350,6 @@ export class StudentService{
                 }
             })
 
-            console.log("Rota de Aniversariantes do Mês acessada.")
             return {celebrants}
     }
 }
