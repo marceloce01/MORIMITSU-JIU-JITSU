@@ -66,7 +66,7 @@ export class StudentService{
             }),
             current_frequency: z.coerce.number("A frequência do aluno deve ser um número válido.").int("A frequência deve ser um número inteiro.").min(0, "A frequência não pode ser negativa.").default(0),
             belt: z.nativeEnum(Belt, "Selecione uma faixa válida."),
-            grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro de 1 a 4.").min(0, "O grau deve ser um número inteiro positivo."),
+            grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro.").min(0, "O grau deve ser um número inteiro positivo."),
             city: z.string().min(3, "A cidade deve conter ao menos 3 caracteres."),
             street: z.string().min(2, "A rua deve conter ao menos 2 caracteres."),
             district: z.string().min(1, "O bairro deve conter ao menos 1 caractere."),
@@ -197,7 +197,7 @@ export class StudentService{
         }),
         current_frequency: z.coerce.number("A frequência do aluno deve ser um número válido.").int("A frequência deve ser um número inteiro.").min(0, "A frequência não pode ser negativa.").optional(),
         belt: z.nativeEnum(Belt, "Selecione uma faixa válida.").optional(),
-        grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro de 1 a 4.").min(0, "O grau deve ser um número inteiro positivo.").optional(),
+        grade: z.coerce.number("Selecione um grau válido.").int("O grau deve ser um número inteiro.").min(0, "O grau deve ser um número inteiro positivo.").optional(),
         city: z.string().min(3, "A cidade deve conter ao menos 3 caracteres.").optional(),
         street: z.string().min(2, "A rua deve conter ao menos 2 caracteres.").optional(),
         district: z.string().min(2).optional(),
@@ -310,7 +310,15 @@ export class StudentService{
     }
 
     static getAllStudents = async()=>{
-        return await StudentRepository.findAll()
+        const students = await StudentRepository.findAll()
+        if(!students || students.length === 0){
+            const error:any = new Error("Nenhum aluno encontrado.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+
+        }else{
+            return students
+        }
     }
 
     static deleteStudent = async(id: string)=>{

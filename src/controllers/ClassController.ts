@@ -28,6 +28,7 @@ export class ClassController{
             
             if(req.file){
                 url = await uploadInCloud(req.file.path) ?? undefined
+                console.log("URL GERADA NO CONTROLLER:", url)
             }
 
             const data = {
@@ -35,6 +36,9 @@ export class ClassController{
                 image_class_url: url
             } 
             const newClass = await ClassService.createClass(data)
+
+            console.log("FILE:", req.file)
+            console.log("BODY:", req.body)
 
             console.log({message: "Turma cadastrada!", class: newClass, status: 201, code:"CREATED"})
             return res.status(201).json({message: "Turma cadastrada!", class: newClass, status: 201, code:"CREATED"})
@@ -81,6 +85,54 @@ export class ClassController{
             }
     }
 
+    static filterClasses = async(req: AuthenticatedRequest, res: Response) =>{
+        try{
+            const user = req.user
+            if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+
+            }
+
+            const filters = req.query
+            
+            const classes = await ClassService.filterClasses(filters)
+
+            console.log({classes, status: 200, code:"OK"})
+            return res.status(200).json({classes, status: 200, code:"OK"})
+    
+        }catch(error:any){
+            const status = statusHTTP(error.code)
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+
+            }
+    }
+
+    static findAll = async(req: AuthenticatedRequest, res: Response) =>{
+        try{
+            const user = req.user
+            if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+
+            const classes = await ClassService.findAll()
+
+            console.log({classes, status: 200, code:"OK"})
+            return res.status(200).json({classes, status: 200, code:"OK"})
+
+        }catch(error:any){
+
+            const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        }
+    }
+
     //Deletar uma turma
     static deleteStudent = async(req: AuthenticatedRequest, res: Response) =>{
         try{
@@ -109,5 +161,5 @@ export class ClassController{
             console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
-        }
+    }
 }

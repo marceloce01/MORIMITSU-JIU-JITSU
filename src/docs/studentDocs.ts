@@ -305,7 +305,7 @@
  *         description: Acesso negado
  * 
  *       404:
- *         description: Aluno não encontrado
+ *         description: Nenhum aluno encontrado
  *         
  * 
  */
@@ -325,6 +325,9 @@
  *         description: Lista de alunos 
  *       401:
  *         description: Acesso negado
+ *       404:
+ *        description: Nenhum aluno encontrado
+ * 
  *         
  */
 

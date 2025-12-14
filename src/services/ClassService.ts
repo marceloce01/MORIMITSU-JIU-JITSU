@@ -1,4 +1,4 @@
-import { ClassRepository } from "../repositories/ClassRepository.js";
+import { ClassFilter, ClassRepository } from "../repositories/ClassRepository.js";
 import { prisma } from "../repositories/prismaClient.js";
 import { UserRepository } from "../repositories/UserRepository.js";
 import { StudentRepository } from "../repositories/StudentRepository.js";
@@ -38,6 +38,26 @@ export class ClassService{
         
     }
 
+    static updateClass = async(id: string, data: {name?: string, image_class_url?: string, teacher_id?: string, local?: string}) =>{
+       const existingClass_ = await ClassRepository.findById(id)
+       if(!existingClass_){
+            const error:any = new Error("Turma não encontrada.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+       if(data.teacher_id !== undefined){
+         const teacher = await UserRepository.findById(data.teacher_id)
+         if(!teacher){
+            const error:any = new Error("Instrutor não encontrado.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+         }
+       }
+
+       const class_ = await ClassRepository.update(id, data)
+       return class_
+    }
+
     //Enturmar aluno
     static addStudentInClass = async(class_id: string, student_id: string) =>{
 
@@ -66,8 +86,28 @@ export class ClassService{
         return `Aluno(a) ${student.name} agora está na turma ${class_.name}`
     }
 
-    static filterClass = async(filter: Number) => {
+    static filterClasses = async(filters: ClassFilter) => {
+        const classes = await ClassRepository.filterClass(filters)
+        if(!classes || classes.length === 0){
+            const error:any = new Error("Nenhuma turma encontrada.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
 
+        }else{
+            return classes
+        }
+    }
+
+    static findAll = async()=> {
+       const classes = await ClassRepository.findAll()
+        if(!classes || classes.length === 0){
+            const error:any = new Error("Nenhuma turma encontrada.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+
+        }else{
+            return classes
+        }
     }
 
     //Deletar uma turma
@@ -79,6 +119,7 @@ export class ClassService{
             throw error
         }
         await prisma.studentClass.deleteMany({where: {class_id: id}})
+        await prisma.classroom.deleteMany({where: {class_id: id}})
         await ClassRepository.delete(id)
         return "Turma deletada!"
     }

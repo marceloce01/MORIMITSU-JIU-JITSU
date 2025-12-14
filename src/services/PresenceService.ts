@@ -2,6 +2,7 @@ import { StudentRepository } from "../repositories/StudentRepository.js"
 import { ClassroomRepository } from "../repositories/ClassroomRepository.js"
 import { ErrorCode } from "../utils/ErrorCodes.js"
 import { PresenceRepository } from "../repositories/PresenceRepository.js"
+import { ConfigBeltRepository } from "../repositories/ConfigBeltRepository.js"
 
 type PresenceInput = {
     student_id: string,
@@ -37,7 +38,6 @@ export class PresenceService {
             throw error
         }
 
-
         if(data.presence === true){
             const alreadyPresence = await PresenceRepository.findPresence(data.student_id, data.classroom_id)
             if(alreadyPresence){
@@ -46,12 +46,17 @@ export class PresenceService {
                 throw error
             }
 
-            const current_frequency = student.current_frequency + 1
-            student.current_frequency = current_frequency
+            const belt = await ConfigBeltRepository.findByBelt(student.belt)
+            if(belt?.max_frequency !== undefined && student.current_frequency < belt?.max_frequency){
+                const current_frequency = student.current_frequency + 1
+                student.current_frequency = current_frequency
+                const total_frequency = student.total_frequency + 1
+                student.total_frequency = total_frequency
+            }
 
-            await StudentRepository.update(student.id, {current_frequency: student.current_frequency})
+            await StudentRepository.update(student.id, {current_frequency: student.current_frequency, total_frequency: student.total_frequency})
             await PresenceRepository.create({student_id: data.student_id, classroom_id: data.classroom_id, presence: data.presence})
-            return "Presença registrada: +1"
+            return `Presença registrada: ${data.presence}.`
 
         }else{
             const alreadyPresence = await PresenceRepository.findPresence(data.student_id, data.classroom_id)
@@ -61,7 +66,7 @@ export class PresenceService {
                 throw error
             }
             await PresenceRepository.create({student_id: data.student_id, classroom_id: data.classroom_id, presence: data.presence})
-            return "Presença registrada: 0"
+            return `Presença registrada: ${data.presence}`
         }
     }
 

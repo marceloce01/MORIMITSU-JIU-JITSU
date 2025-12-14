@@ -45,6 +45,79 @@
 
 /**
  * @openapi
+ * /class/filter:
+ *   get:
+ *     summary: Filtrar turma por algum atributo
+ *     tags: [Class]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: query
+ *         description: ID da Turma
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: name
+ *         in: query
+ *         description: Nome da turma
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: teacher_id
+ *         in: query
+ *         description: ID do professor
+ *         schema: 
+ *           type: string
+ * 
+ *       - name: teacher_name
+ *         in: query
+ *         description: Nome do professsor
+ *         schema: 
+ *           type: string
+ * 
+ * 
+ *       - name: local
+ *         in: query
+ *         description: Local da turma
+ *         schema: 
+ *           type: string
+ * 
+ * 
+ *     responses:
+ *       200:
+ *         description: Filtragem de alunos sucedida
+ *       
+ *       401:
+ *         description: Acesso negado
+ * 
+ *       404:
+ *         description: Nenhum aluno encontrado
+ *         
+ */
+
+/**
+ * @openapi
+ * /class:
+ *   get:
+ *     summary: Filtrar todas as turmas
+ *     tags: [Class]
+ *     security:
+ *       - bearerAuth: []
+ * 
+ *     responses:
+ *       200:
+ *         description: Lista de turmas
+ *       401:
+ *         description: Acesso negado
+ *       404:
+ *        description: Nenhuma turma encontrada
+ * 
+ *         
+ */
+
+/**
+ * @openapi
  * /class/add-student/{class_id}:
  *   post:
  *     summary: Enturmar um aluno na turma

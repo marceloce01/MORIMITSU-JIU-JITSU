@@ -12,4 +12,4 @@ beltRouter.put("/update/:belt", BeltController.updateBeltConfig)
 
 beltRouter.get("/filter/", BeltController.filterBelt)
 
-beltRouter.get("/belts", BeltController.getAll)
+beltRouter.get("/", BeltController.getAll)

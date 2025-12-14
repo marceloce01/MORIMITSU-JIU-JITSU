@@ -77,7 +77,7 @@
 
 /**
  * @openapi
- * /belt-config/belts:
+ * /belt-config:
  *   get:
  *     summary: Filtrar as configurações de faixa
  *     tags: [Belts]

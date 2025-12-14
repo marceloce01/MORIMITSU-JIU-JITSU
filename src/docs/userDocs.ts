@@ -94,7 +94,7 @@
 
  /**
  * @openapi
- * /user/:
+ * /user:
  *   get:
  *     summary: Filtrar todos os usuários
  *     tags: [Users]

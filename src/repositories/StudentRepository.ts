@@ -112,7 +112,7 @@ export class StudentRepository{
     }
 
     static findAll = async()=>{
-        return prisma.student.findMany({include: {classes: true}})
+        return prisma.student.findMany({include: {classes: {include: {class: {include: {teacher: true}}}}}})
     }
 
     static update = async(
