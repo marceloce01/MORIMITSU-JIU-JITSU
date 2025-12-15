@@ -108,7 +108,7 @@ export class StudentRepository{
             where.classes = {some: {class_id: filters.class_id}}
         }
 
-        return prisma.student.findMany({where, include: {classes: true}})
+        return prisma.student.findMany({where, include: {classes: {include: {class: {include: {teacher: true}}}}}})
     }
 
     static findAll = async()=>{

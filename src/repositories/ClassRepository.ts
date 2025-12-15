@@ -15,7 +15,7 @@ export class ClassRepository{
     }
 
     //Atualizar dados de uma turma
-    static update = async(id: string, data: {name?: string, teacher_id?: string, local?: string}) => {
+    static update = async(id: string, data: {name?: string, image_class_url?: string, teacher_id?: string, local?: string}) => {
           return prisma.class.update({where: {id}, data})
     }
 
@@ -35,11 +35,11 @@ export class ClassRepository{
         }
         if(filters.local != undefined) where.local = {contains: filters.local, mode: "insensitive"}
 
-        return prisma.class.findMany({where})
+        return prisma.class.findMany({where, include: {students: {include: {student: true}}}})
     }
 
     static findAll = async() =>{
-        return prisma.class.findMany()
+        return prisma.class.findMany({include: {students: {include: {student: true}}}})
     }
 
     //Deletar uma turma

@@ -39,5 +39,7 @@ studentRouter.get("/", StudentController.getAllStudents)
 
 studentRouter.delete("/:id", StudentController.deleteStudent)
 
+studentRouter.patch("/promote/:id", StudentController.promote)
+
 studentRouter.patch("/graduate/:id", GraduationController.graduateStudent)
 

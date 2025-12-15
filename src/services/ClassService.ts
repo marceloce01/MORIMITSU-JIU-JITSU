@@ -54,6 +54,10 @@ export class ClassService{
          }
        }
 
+       if(data.image_class_url === null){
+            data.image_class_url === null
+       }
+
        const class_ = await ClassRepository.update(id, data)
        return class_
     }

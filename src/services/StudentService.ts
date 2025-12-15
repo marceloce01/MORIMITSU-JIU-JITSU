@@ -1,5 +1,5 @@
 import { StudentFilter, StudentRepository } from "../repositories/StudentRepository.js";
-import z from "zod"
+import z, { includes } from "zod"
 import { allowedDomain } from "../schemas/Email.js";
 import { Role, Belt, Gender} from "@prisma/client";
 import { phoneValidation } from "../utils/validations/phone.js";
@@ -9,6 +9,7 @@ import { cpfValidation } from "../utils/validations/cpf.js";
 import { prisma } from "../repositories/prismaClient.js";
 import { ConfigBeltRepository } from "../repositories/ConfigBeltRepository.js";
 import { parse } from "path";
+import { UserService } from "./UserService.js";
 
 //Dados de entrada
 export type StudentInput = {
@@ -18,6 +19,7 @@ export type StudentInput = {
         phone: string,
         email: string,
         cpf: string,
+        role?: Role,
         gender: Gender,
         birth_date: Date,
         current_frequency: number,
@@ -31,7 +33,6 @@ export type StudentInput = {
         guardian_phone?: string,
         enrollment?: number,
     }
-
 
 export class StudentService{
 
@@ -335,6 +336,29 @@ export class StudentService{
         
         console.log(`Aluno(a) ${student.name} deletado(a).`)
         return `Aluno(a) ${student.name} deletado(a).`
+    }
+
+    static promote = async(id: string)=>{
+        const student = await StudentRepository.findById(id)
+        if(!student){
+            const error:any = new Error("Aluno(a) não encontrado(a).")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        const belt_allowed: Belt[] = [Belt.PURPLE, Belt.BROWN, Belt.BLACK, Belt.RED_BLACK, Belt.RED_WHITE,Belt.RED]
+
+        if(belt_allowed.includes(student.belt)){
+            await this.updateStudent(id, {role: Role.TEACHER})
+            await UserService.registerUser({username: student.social_name ?? student.name, email: student.email, password: student.cpf, role: Role.TEACHER})
+
+            return `Aluno(a) ${student.name} promovido(a) para professor.`
+
+        }else{
+            const error:any = new Error(`Aluno(a) ${student.name} não está apto(a) para ser promovido(a).`)
+            error.code = ErrorCode.METHOD_NOT_ALLOWED
+            throw error
+        } 
     }
 
     static getCelebrantsBirth = async()=>{

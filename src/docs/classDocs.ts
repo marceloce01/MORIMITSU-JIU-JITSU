@@ -45,6 +45,54 @@
 
 /**
  * @openapi
+ * /class/update/{id}:
+ *   put:
+ *     summary: Atualizar dados de uma turma selecionando ID
+ *     tags: [Class]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID do Aluno
+ *         required: true
+ *         schema: 
+ *           type: string           
+ *     
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object            
+ *             properties:
+ *               name:
+ *                 type: string
+ * 
+ *               image_class_url:
+ *                 type: string
+ *                 format: binary
+ *                 
+ *               teacher_id:
+ *                 type: string           
+ *                 
+ *               local:
+ *                 type: string           
+ *                 
+ *     responses:
+ *       200:
+ *         description: Dados atualizados
+ *       
+ *       401:
+ *         description: Acesso negado
+ * 
+ *       404:
+ *         description: ID não fornecido ou Turma não encontrado         
+ * 
+ */
+
+/**
+ * @openapi
  * /class/filter:
  *   get:
  *     summary: Filtrar turma por algum atributo
