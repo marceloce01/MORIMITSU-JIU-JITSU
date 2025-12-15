@@ -24,16 +24,7 @@ export class ClassController{
                 return res.status(401).json({message: "Acesso negado: Apenas ADMINISTRADORES podem acessar.", status: 401, code: "UNNAUTHORIZED"})
             }
 
-            let url : string | undefined = undefined
-            
-            if(req.file){
-                url = await uploadInCloud(req.file.path) ?? undefined
-            }
-
-            const data = {
-                ...req.body,
-                image_class_url: url
-            } 
+            const data = req.body
             const newClass = await ClassService.createClass(data)
 
             console.log({message: "Turma cadastrada!", class: newClass, status: 201, code:"CREATED"})
