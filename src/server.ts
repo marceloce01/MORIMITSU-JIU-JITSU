@@ -11,6 +11,7 @@ import { StudentController } from './controllers/StudentController.js';
 import { AuthMiddleware } from './middlewares/authMiddlewares.js';
 import { classroomRouter } from './routes/ClassroomRoutes.js';
 import { presenceRouter } from './routes/PresenceRoutes.js';
+import { statisticsRouter } from './routes/StatisticsRoutes.js';
 
 const app = express();
 
@@ -44,5 +45,6 @@ app.use("/class", classRouter)
 app.use("/belt-config", beltRouter)
 app.use("/classroom", classroomRouter)
 app.use("/presence", presenceRouter)
+app.use("/statistics", statisticsRouter)
 
 app.listen(PORT, "0.0.0.0", () => console.log(`Servidor rodando na porta ${PORT}`))

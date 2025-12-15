@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client"
 import {prisma} from "./prismaClient.js"
 
 export type ClassFilter = {
@@ -35,16 +36,24 @@ export class ClassRepository{
         }
         if(filters.local != undefined) where.local = {contains: filters.local, mode: "insensitive"}
 
-        return prisma.class.findMany({where, include: {students: {include: {student: true}}}})
+        return prisma.class.findMany({where, include: {teacher: true, students: {include: {student: true}}, _count: {select: {students: true}}}})
     }
 
     static findAll = async() =>{
-        return prisma.class.findMany({include: {students: {include: {student: true}}}})
+        return prisma.class.findMany({include: {teacher: true, students: {include: {student: true}},  _count: {select: {students: true}}}})
     }
 
     //Deletar uma turma
     static delete = async(id: string)=>{
         return prisma.class.delete({where: {id}})
+    }
+
+    static quant = async(where?: Prisma.ClassWhereInput)=>{
+        return prisma.class.count({where})
+    }
+
+    static quant_students = async(class_id: string)=>{
+        return prisma.studentClass.count({where: {class_id}})
     }
 }
 

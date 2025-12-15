@@ -12,6 +12,6 @@ export class ClassroomRepository{
     }
 
     static findAll = async()=>{
-       return prisma.class.findMany({include: {students: true}})
+       return prisma.classroom.findMany()
     }
 }

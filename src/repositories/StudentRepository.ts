@@ -1,4 +1,4 @@
-import { Gender, Belt} from "@prisma/client";
+import { Gender, Belt, Prisma} from "@prisma/client";
 import {prisma} from "./prismaClient.js"
 
 export type StudentFilter = {
@@ -164,5 +164,9 @@ export class StudentRepository{
     
     static delete = async(id: string)=>{
         return prisma.student.delete({where: {id}})
+    }
+
+    static quant = async(where?: Prisma.StudentWhereInput)=>{
+        return prisma.student.count({where})
     }
 }

@@ -1,6 +1,6 @@
 //Repositório de Usuários: local onde vou fazer ligações diretas com o banco de dados, como criar, ler, atualizar e deletar o usuário  diretamente, depois utilizá-lo em services e controllers
 
-import { Role } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import {prisma} from "./prismaClient.js"
 import { includes } from "zod";
 
@@ -53,4 +53,8 @@ export class UserRepository{
        return prisma.user.findMany({include: {classes: true}})
        
     }
+
+    static quant = async(where?: Prisma.UserWhereInput)=>{
+            return prisma.user.count({where})
+        }
 }

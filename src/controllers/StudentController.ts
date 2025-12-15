@@ -6,6 +6,7 @@ import { statusHTTP } from "../utils/ErrorCodes.js";
 import { zodMessage } from "../utils/ZodErrorFormat.js";
 import { uploadInCloud } from "../config/cloudinary.js";
 import { AuthenticatedRequest } from "../utils/types.js";
+import { StatisticsService } from "../services/StatisticsService.js";
 
 export class StudentController {
 
@@ -221,4 +222,5 @@ export class StudentController {
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
+
 }

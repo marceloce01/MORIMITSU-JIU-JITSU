@@ -112,6 +112,7 @@ export class ClassService{
         }else{
             return classes
         }
+        
     }
 
     //Deletar uma turma

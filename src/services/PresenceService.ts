@@ -26,7 +26,7 @@ export class PresenceService {
 
         const classroom = await ClassroomRepository.findById(data.classroom_id)
         if(!classroom || !classroom.class_id){
-            const error:any = new Error("Classe não encontrado.")
+            const error:any = new Error("Classe não encontrada.")
             error.code = ErrorCode.NOT_FOUND
             throw error
         }

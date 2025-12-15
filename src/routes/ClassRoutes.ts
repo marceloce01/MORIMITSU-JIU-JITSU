@@ -8,7 +8,7 @@ export const classRouter = Router()
 
 classRouter.use(AuthMiddleware.authenticate)
 
-classRouter.post("/create", upload.single('image_class_url'), upload.single('image_class_url'), (req, res, next) => {
+classRouter.post("/create", upload.single('image_class_url'), (req, res, next) => {
     if(!req.file){
         req.body.image_class_url = null
         return next()
