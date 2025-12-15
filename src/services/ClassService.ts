@@ -112,7 +112,7 @@ export class ClassService{
         }else{
             return classes
         }
-        
+
     }
 
     //Deletar uma turma
@@ -123,8 +123,13 @@ export class ClassService{
             error.code = ErrorCode.NOT_FOUND
             throw error
         }
+
+        const classrooms = await prisma.classroom.findMany({where: {class_id: id}})
+        for(const classroom of classrooms){
+            await prisma.studentPresence.deleteMany({where: {classroom_id: classroom?.id}})
+            await prisma.classroom.delete({where: {id: classroom.id}})
+        }
         await prisma.studentClass.deleteMany({where: {class_id: id}})
-        await prisma.classroom.deleteMany({where: {class_id: id}})
         await ClassRepository.delete(id)
         return "Turma deletada!"
     }
