@@ -207,6 +207,47 @@
 
 /**
  * @openapi
+ * /class/remove-student/{class_id}:
+ *   delete:
+ *     summary: Desenturmar um aluno 
+ *     tags: [Class]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: class_id
+ *         in: path
+ *         description: ID da turma
+ *         required: true
+ *         schema: 
+ *           type: string
+ * 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - student_id            
+ *             properties:
+ *               student_id:
+ *                 type: string
+ * 
+ * 
+ *     responses:
+ *       200:
+ *         description: Aluno desenturmado
+ *       
+ *       401:
+ *         description: Acesso negado
+ * 
+ *       404:
+ *         description: Turma ou Aluno não encontrado
+ *         
+ */
+
+/**
+ * @openapi
  * /class/{id}:
  *   delete:
  *     summary: Deletar turma

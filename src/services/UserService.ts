@@ -6,6 +6,7 @@ import { UserFilter, UserRepository } from "../repositories/UserRepository.js";
 import { ErrorCode } from "../utils/ErrorCodes.js";
 import { Role } from "@prisma/client";
 import z from "zod";
+import { prisma } from "../repositories/prismaClient.js";
 
 type UserInput = {
     username: string,
@@ -85,6 +86,58 @@ export class UserService{
     static getAllUsers = async()=>{
         const users=  await UserRepository.findAll()
         return users
+    }
+
+    static teacherClasses = async(id: string)=>{
+        const user = await UserRepository.findById(id)
+        if(!user){
+            const error:any = new Error("Usuário não encontrado!")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        const classes = await prisma.class.findMany({where: {teacher_id: id}, include: {students: {include: {student: true}}, _count: {select: {students: true}}}})
+
+        if(!classes || classes.length === 0){
+            const error:any = new Error("Nenhuma turma.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        return classes
+
+    }
+
+    static teacherStudents = async(id: string)=>{
+        const user = await UserRepository.findById(id)
+        if(!user){
+            const error:any = new Error("Usuário não encontrado!")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        const classes = await prisma.class.findMany({where: {teacher_id: id}, include: {students: {include: {student: true}}}})
+
+        if(!classes || classes.length === 0){
+            const error:any = new Error("Nenhuma turma, ou seja, nenhum aluno.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        const students: any[] = []
+
+        for(const class_ of classes){
+            for(const student of class_.students)
+                students.push(student.student)
+        }
+
+        if(!students || students.length === 0){
+            const error:any = new Error("Nenhum aluno.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        return students
     }
 }
 

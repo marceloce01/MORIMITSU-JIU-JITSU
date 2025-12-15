@@ -104,3 +104,48 @@
  *         description: Lista de usuários
  *         
  */
+
+ /**
+ * @openapi
+ * /user/students/{id}:
+ *   get:
+ *     summary: Filtrar todos os alunos de um professor
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ * 
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID do usuário
+ *         required: true
+ *         schema: 
+ *           type: string
+ * 
+ *     responses:
+ *       200:
+ *         description: Lista de alunos
+ *         
+ */
+
+ /**
+ * @openapi
+ * /user/classes/{id}:
+ *   get:
+ *     summary: Filtrar todas as turmas de um professor
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID do usuário
+ *         required: true
+ *         schema: 
+ *           type: string
+ * 
+ *     responses:
+ *       200:
+ *         description: Lista de turmas
+ *         
+  */

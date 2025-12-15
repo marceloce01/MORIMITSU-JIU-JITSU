@@ -14,6 +14,8 @@ classRouter.put("/update/:id", ClassController.updateClass)
 
 classRouter.post("/add-student/:class_id", ClassController.addStudentInClass)
 
+classRouter.delete("/remove-student/:class_id", ClassController.removeStudentInClass)
+
 classRouter.get("/filter", ClassController.filterClasses)
 
 classRouter.get("/", ClassController.findAll)

@@ -90,6 +90,33 @@ export class ClassService{
         return `Aluno(a) ${student.name} agora está na turma ${class_.name}`
     }
 
+    static removeStudentInClass = async(class_id: string, student_id: string) =>{
+
+        const class_ = await ClassRepository.findById(class_id)
+        if(!class_){
+            const error:any = new Error("Turma não encontrada.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        const student = await StudentRepository.findById(student_id)
+        if(!student){
+            const error:any = new Error("Aluno não encontrado.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        const student_class = await prisma.studentClass.findFirst({where: {student_id, class_id}})
+        if(!student_class){
+            const error:any = new Error("Aluno não está nessa turma.")
+            error.code = ErrorCode.CONFLICT
+            throw error
+        }
+
+        await prisma.studentClass.deleteMany({where: {student_id, class_id}})
+        return `Aluno(a) ${student.name} foi removido(a) da turma ${class_.name}`
+    }
+
     static filterClasses = async(filters: ClassFilter) => {
         const classes = await ClassRepository.filterClass(filters)
         if(!classes || classes.length === 0){

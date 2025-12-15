@@ -4,6 +4,7 @@ import { UserService } from "../services/UserService.js"
 import { ErrorCode, statusHTTP } from "../utils/ErrorCodes.js"
 import { ZodError } from "zod"
 import { zodMessage } from "../utils/ZodErrorFormat.js"
+import { AuthenticatedRequest } from "../utils/types.js"
 
 export class UserController{
 
@@ -59,5 +60,51 @@ export class UserController{
                 const status = statusHTTP(error.code)
                 return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
             }
+    }
+
+    static teacherClasses = async(req: AuthenticatedRequest, res: Response)=>{
+        try{
+            const user = req.user
+            if(!user){
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+
+            const {id} = req.params
+
+            const classes = await UserService.teacherClasses(id)
+
+            return res.status(200).json({classes, status: 200, code:"OK"})
+
+        }catch(error:any){
+
+            const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
+    }
+
+    static teacherStudents = async(req: AuthenticatedRequest, res: Response)=>{
+        try{
+            const user = req.user
+            if(!user){
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+
+            const {id} = req.params
+
+            const students = await UserService.teacherStudents(id)
+
+            return res.status(200).json({students, status: 200, code:"OK"})
+
+        }catch(error:any){
+
+            const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        }
+    }
 }
