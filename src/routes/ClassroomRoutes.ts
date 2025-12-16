@@ -7,3 +7,5 @@ export const classroomRouter = Router()
 classroomRouter.use(AuthMiddleware.authenticate)
 
 classroomRouter.post("/:class_id", ClassroomController.createClassroom)
+
+classroomRouter.get("/:class_id", ClassroomController.findClassroom)

@@ -42,4 +42,15 @@ export class ClassroomService {
         return {id: classroom.id, teacher_id: classroom.teacher_id, class_id: classroom.class_id, classroom_date: classroom.classroom_date}
         
     }
+
+    static findByClassID = async(class_id: string)=>{
+       const classrooms = await ClassroomRepository.findByClassID(class_id)
+        if(!classrooms){
+            const error:any = new Error("Turma não encontrada!")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        return classrooms
+    }
 }

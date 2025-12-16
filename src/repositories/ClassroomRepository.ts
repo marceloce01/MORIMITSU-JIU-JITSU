@@ -11,7 +11,7 @@ export class ClassroomRepository{
         return prisma.classroom.findUnique({where: {id}})
     }
 
-    static findAll = async()=>{
-       return prisma.classroom.findMany()
+    static findByClassID = async(class_id: string)=>{
+       return prisma.classroom.findMany({where: {class_id}})
     }
 }

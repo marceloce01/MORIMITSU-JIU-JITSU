@@ -47,3 +47,29 @@
  *         description: Turma ou Instrutor não encontrado
  * 
  */
+
+/**
+ * @openapi
+ * /classroom/{class_id}:
+ *   get:
+ *     summary: Acessar aulas de uma turma
+ *     tags: [Classroom]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: class_id
+ *         in: path
+ *         description: ID da Turma
+ *         required: true
+ *         schema: 
+ *           type: string     
+ *                
+ *     responses:
+ *       200:
+ *         description: Aulas da turma
+ *       401:
+ *         description: Acesso negado
+ *       404:
+ *         description: Turma não encontrado
+ * 
+ */
