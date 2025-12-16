@@ -8,8 +8,13 @@ import { AuthenticatedRequest } from "../utils/types.js"
 
 export class UserController{
 
-    static registerUser = async(req: Request, res: Response) => {
+    static registerUser = async(req: AuthenticatedRequest, res: Response) => {
         try{
+            const user_ = req.user
+            if(!user_){
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
             const data = req.body
             const user = await UserService.registerUser(data)
             res.status(201).json({message: "Cadastro realizado.", user})
@@ -25,8 +30,13 @@ export class UserController{
         }
     }
 
-    static filterUsers = async(req: Request, res: Response) =>{
+    static filterUsers = async(req: AuthenticatedRequest, res: Response) =>{
         try{
+            const user = req.user
+            if(!user){
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
             const filters = req.query
             const users = await UserService.filterUsers(filters)
             return res.status(200).json({users, status: 200, code:"OK"})
@@ -51,8 +61,13 @@ export class UserController{
         }  
     }
 
-    static getAllUsers = async(req: Request, res: Response) =>{
+    static getAllUsers = async(req: AuthenticatedRequest, res: Response) =>{
             try{
+                const user = req.user
+                if(!user){
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
                 const users = await UserService.getAllUsers()
                 return res.status(200).json({users, status: 200, code:"OK"})
     

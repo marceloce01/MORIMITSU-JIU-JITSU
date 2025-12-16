@@ -101,4 +101,22 @@ export class GraduationService {
             throw error
         }
     }
+
+    static fitGraduate = async()=>{
+        const students = await StudentRepository.findAll()
+
+        let fits = 0
+
+        for(let i=0; i < students.length; i++){
+            const student = students[i]
+            const belt = await ConfigBeltRepository.findByBelt(student.belt)
+            const max_frequency = belt?.max_frequency
+            const grade =  belt?.grade
+
+            if(grade != null && ((student.grade < grade && student.current_frequency === max_frequency) || (student.grade === belt?.grade && student.current_frequency === max_frequency))){
+                fits++
+            }
+        }
+        return fits
+    }
 }

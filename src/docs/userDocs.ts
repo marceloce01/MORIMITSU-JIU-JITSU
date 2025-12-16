@@ -12,6 +12,8 @@
  *   post:
  *     summary: Cadastro de Usuário
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -53,6 +55,8 @@
  *   get:
  *     summary: Filtrar usuário por algum atributo
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: query
@@ -98,6 +102,8 @@
  *   get:
  *     summary: Filtrar todos os usuários
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  * 
  *     responses:
  *       200:
