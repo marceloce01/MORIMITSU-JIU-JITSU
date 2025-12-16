@@ -43,5 +43,5 @@ studentRouter.patch("/promote/:id", StudentController.promote)
 
 studentRouter.patch("/graduate/:id", GraduationController.graduateStudent)
 
-
+studentRouter.get("/fits-graduate", GraduationController.fitsGraduate)
 

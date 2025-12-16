@@ -28,4 +28,27 @@ export class PresenceController {
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
+
+    static updatePresence = async(req: AuthenticatedRequest, res: Response) =>{
+        try{
+            const user = req.user
+            if(!user){
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            const {classroom_id} = req.params
+            const {student_id, presence} = req.body
+            
+            const add_presence = await PresenceService.update({classroom_id, student_id, presence})
+
+            console.log({presence: add_presence, status: 201, code:"OK"})
+            return res.status(200).json({presence: add_presence, status: 200, code:"OK"})
+
+        }catch(error:any){
+            
+            const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        }
+    }
 }

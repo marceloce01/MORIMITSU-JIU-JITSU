@@ -7,3 +7,5 @@ export const presenceRouter = Router()
 presenceRouter.use(AuthMiddleware.authenticate)
 
 presenceRouter.post("/add/:classroom_id", PresenceController.presence)
+
+presenceRouter.put("/update/:classroom_id", PresenceController.updatePresence)

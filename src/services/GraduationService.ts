@@ -105,7 +105,7 @@ export class GraduationService {
     static fitGraduate = async()=>{
         const students = await StudentRepository.findAll()
 
-        let fits = 0
+        const fits = []
 
         for(let i=0; i < students.length; i++){
             const student = students[i]
@@ -113,10 +113,11 @@ export class GraduationService {
             const max_frequency = belt?.max_frequency
             const grade =  belt?.grade
 
-            if(grade != null && ((student.grade < grade && student.current_frequency === max_frequency) || (student.grade === belt?.grade && student.current_frequency === max_frequency))){
-                fits++
+            if(grade != null && ((student.grade < grade && student.current_frequency === max_frequency) || (student.grade === grade && student.current_frequency === max_frequency))){
+                fits.push(student)
             }
         }
+
         return fits
     }
 }

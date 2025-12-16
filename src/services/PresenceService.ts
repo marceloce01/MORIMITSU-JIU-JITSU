@@ -96,13 +96,40 @@ export class PresenceService {
             if(data.presence === true){
                 await StudentRepository.update(student.id, {current_frequency: student.current_frequency + 1})
                 await PresenceRepository.create({student_id: data.student_id, classroom_id: data.classroom_id, presence: data.presence})
-                return "Presença atualizada: +1"
+                return "Presença atualizada."
             }
         }
 
         if(existingPresence?.presence === false && data.presence === true){
-            await StudentRepository.update(student.id, {current_frequency: student.current_frequency + 1})
-            
+
+            const belt = await ConfigBeltRepository.findByBelt(student.belt)
+
+            if(belt?.max_frequency !== undefined && student.current_frequency < belt?.max_frequency){
+                const current_frequency = student.current_frequency + 1
+                student.current_frequency = current_frequency
+                const total_frequency = student.total_frequency + 1
+                student.total_frequency = total_frequency
+            }
+            await StudentRepository.update(student.id, {current_frequency: student.current_frequency, total_frequency: student.total_frequency})
         }
+
+        if(existingPresence?.presence === true && data.presence === false){
+
+            if(student.current_frequency > 0){
+                const current_frequency = student.current_frequency - 1
+                student.current_frequency = current_frequency
+            }
+
+            if(student.total_frequency > 0){
+                const total_frequency = student.total_frequency - 1
+                student.total_frequency = total_frequency
+            }
+                
+            await StudentRepository.update(student.id, {current_frequency: student.current_frequency, total_frequency: student.total_frequency})
+        }
+
+        await PresenceRepository.update(existingPresence?.id!, {presence: data.presence})
+
+        return "Presença atualizada."
     }
 }

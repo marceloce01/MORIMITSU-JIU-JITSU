@@ -31,3 +31,19 @@
  *       405:
  *         description: Aluno não apto à graduar
  */
+
+/**
+ * @openapi
+ * /student/fits-graduate:
+ *   get:
+ *     summary: Alunos aptos à graduar
+ *     tags: [Graduation]
+ *     security:
+ *       - bearerAuth: [] 
+ *                
+ *     responses:
+ *       200:
+ *         description: Alunos aptos à graduação
+ *       401:
+ *         description: Acesso negado
+ */
