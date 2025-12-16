@@ -1,4 +1,4 @@
-import { Gender, Belt, Prisma} from "@prisma/client";
+import { Gender, Belt, Role, Prisma} from "@prisma/client";
 import {prisma} from "./prismaClient.js"
 
 export type StudentFilter = {
@@ -124,6 +124,7 @@ export class StudentRepository{
             email?: string,
             cpf?: string,
             gender?: Gender,
+            role?: Role,
             birth_date?: Date,
             enrollment?: number,
             current_frequency?: number,
@@ -146,6 +147,7 @@ export class StudentRepository{
         if(data.email != undefined) dataUpdated.email = data.email
         if(data.cpf != undefined) dataUpdated.cpf = data.cpf
         if(data.gender != undefined) dataUpdated.gender = data.gender
+        if(data.role != undefined) dataUpdated.role = data.role
         if(data.birth_date != undefined) dataUpdated.birth_date = data.birth_date
         if(data.enrollment!= undefined) dataUpdated.enrollment = data.enrollment
         if(data.current_frequency != undefined) dataUpdated.current_frequency = data.current_frequency
