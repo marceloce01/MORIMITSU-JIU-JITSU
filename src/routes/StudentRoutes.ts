@@ -45,3 +45,5 @@ studentRouter.patch("/graduate/:id", GraduationController.graduateStudent)
 
 studentRouter.get("/fits-graduate", GraduationController.fitsGraduate)
 
+studentRouter.get("/belts-upper", StudentController.studentsBeltPurple)
+

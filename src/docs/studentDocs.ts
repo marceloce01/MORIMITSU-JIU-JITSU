@@ -362,3 +362,20 @@
  *         
  * 
  */
+
+/**
+ * @openapi
+ * /student/belts-upper:
+ *   get:
+ *     summary: Filtrar todos os alunos com faixa roxa ou superior
+ *     tags: [Students]
+ *     security:
+ *       - bearerAuth: []
+ * 
+ *     responses:
+ *       200:
+ *         description: Lista de alunos 
+ *       401:
+ *         description: Acesso negado
+ *         
+ */

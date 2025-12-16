@@ -428,4 +428,21 @@ export class StudentService{
 
             return {celebrants}
     }
+
+    static beltPurple = async()=>{
+        const students = await StudentRepository.findAll()
+
+        const students_ = []
+        const belts: Belt[] = [Belt.PURPLE, Belt.BROWN, Belt.BLACK, Belt.RED_BLACK, Belt.RED_WHITE,Belt.RED]
+
+        for(let i=0; i < students.length; i++){
+            const student = students[i]
+            
+            if(belts.includes(student.belt)){
+                students_.push(student)
+            }
+        }
+
+        return students_
+    }
 }

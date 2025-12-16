@@ -223,4 +223,27 @@ export class StudentController {
         }
     }
 
+    static studentsBeltPurple = async(req: AuthenticatedRequest, res: Response) => {
+        try{
+            const user = req.user
+            if(!user){
+
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+
+            const students = await StudentService.beltPurple()
+
+            console.log({students, status: 200, code: "OK"})
+            return res.status(200).json({students, status: 200, code: "OK"})
+
+        }catch(error:any){
+
+            const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        }
+    }
+
 }
