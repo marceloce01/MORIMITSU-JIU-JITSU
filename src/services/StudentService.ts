@@ -10,6 +10,7 @@ import { prisma } from "../repositories/prismaClient.js";
 import { ConfigBeltRepository } from "../repositories/ConfigBeltRepository.js";
 import { parse } from "path";
 import { UserService } from "./UserService.js";
+import { UserRepository } from "../repositories/UserRepository.js";
 
 //Dados de entrada
 export type StudentInput = {
@@ -350,6 +351,12 @@ export class StudentService{
 
         if(belt_allowed.includes(student.belt)){
             await this.updateStudent(id, {role: Role.TEACHER})
+            const existing_email = await UserRepository.findByEmail(student.email)
+            if(student.role === Role.TEACHER && existing_email){
+                const error:any = new Error("Aluno já foi promovido.")
+                error.code = ErrorCode.CONFLICT
+                throw error
+            }
             await UserService.registerUser({username: student.social_name ?? student.name, email: student.email, password: student.cpf, role: Role.TEACHER})
 
             return `Aluno(a) ${student.name} promovido(a) para professor.`
