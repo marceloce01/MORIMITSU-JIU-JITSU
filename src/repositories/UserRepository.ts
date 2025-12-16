@@ -16,12 +16,12 @@ export type UserFilter = {
 export class UserRepository{
 
     //Cria um usuário na tabela User
-    static create = async( data: {username: string, email: string, password: string, role?: Role}) => {
+    static create = async( data: {username: string, image_user_url?: string, email: string, password: string, role?: Role}) => {
        return prisma.user.create({data: {username: data.username, email: data.email, password: data.password, role: data.role}})
     } 
 
     //Atualiza dados do usuário
-    static update = async(userId: string, data: {username?: string, email?: string, password?: string, role?: Role}) => {
+    static update = async(userId: string, data: {username?: string, image_user_url?: string, password?: string}) => {
       return prisma.user.update({where: {id: userId}, data})
     }
 

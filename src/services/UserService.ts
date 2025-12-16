@@ -5,8 +5,10 @@ import { allowedDomain } from "../schemas/Email.js";
 import { UserFilter, UserRepository } from "../repositories/UserRepository.js";
 import { ErrorCode } from "../utils/ErrorCodes.js";
 import { Role } from "@prisma/client";
-import z from "zod";
+import z, { email } from "zod";
 import { prisma } from "../repositories/prismaClient.js";
+import { StudentRepository } from "../repositories/StudentRepository.js";
+import { ClassRepository } from "../repositories/ClassRepository.js";
 
 type UserInput = {
     username: string,
@@ -53,9 +55,27 @@ export class UserService{
 
         const hashedPassword = await bcrypt.hash(parsed.password, 10)
 
-        const user = await UserRepository.create({username: parsed.username, email: parsed.email, password: hashedPassword, role: parsed.role})
+        const user = await UserRepository.create({username: parsed.username, image_user_url: parsed.image_user_url, email: parsed.email, password: hashedPassword, role: parsed.role})
     
         return {id: user.id, username: user.username, email: user.email, role: user.role}
+    }
+
+    static updateUser = async(id: string, data: {username?: string, image_user_url?: string | undefined})=>{
+        if(!id){
+            const error:any = new Error("ID não fornecido.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        const user = await UserRepository.findById(id)
+        if(!user){
+            const error:any = new Error("Usuário não encontrado.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        await UserRepository.update(id, data)
+        return user
     }
 
     static filterUsers = async(filters: UserFilter) =>{
@@ -139,7 +159,87 @@ export class UserService{
 
         return students
     }
+
+    static teacherProfile = async(email: string)=>{
+        
+        if(!email){
+            const error:any = new Error("Email obrigatório.")
+            error.code = ErrorCode.BAD_REQUEST
+            throw error
+        }
+
+        const emailSchema = z.object({
+                email: z.string().email("Digite um e-mail válido.").refine((val) => {
+                const domain = val.split("@")[1]
+                return allowedDomain.includes(domain)
+            
+            }, "Domínio de e-mail não autorizado."),
+        })
+
+        emailSchema.parse({email})
+
+        const user = await UserRepository.findByEmail(email)
+        if(!user){
+            const error:any = new Error("Usuário não possui cadastro.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        let class_teacher: any = []
+        class_teacher = await ClassRepository.findByTeacherID(user.id)
+        
+        if(user.role !== Role.ADMIN){
+            const student = await StudentRepository.findByEmail(email)
+            if(!student){
+                const error:any = new Error("Usuário não possui cadastro de aluno.")
+                error.code = ErrorCode.NOT_FOUND
+                throw error
+            }
+
+            let class_student = []
+            class_student = await ClassRepository.findByStudentID(student.id)
+
+            const today = new Date()
+            const birthDate = student.birth_date
+            let age = today.getFullYear() - birthDate.getFullYear()
+            const month = today.getMonth() - birthDate.getMonth()
+
+            if(month < 0 || (month === 0 && today.getDate() < birthDate.getDate())){
+                    age--
+            }
+
+            return {
+                user: {
+                    name: student.name,
+                    image_user_url: user.image_user_url,
+                    age: age,
+                    belt: student.belt,
+                    phone: student.phone,
+                    enrollment: student.enrollment,
+                    role: student.role,
+                    birth_date: student.birth_date,
+                    email: student.email,
+                    social_name: student.social_name,
+                    gender: student.gender,
+                    current_frequency: student.current_frequency
+                },
+                class_teacher,
+                class_student,
+            }
+
+        }else if(user.role === Role.ADMIN){
+            return {
+                user: {
+                    name: user.username,
+                    image_user_url: user.image_user_url,
+                    email: user.email
+                },
+                class_teacher
+            }
+        }
+    }
 }
+
 
 
 

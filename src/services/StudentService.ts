@@ -357,7 +357,7 @@ export class StudentService{
                 error.code = ErrorCode.CONFLICT
                 throw error
             }
-            await UserService.registerUser({username: student.social_name ?? student.name, email: student.email, password: student.cpf, role: Role.TEACHER})
+            await UserService.registerUser({username: student.social_name ?? student.name, image_user_url: student.image_student_url ?? undefined, email: student.email, password: student.cpf, role: Role.TEACHER})
 
             return `Aluno(a) ${student.name} promovido(a) para professor.`
 

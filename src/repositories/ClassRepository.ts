@@ -39,6 +39,14 @@ export class ClassRepository{
         return prisma.class.findMany({where, include: {teacher: true, students: {include: {student: true}}, _count: {select: {students: true}}}})
     }
 
+    static findByTeacherID = async(teacher_id: string)=>{
+        return prisma.class.findMany({where: {teacher_id}})
+    }
+
+    static findByStudentID = async(student_id: string)=>{
+        return prisma.class.findMany({where: {students: {some: {student_id}}}})
+    }
+
     static findAll = async() =>{
         return prisma.class.findMany({include: {teacher: true, students: {include: {student: true}},  _count: {select: {students: true}}}})
     }

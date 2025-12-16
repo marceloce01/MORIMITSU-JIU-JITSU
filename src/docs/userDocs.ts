@@ -48,6 +48,47 @@
  *         description: Mensagem de erro ZOD
  */
 
+ /**
+ * @openapi
+ * /user/update/{id}:
+ *   put:
+ *     summary: Atualizar dados do usuário selecionando ID
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID do Aluno
+ *         required: true
+ *         schema: 
+ *           type: string           
+ *     
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object            
+ *             properties:
+ *               username:
+ *                 type: string
+ * 
+ *               image_user_url:
+ *                 type: string
+ *                 format: binary
+ *  
+ *     responses:
+ *       200:
+ *         description: Dados atualizados
+ *       
+ *       401:
+ *         description: Acesso negado
+ * 
+ *       404:
+ *         description: ID não fornecido ou Aluno não encontrado
+ */
+
  //Filtrar Usuário
  /**
  * @openapi
@@ -153,5 +194,27 @@
  *     responses:
  *       200:
  *         description: Lista de turmas
+ *         
+  */
+
+  /**
+ * @openapi
+ * /user/profile/{email}:
+ *   get:
+ *     summary: Perfil de Usuário 
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: email
+ *         in: path
+ *         description: E-mail do usuário
+ *         required: true
+ *         schema: 
+ *           type: string
+ * 
+ *     responses:
+ *       200:
+ *         description: Perfil
  *         
   */

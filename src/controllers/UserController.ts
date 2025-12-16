@@ -5,6 +5,7 @@ import { ErrorCode, statusHTTP } from "../utils/ErrorCodes.js"
 import { ZodError } from "zod"
 import { zodMessage } from "../utils/ZodErrorFormat.js"
 import { AuthenticatedRequest } from "../utils/types.js"
+import { uploadInCloud } from "../config/cloudinary.js"
 
 export class UserController{
 
@@ -19,6 +20,35 @@ export class UserController{
             const user = await UserService.registerUser(data)
             res.status(201).json({message: "Cadastro realizado.", user})
             
+
+        }catch(error:any){ 
+             if(error instanceof ZodError){
+                return res.status(422).json({message: zodMessage(error), status: 422, code: ErrorCode.UNPROCESSABLE_ENTITY})
+            }
+            const status = statusHTTP(error.code)
+            res.status(status).json({message: error.message || "Internal server error", code: error.code || ErrorCode.INTERNAL})
+        
+        }
+    }
+
+    static updateUser = async(req: AuthenticatedRequest, res: Response) =>{
+         try{
+            const user_ = req.user
+            if(!user_){
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            const {id} = req.params
+            const data = req.body
+
+            let url : string | undefined = undefined
+            if(req.file){
+                url = await uploadInCloud(req.file.path) ?? undefined
+                data.image_user_url = url ?? undefined
+            }
+
+            const user = await UserService.updateUser(id, data)
+            res.status(200).json({message: "As alterações foram salvas.", user, status: 200, code: "OK"})
 
         }catch(error:any){ 
              if(error instanceof ZodError){
@@ -113,6 +143,29 @@ export class UserController{
             const students = await UserService.teacherStudents(id)
 
             return res.status(200).json({students, status: 200, code:"OK"})
+
+        }catch(error:any){
+
+            const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        }
+    }
+
+    static teacherProfile = async(req: AuthenticatedRequest, res: Response)=>{
+        try{
+            const user = req.user
+            if(!user){
+                console.error({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+
+            const {email} = req.params
+
+            const profile = await UserService.teacherProfile(email)
+
+            return res.status(200).json({profile, status: 200, code:"OK"})
 
         }catch(error:any){
 
