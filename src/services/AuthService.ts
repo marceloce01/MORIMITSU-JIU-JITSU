@@ -203,6 +203,16 @@ export class AuthService{
             throw error
         }
 
-        const adminEmail = process.env.ADMIN_EMAIL as string
+        const adminEmail = process.env.ADMIN_EMAIL!
+
+        await sendMail(
+            adminEmail,
+            "SOLICITAÇÃO DE CADASTRO",
+            `
+            <h2> Olá, Saulo Bezerra </h2>
+            <p> Um usuário solicitou cadastro de conta.</p>
+            <h2> ${email} </h2>
+            `
+        )     
     }
 }
