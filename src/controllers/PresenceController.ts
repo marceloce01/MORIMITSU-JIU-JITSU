@@ -51,4 +51,26 @@ export class PresenceController {
             return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
         }
     }
+
+    static getPresence = async(req: AuthenticatedRequest, res: Response) =>{
+        try{
+            const user = req.user
+            if(!user){
+                return res.status(401).json({message: "Usuário não autenticado.", status: 401, code: "UNNAUTHORIZED"})
+            }
+            const {classroom_id} = req.params
+           
+            const presences = await PresenceService.getPresences(classroom_id)
+
+            console.log({presences, status: 200, code:"OK"})
+            return res.status(200).json({presences, status: 200, code:"OK"})
+
+        }catch(error:any){
+            
+            const status = statusHTTP(error.code)
+
+            console.error({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+            return res.status(status).json({message: error.message || "Internal server error", status: status, code: error.code || ErrorCode.INTERNAL})
+        }
+    }
 }

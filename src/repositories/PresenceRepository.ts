@@ -14,7 +14,7 @@ export class PresenceRepository{
     }
 
     static findByClassroom = async(classroom_id: string)=>{
-        return prisma.studentPresence.findMany({where: {classroom_id}})
+        return prisma.studentPresence.findMany({where: {classroom_id}, include: {student: {select: {id: true, name: true}}}})
     }
 
     static findPresence = async(student_id: string, classroom_id: string)=>{

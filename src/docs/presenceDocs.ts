@@ -79,11 +79,37 @@
  *                 type: boolean
  *                
  *     responses:
- *       201:
+ *       200:
  *         description: Presença atualizada
  *       401:
  *         description: Acesso negado
  *       404:
  *         description: Aula ou Student não encontrado
+ * 
+ */
+
+/**
+ * @openapi
+ * /presence/{classroom_id}:
+ *   get:
+ *     summary: Ver as presenças registradas de uma aula
+ *     tags: [Presence]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: classroom_id
+ *         in: path
+ *         description: ID da Aula
+ *         required: true
+ *         schema: 
+ *           type: string     
+ *                 
+ *     responses:
+ *       200:
+ *         description: Presenças
+ *       401:
+ *         description: Acesso negado
+ *       404:
+ *         description: Aula não encontrada
  * 
  */

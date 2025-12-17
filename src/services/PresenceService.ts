@@ -132,4 +132,20 @@ export class PresenceService {
 
         return "Presença atualizada."
     }
+
+    static getPresences = async(classroom_id: string)=>{
+        const classroom = await ClassroomRepository.findById(classroom_id)
+        if(!classroom){
+            const error:any = new Error("Aula não encontrada.")
+            error.code = ErrorCode.NOT_FOUND
+            throw error
+        }
+
+        if(classroom.classroom_date > new Date()){
+            return []
+        }
+
+        const presences = await PresenceRepository.findByClassroom(classroom_id)
+        return presences
+    }
 }

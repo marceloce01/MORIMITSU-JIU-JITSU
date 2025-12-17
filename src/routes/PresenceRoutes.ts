@@ -9,3 +9,5 @@ presenceRouter.use(AuthMiddleware.authenticate)
 presenceRouter.post("/add/:classroom_id", PresenceController.presence)
 
 presenceRouter.put("/update/:classroom_id", PresenceController.updatePresence)
+
+presenceRouter.get("/:classroom_id", PresenceController.getPresence)
